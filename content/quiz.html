@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبارات شرح البيقونية</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700;900&display=swap');
+
+:root{
+  --bg: #faf6ee;
+  --panel: #ffffff;
+  --ink: #2b2418;
+  --muted: #7a6f5c;
+  --green: #1f4d3d;
+  --green-dark: #163a2d;
+  --gold: #b8934a;
+  --gold-light: #e8d9b5;
+  --ok: #2f7d4f;
+  --bad: #b3452f;
+  --radius: 16px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background: linear-gradient(180deg, #f4ecda 0%, var(--bg) 220px);
+  color: var(--ink);
+  font-family: 'Tajawal', sans-serif;
+  min-height:100vh;
+  padding: 24px 14px 60px;
+}
+.heading, h1, h2, h3, .qtext{
+  font-family: 'Amiri', serif;
+}
+.wrap{max-width: 880px; margin: 0 auto;}
+
+/* ===== Header ===== */
+header.top{
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  color:#fbf6e8;
+  border-radius: var(--radius);
+  padding: 28px 26px;
+  text-align:center;
+  box-shadow: 0 8px 24px rgba(22,58,45,.18);
+  border: 1px solid var(--gold);
+  position:relative;
+  overflow:hidden;
+}
+header.top::before{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(circle at 85% -10%, rgba(184,147,74,.35), transparent 55%);
+}
+header.top h1{
+  margin:0 0 6px; font-size: 30px; position:relative; z-index:1;
+}
+header.top p{
+  margin:0; color: var(--gold-light); font-size:15px; position:relative; z-index:1;
+}
+
+/* ===== level select ===== */
+.levels{
+  display:grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
+  gap:16px; margin-top:22px;
+}
+.level-card{
+  background: var(--panel);
+  border: 1px solid #e7ddc4;
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor:pointer;
+  transition:.18s;
+  position:relative;
+  box-shadow: 0 2px 8px rgba(43,36,24,.05);
+}
+.level-card:hover{ transform: translateY(-3px); box-shadow:0 10px 22px rgba(43,36,24,.12); border-color:var(--gold); }
+.level-card .tag{
+  display:inline-block; font-size:12px; font-weight:700; padding:3px 12px; border-radius:20px;
+  margin-bottom:10px; color:#fff;
+}
+.level-card h3{ margin:0 0 8px; font-size:21px; color:var(--green-dark); }
+.level-card p{margin:0; color:var(--muted); font-size:14px; line-height:1.7;}
+.level-card .meta{margin-top:12px; font-size:13px; color:var(--gold); font-weight:700;}
+.lv1 .tag{background:#3f8a5f;}
+.lv2 .tag{background:#b8934a;}
+.lv3 .tag{background:#b3452f;}
+.best{
+  margin-top:10px; font-size:13px; color:var(--ok); font-weight:700; display:none;
+}
+
+/* ===== quiz panel ===== */
+.panel{
+  background: var(--panel);
+  border-radius: var(--radius);
+  border: 1px solid #e7ddc4;
+  margin-top: 18px;
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(43,36,24,.06);
+  display:none;
+}
+.panel.active{display:block;}
+.qbar{
+  display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+  font-size:14px; color:var(--muted);
+}
+.progress-track{
+  height:8px; background:#eee1c4; border-radius:6px; overflow:hidden; margin-bottom:20px;
+}
+.progress-fill{
+  height:100%; background: linear-gradient(90deg, var(--gold), var(--green)); width:0%;
+  transition: width .3s;
+}
+.qtext{
+  font-size:22px; line-height:1.9; color:var(--green-dark); margin:0 0 18px;
+  background: #f7f1de; border-right:4px solid var(--gold); padding:14px 18px; border-radius:10px;
+}
+.options{display:flex; flex-direction:column; gap:10px;}
+.opt{
+  text-align:right; padding:13px 16px; border-radius:12px; border:1.5px solid #e2d6b3;
+  background:#fffdf7; cursor:pointer; font-family:'Tajawal'; font-size:16px; color:var(--ink);
+  transition:.15s;
+}
+.opt:hover:not(.locked){ border-color: var(--gold); background:#fbf3de; }
+.opt.correct{ background:#e6f4ea; border-color:var(--ok); color:#1f5c37; font-weight:700; }
+.opt.wrong{ background:#fbe8e3; border-color:var(--bad); color:#8a2f1c; font-weight:700; }
+.opt.locked{ cursor:default; }
+.explain{
+  margin-top:14px; padding:12px 16px; border-radius:10px; font-size:14px; line-height:1.9;
+  background:#fbf6e6; border-right:3px solid var(--green); color:#4a4230; display:none;
+}
+.explain.show{display:block;}
+.footer-row{
+  display:flex; justify-content:space-between; align-items:center; margin-top:20px;
+}
+button.nav{
+  background: var(--green); color:#fbf6e8; border:none; padding:11px 26px; border-radius:10px;
+  font-family:'Tajawal'; font-weight:700; font-size:15px; cursor:pointer; transition:.15s;
+}
+button.nav:disabled{ background:#c9c0a8; cursor:not-allowed; }
+button.nav:hover:not(:disabled){ background: var(--green-dark); }
+button.secondary{
+  background:transparent; color:var(--muted); border:1px solid #dcd0ac; padding:10px 18px;
+  border-radius:10px; font-family:'Tajawal'; cursor:pointer;
+}
+button.secondary:hover{ border-color:var(--gold); color:var(--green-dark); }
+
+/* ===== results ===== */
+.result{
+  text-align:center; padding: 20px 10px;
+}
+.result .score{
+  font-size:52px; font-weight:900; color:var(--green-dark); font-family:'Amiri';
+}
+.result .msg{ font-size:17px; color:var(--muted); margin:8px 0 22px; }
+.result-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+@media (max-width:520px){
+  .qtext{font-size:19px; padding:12px 14px;}
+  header.top h1{font-size:24px;}
+  .result .score{font-size:42px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>اختبارات شرح المنظومة البيقونية</h1>
+    <p>شرح الشيخ ابن عُثيمين رحمه الله — ثلاثة مستويات، عشرة أسئلة لكل مستوى</p>
+  </header>
+
+  <div id="levelScreen">
+    <div class="levels">
+      <div class="level-card lv1" onclick="startQuiz(0)">
+        <span class="tag">مستوى ١</span>
+        <h3>أساسيات المنظومة</h3>
+        <p>تعريفات مباشرة من متن البيقونية: الصحيح، الحسن، الضعيف، المرفوع، الموقوف، المقطوع وأمثالها.</p>
+        <div class="meta">10 أسئلة · سهل</div>
+        <div class="best" id="best0"></div>
+      </div>
+      <div class="level-card lv2" onclick="startQuiz(1)">
+        <span class="tag">مستوى ٢</span>
+        <h3>فروق ودقائق</h3>
+        <p>الفرق بين المصطلحات المتشابهة: العزيز والمشهور، المعلق والمرسل والمعضل، تدليس الإسناد وتدليس الشيوخ.</p>
+        <div class="meta">10 أسئلة · متوسط</div>
+        <div class="best" id="best1"></div>
+      </div>
+      <div class="level-card lv3" onclick="startQuiz(2)">
+        <span class="tag">مستوى ٣</span>
+        <h3>تفاصيل الشرح والأمثلة</h3>
+        <p>أمثلة وتفاصيل دقيقة من شرح الشيخ نفسه: العلة القادحة، المدرج، قصة اختبار أهل بغداد للبخاري، وغيرها.</p>
+        <div class="meta">10 أسئلة · صعب</div>
+        <div class="best" id="best2"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="quizPanel">
+    <div class="qbar">
+      <span id="levelLabel"></span>
+      <span id="qCounter"></span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="qtext" id="qText"></div>
+    <div class="options" id="optionsBox"></div>
+    <div class="explain" id="explainBox"></div>
+    <div class="footer-row">
+      <button class="secondary" onclick="backToLevels()">رجوع للمستويات</button>
+      <button class="nav" id="nextBtn" disabled onclick="nextQuestion()">التالي</button>
+    </div>
+  </div>
+
+  <div class="panel" id="resultPanel">
+    <div class="result">
+      <div class="score" id="finalScore"></div>
+      <div class="msg" id="finalMsg"></div>
+      <div class="result-actions">
+        <button class="nav" id="retryBtn" onclick="retryQuiz()">إعادة نفس المستوى</button>
+        <button class="secondary" onclick="backToLevels()">رجوع للمستويات</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const QUIZZES = [
+// ============ المستوى الأول: أساسيات ============
+[
+  {q:"كم عدد أبيات المنظومة البيقونية؟", opts:["30 بيتاً","32 بيتاً","34 بيتاً","40 بيتاً"], a:2,
+   ex:"قال الناظم: «فوق الثلاثين بأربعٍ أتَتْ ... أبياتُها ثم بخيرٍ خُتِمَتْ» أي 34 بيتاً."},
+  {q:"كم عدد أقسام (أنواع) الحديث التي ذكرها الناظم في المنظومة؟", opts:["22 نوعاً","28 نوعاً","32 نوعاً","34 نوعاً"], a:2,
+   ex:"ذكر الشارح أن أقسام الحديث المذكورة في النظم اثنان وثلاثون نوعاً."},
+  {q:"ما هو أول نوع من أنواع الحديث الذي بدأ به الناظم؟", opts:["الحسن","الصحيح","المرفوع","المسند"], a:1,
+   ex:"بدأ المؤلف بالصحيح لأنه أشرف أقسام الحديث."},
+  {q:"الحديث الصحيح هو ما اتصل إسناده ولم يُشذّ أو...؟", opts:["يُرسَل","يُعَلّ","يُقطَع","يُبهَم"], a:1,
+   ex:"«أوَّلُها الصحيحُ وهو ما اتّصل إسنادُهُ ولم يُشذّ أو يُعَلّ»."},
+  {q:"الحديث الذي رواه عدلٌ خفيف الضبط بسند متصل خالٍ من الشذوذ والعلة القادحة يسمى؟", opts:["الضعيف","الحسن","الغريب","المعلول"], a:1,
+   ex:"هذا هو تعريف الحديث الحسن كما بيّنه الشيخ."},
+  {q:"كل ما قصُر عن رتبة الحسن يسمى؟", opts:["الشاذ","المتروك","الضعيف","المنكر"], a:2,
+   ex:"«وكلُّ ما عن رتبةِ الحُسنِ قَصُر ... فهو الضعيفُ وهو أقساماً كُثُر»."},
+  {q:"الحديث الذي أُضيف إلى النبي صلى الله عليه وسلم من قول أو فعل أو تقرير يسمى؟", opts:["الموقوف","المقطوع","المرفوع","المسند"], a:2,
+   ex:"«وما أُضيف للنبي المرفوعُ»."},
+  {q:"الحديث الذي أُضيف إلى التابعي (من قوله أو فعله) يسمى؟", opts:["المقطوع","الموقوف","المنقطع","المعضل"], a:0,
+   ex:"«وما لتابعٍ هو المقطوعُ»، والمقطوع غير المنقطع."},
+  {q:"ما أضافه الراوي إلى الصحابي من قول أو فعل يسمى؟", opts:["المرفوع","المسند","الموقوف","المتصل"], a:2,
+   ex:"«وما أضفتَه إلى الأصحاب من قولٍ وفعلٍ فهو موقوفٌ زُكِن»."},
+  {q:"الحديث الذي لم يروِه إلا راوٍ واحد فقط يسمى؟", opts:["العزيز","المشهور","الغريب","المسلسل"], a:2,
+   ex:"«وقُل غريبٌ ما رَوى راوٍ فقط»."}
+],
+// ============ المستوى الثاني: فروق ودقائق ============
+[
+  {q:"عند الحافظ ابن حجر، ما الفرق الجوهري بين تعريف الصحيح وتعريف الحسن؟", opts:["اختلاف اتصال السند","تمام الضبط في الصحيح مقابل خفة الضبط في الحسن","اشتراط العدد في الحسن دون الصحيح","اختلاف اشتراط السلامة من الشذوذ"], a:1,
+   ex:"قال ابن حجر: الفرق بينهما فرق واحد، بدل أن تقول في الصحيح «تام الضبط» تقول في الحسن «خفيف الضبط»، وبقية الشروط واحدة."},
+  {q:"الحديث الذي رواه اثنان عن اثنين عن اثنين إلى منتهى السند يسمى عند المتأخرين؟", opts:["المشهور","المتواتر","العزيز","المسلسل"], a:2,
+   ex:"العزيز اصطلاحاً عند المتأخرين هو ما رواه اثنان فقط من أول السند إلى آخره."},
+  {q:"عند المتأخرين، الحديث الذي رواه ثلاثةٌ فأكثر (ولم يبلغ حد التواتر) يسمى؟", opts:["العزيز","المشهور","الغريب","الفرد"], a:1,
+   ex:"والمشهور على القول الراجح هو ما رواه ثلاثة فصاعداً ولم يصل إلى حد التواتر."},
+  {q:"الحديث الذي أُدِّي بصيغة «عن» مثل «عن سعيد عن كرم» يسمى؟", opts:["المسلسل","المعنعن","المبهم","المدبّج"], a:1,
+   ex:"«معنعنٌ كعن سعيدٍ عن كرَمْ»، وحكمه الاتصال إلا ممن عُرف بالتدليس."},
+  {q:"الحديث الذي يوجد في سنده راوٍ لم يُسمَّ يسمى؟", opts:["المبهم","الغريب","المقلوب","المعضل"], a:0,
+   ex:"«ومبهمٌ ما فيه راوٍ لم يُسَمْ»، وحكمه عدم القبول حتى يُعرف إلا إن كان المبهم صحابياً."},
+  {q:"علوّ الإسناد ينقسم إلى علوّ عدد وعلوّ...؟", opts:["زمن","صفة","بلد","سند"], a:1,
+   ex:"علو الصفة هو ما كان رجاله أثبت في الحفظ والعدالة من طريق آخر، وهو مقدَّم على علو العدد عند التعارض."},
+  {q:"الحديث الذي سقط منه الصحابي (أو رفعه من لم يسمع من النبي صلى الله عليه وسلم) يسمى؟", opts:["المنقطع","المعضل","المرسل","المعلق"], a:2,
+   ex:"«ومرسلٌ منه الصحابيّ سقط»، وهو من أقسام الضعيف إلا في مواضع استُثنيت."},
+  {q:"الانقطاع من أول السند (بحذف الراوي الأول فأكثر) يسمى؟", opts:["المرسل","المعلق","المعضل","المنقطع"], a:1,
+   ex:"سُمّي معلقاً لأنه كالشيء المعلَّق في السقف منقطع من أسفله."},
+  {q:"تدليس الشيوخ يختلف عن تدليس الإسناد في أن المدلِّس فيه؟", opts:["يُسقط شيخه كلياً","لا يُسقط الشيخ لكن يصفه بما لا يُعرف به","يقلب متن الحديث","يُسقط راويين على التوالي"], a:1,
+   ex:"«والثاني لا يُسقطه لكن يَصِف ... أوصافه بما به لا يُنعرَف»."},
+  {q:"الحديث الذي خالف فيه الراوي الثقة من هو أرجح منه عدداً أو عدالة أو ضبطاً يسمى؟", opts:["المنكر","الشاذ","المقلوب","المضطرب"], a:1,
+   ex:"أما إذا خالف فيه الضعيف الثقة فيسمى منكراً لا شاذاً."}
+],
+// ============ المستوى الثالث: تفاصيل الشرح والأمثلة ============
+[
+  {q:"مثّل الشيخ للشذوذ بحديث النهي عن الصيام إذا انتصف شعبان، فما الحديث الأرجح الذي خالفه؟", opts:["«إنما الأعمال بالنيات»","«لا تقدَّموا رمضان بصوم يوم ولا يومين»","«من غشّ فليس منّا»","«الأعمال بالخواتيم»"], a:1,
+   ex:"أخذ الإمام أحمد بالحديث الوارد في الصحيحين وحكم بشذوذ حديث النهي عند انتصاف شعبان لمخالفته له."},
+  {q:"ذكر الشيخ مثالاً للعلة غير القادحة في اختلاف الرواة على مقدار ثمن القلادة الذهبية في حديث؟", opts:["فضالة بن عبيد","جابر بن عبد الله","أبي هريرة","معاذ بن جبل"], a:0,
+   ex:"قصة القلادة الذهبية بيعت باثني عشر ديناراً واختلف الرواة في مقدار الثمن، وهذا لا يقدح لأنه لا يمس صميم موضوع الحديث."},
+  {q:"ما الفرق بين المنقطع والمعضل من حيث عدد الرواة الساقطين؟", opts:["لا فرق بينهما","المنقطع سقط منه راوٍ واحد، والمعضل سقط منه راويان فأكثر على التوالي","المعضل سقط من أوله، والمنقطع من آخره","المنقطع في المتن والمعضل في السند"], a:1,
+   ex:"المنقطع: ما حُذف من أثناء سنده راوٍ واحد. المعضل: ما سقط منه اثنان فأكثر على التوالي."},
+  {q:"عرّف الحافظ ابن حجر الحديث المنكر بأنه؟", opts:["ما انفرد به راوٍ ثقة","ما رواه الضعيف مخالفاً للثقة","ما اتُّهم راويه بالكذب","ما خالف فيه الثقة من هو أرجح منه"], a:1,
+   ex:"هذا ما مشى عليه ابن حجر في نخبة الفكر، بخلاف تعريف الناظم الذي جعله الفرد الذي لا يُحتمل تفرده."},
+  {q:"المتروك عند ابن حجر هو ما رواه راوٍ؟", opts:["أجمع العلماء على تعديله","اتُّهم بالكذب","خفيف الضبط فقط","انفرد به عن أهل بلد"], a:1,
+   ex:"وهذا أدق من تعريف الناظم (ما انفرد به ضعيف أجمعوا على تضعيفه)."},
+  {q:"ما المثال الذي ذكره الشيخ للإدراج في أول الحديث؟", opts:["«والتحنّث التعبّد»","«أسبغوا الوضوء ويلٌ للأعقاب من النار»","«فمن استطاع أن يطيل غرّته فليفعل»","«حتى لا تعلم شماله ما تنفق يمينه»"], a:1,
+   ex:"المرفوع هو «ويل للأعقاب من النار» فقط، أما «أسبغوا الوضوء» فمن كلام أبي هريرة رضي الله عنه أُدرج بلا بيان."},
+  {q:"حديث «إنما الأعمال بالنيات» برواية عمر بن الخطاب رضي الله عنه، مثّله الشيخ لنوع الفرد المقيَّد بـ؟", opts:["جمع","رواية","ثقة","بلد"], a:2,
+   ex:"لأنه انفرد به الثقة عن الثقة عن الثقة في ثلاث طبقات مع صحته، فهو فرد مقيّد بثقة."},
+  {q:"ما رأي الإمام أحمد في نُسك النبي صلى الله عليه وسلم في حجة الوداع، بعد الجمع بين روايات الاضطراب؟", opts:["أنه حجّ مفرداً","أنه حجّ متمتعاً","أنه حجّ قارناً","لا يمكن الجزم بشيء"], a:2,
+   ex:"قال الإمام أحمد: لا أشك أن النبي صلى الله عليه وسلم كان قارناً، والمتعة أحب إليّ."},
+  {q:"ما الفرق الدقيق بين «المتفق والمفترق» و«المؤتلف والمختلف»؟", opts:["لا فرق، مصطلحان لمعنى واحد","الأول اتفاق في اللفظ والخط مع اختلاف الذات، والثاني اتفاق في الخط فقط مع اختلاف النطق","الأول يخص المتون والثاني يخص الأسانيد","الأول للضعيف والثاني للثقة"], a:1,
+   ex:"المتفق والمفترق: الاسم واحد لفظاً وخطاً لكن المسمَّى متعدد. المؤتلف والمختلف: يتفق خطاً لكن يختلف نطقاً، مثل عبّاس وعيّاش."},
+  {q:"في قصة اختبار أهل بغداد للإمام البخاري، كم عدد الأحاديث التي وضعوا لها أسانيد مقلوبة لاختباره؟", opts:["خمسون حديثاً","مائة حديث","عشرة أحاديث","ألف حديث"], a:1,
+   ex:"وضعوا مائة حديث بأسانيد مقلوبة، فقال البخاري في كل واحد «لا أعرفه» ثم ساقها كلها بأسانيدها الصحيحة."}
+]
+];
+
+const LEVEL_NAMES = ["المستوى الأول: أساسيات المنظومة","المستوى الثاني: فروق ودقائق","المستوى الثالث: تفاصيل الشرح والأمثلة"];
+
+let currentLevel = 0;
+let currentQ = 0;
+let score = 0;
+let locked = false;
+
+function loadBests(){
+  for(let i=0;i<3;i++){
+    const v = localStorage.getItem('bayquniyyah_best_'+i);
+    if(v!==null){
+      const el = document.getElementById('best'+i);
+      el.textContent = "أفضل نتيجة: "+v+" / 10";
+      el.style.display = "block";
+    }
+  }
+}
+loadBests();
+
+function startQuiz(level){
+  currentLevel = level;
+  currentQ = 0;
+  score = 0;
+  document.getElementById('levelScreen').style.display = 'none';
+  document.getElementById('resultPanel').classList.remove('active');
+  document.getElementById('quizPanel').classList.add('active');
+  document.getElementById('levelLabel').textContent = LEVEL_NAMES[level];
+  renderQuestion();
+}
+
+function renderQuestion(){
+  locked = false;
+  const list = QUIZZES[currentLevel];
+  const item = list[currentQ];
+  document.getElementById('qCounter').textContent = "سؤال " + (currentQ+1) + " / " + list.length;
+  document.getElementById('progressFill').style.width = ((currentQ)/list.length*100) + "%";
+  document.getElementById('qText').textContent = item.q;
+  const box = document.getElementById('optionsBox');
+  box.innerHTML = "";
+  item.opts.forEach((opt, idx) => {
+    const btn = document.createElement('div');
+    btn.className = 'opt';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(idx);
+    box.appendChild(btn);
+  });
+  document.getElementById('explainBox').classList.remove('show');
+  document.getElementById('explainBox').textContent = "";
+  document.getElementById('nextBtn').disabled = true;
+  document.getElementById('nextBtn').textContent = (currentQ === list.length-1) ? "عرض النتيجة" : "التالي";
+}
+
+function selectAnswer(idx){
+  if(locked) return;
+  locked = true;
+  const item = QUIZZES[currentLevel][currentQ];
+  const opts = document.querySelectorAll('#optionsBox .opt');
+  opts.forEach((o,i)=>{
+    o.classList.add('locked');
+    if(i === item.a) o.classList.add('correct');
+    else if(i === idx) o.classList.add('wrong');
+  });
+  if(idx === item.a) score++;
+  const ex = document.getElementById('explainBox');
+  ex.textContent = item.ex;
+  ex.classList.add('show');
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion(){
+  const list = QUIZZES[currentLevel];
+  if(currentQ < list.length - 1){
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult(){
+  document.getElementById('quizPanel').classList.remove('active');
+  document.getElementById('resultPanel').classList.add('active');
+  document.getElementById('finalScore').textContent = score + " / " + QUIZZES[currentLevel].length;
+  let msg = "";
+  const pct = score / QUIZZES[currentLevel].length;
+  if(pct === 1) msg = "ممتاز! إجابات كاملة صحيحة 🌟";
+  else if(pct >= 0.8) msg = "أحسنت! نتيجة ممتازة.";
+  else if(pct >= 0.5) msg = "جيد، راجع الأسئلة التي أخطأت فيها.";
+  else msg = "راجع الشرح مرة أخرى ثم أعد المحاولة.";
+  document.getElementById('finalMsg').textContent = msg;
+
+  const key = 'bayquniyyah_best_'+currentLevel;
+  const prev = localStorage.getItem(key);
+  if(prev === null || score > parseInt(prev)){
+    localStorage.setItem(key, score);
+  }
+}
+
+function retryQuiz(){
+  startQuiz(currentLevel);
+}
+
+function backToLevels(){
+  document.getElementById('quizPanel').classList.remove('active');
+  document.getElementById('resultPanel').classList.remove('active');
+  document.getElementById('levelScreen').style.display = 'block';
+  loadBests();
+}
+</script>
+</body>
+</html>

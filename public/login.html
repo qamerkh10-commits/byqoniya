@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول — المنظومة البيقونية</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="brand">المنظومة البيقونية</h1>
+      <div class="subtitle">سجّل دخولك للمتابعة</div>
+
+      <div class="error-box" id="errorBox"></div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label>اسم المستخدم</label>
+          <input type="text" id="username" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label>كلمة المرور</label>
+          <input type="password" id="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn" type="submit" id="submitBtn">تسجيل الدخول</button>
+      </form>
+
+      <div class="switch-link">
+        مش عندك حساب؟ <a href="/register.html">إنشاء حساب جديد</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+const form = document.getElementById('loginForm');
+const errorBox = document.getElementById('errorBox');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.style.display = 'none';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الدخول...';
+
+  try {
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'تعذر تسجيل الدخول');
+    window.location.href = '/index.html';
+  } catch (err) {
+    errorBox.textContent = err.message;
+    errorBox.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'تسجيل الدخول';
+  }
+});
+</script>
+</body>
+</html>

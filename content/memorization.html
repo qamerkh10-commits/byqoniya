@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار حفظ المنظومة البيقونية</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Amiri:wght@400;700&display=swap');
+
+:root{
+  --bg: #f7f1e3;
+  --bg2: #efe4c8;
+  --ink: #2e2418;
+  --gold: #a9812f;
+  --gold-dark: #7c5e20;
+  --green: #1e7d32;
+  --green-bg: #e3f3e5;
+  --red: #b3261e;
+  --red-bg: #fbe9e7;
+  --orange: #b06a00;
+  --orange-bg: #fff3e0;
+  --gray: #6b6459;
+  --gray-bg: #ece5d5;
+  --card: #fffdf7;
+  --border: #ddceac;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background: linear-gradient(180deg, var(--bg), var(--bg2));
+  color: var(--ink);
+  font-family:'Tajawal', sans-serif;
+  min-height:100vh;
+  padding: 24px 14px 60px;
+}
+.wrap{max-width:1040px; margin:0 auto;}
+h1{
+  font-family:'Amiri', serif;
+  text-align:center;
+  font-size: 30px;
+  color: var(--gold-dark);
+  margin: 4px 0 2px;
+}
+.subtitle{
+  text-align:center;
+  color: var(--gray);
+  font-size:14px;
+  margin-bottom:18px;
+}
+.mode-tabs{
+  display:flex; justify-content:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;
+}
+.mode-tab{
+  background:#fff;
+  border:1.5px solid var(--gold);
+  color:var(--gold-dark);
+  border-radius: 999px;
+  padding: 9px 22px;
+  font-family:'Tajawal', sans-serif;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+}
+.mode-tab.active{
+  background: var(--gold-dark);
+  color:#fff;
+  border-color: var(--gold-dark);
+}
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 18px rgba(120,90,30,0.08);
+  margin-bottom:18px;
+}
+.nav-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.nav-btn{
+  background: var(--gold);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:9px 16px;
+  font-family:'Tajawal', sans-serif;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+  transition: background .15s;
+}
+.nav-btn:hover{background: var(--gold-dark);}
+.nav-btn:disabled{background:#c9bd9a; cursor:not-allowed;}
+.verse-picker{
+  display:flex; align-items:center; gap:8px; font-size:14px; color:var(--gray);
+}
+select{
+  font-family:'Tajawal', sans-serif;
+  padding:6px 10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-size:14px;
+}
+.verse-badge{
+  display:inline-block;
+  background: var(--gold-dark);
+  color:#fff;
+  border-radius: 999px;
+  width:34px; height:34px;
+  line-height:34px;
+  text-align:center;
+  font-weight:900;
+  font-family:'Amiri', serif;
+  font-size:16px;
+}
+.verse-box{
+  text-align:center;
+  margin: 18px 0 10px;
+}
+.verse-hidden-note{
+  color:var(--gray);
+  font-size:14px;
+  padding: 26px 10px;
+  border: 2px dashed var(--border);
+  border-radius:14px;
+  background: var(--bg);
+}
+.verse-text{
+  font-family:'Amiri', serif;
+  font-size: 26px;
+  line-height:2.1;
+  color: var(--ink);
+}
+.reveal-btn{
+  background:none;
+  border:1px solid var(--gold);
+  color:var(--gold-dark);
+  border-radius:8px;
+  padding:5px 14px;
+  font-size:13px;
+  font-family:'Tajawal', sans-serif;
+  cursor:pointer;
+  margin-top:10px;
+  margin-inline-end:6px;
+}
+.reveal-btn:hover{background:var(--bg);}
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin: 20px 0 6px;
+  flex-wrap:wrap;
+}
+.mic-btn{
+  display:flex; align-items:center; gap:8px;
+  background: var(--green);
+  color:#fff;
+  border:none;
+  border-radius: 999px;
+  padding: 13px 26px;
+  font-size:16px;
+  font-weight:700;
+  font-family:'Tajawal', sans-serif;
+  cursor:pointer;
+  box-shadow: 0 3px 10px rgba(30,125,50,0.25);
+}
+.mic-btn.recording{
+  background: var(--red);
+  animation: pulse 1.2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(179,38,30,.45);}
+  70%{box-shadow:0 0 0 14px rgba(179,38,30,0);}
+  100%{box-shadow:0 0 0 0 rgba(179,38,30,0);}
+}
+.compare-btn{
+  background: var(--gold-dark);
+  color:#fff;
+  border:none;
+  border-radius: 999px;
+  padding: 13px 22px;
+  font-size:15px;
+  font-weight:700;
+  font-family:'Tajawal', sans-serif;
+  cursor:pointer;
+}
+.compare-btn:disabled{background:#c9bd9a; cursor:not-allowed;}
+.clear-btn{
+  background:#fff;
+  border:1.5px solid var(--red);
+  color:var(--red);
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-size:14px;
+  font-weight:700;
+  font-family:'Tajawal', sans-serif;
+  cursor:pointer;
+}
+.transcript-box{
+  margin-top:16px;
+}
+.transcript-label{
+  font-size:13px; color:var(--gray); margin-bottom:6px;
+}
+textarea{
+  width:100%;
+  min-height:80px;
+  font-family:'Tajawal', sans-serif;
+  font-size:18px;
+  direction:rtl;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  resize:vertical;
+  background:#fffef9;
+}
+.result-box{
+  margin-top:20px;
+  border-top: 1px dashed var(--border);
+  padding-top:18px;
+}
+.score-line{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.score-pill{
+  font-family:'Amiri', serif;
+  font-size:22px;
+  font-weight:700;
+  padding: 6px 20px;
+  border-radius: 999px;
+}
+.score-pill.good{background:var(--green-bg); color:var(--green);}
+.score-pill.mid{background:var(--orange-bg); color:var(--orange);}
+.score-pill.low{background:var(--red-bg); color:var(--red);}
+.diff-text{
+  font-family:'Amiri', serif;
+  font-size:24px;
+  line-height:2.4;
+  text-align:center;
+  padding: 14px 8px;
+  background: var(--bg);
+  border-radius:12px;
+}
+.diff-text.long{
+  font-size:20px;
+  line-height:2.1;
+  text-align:right;
+  max-height:560px;
+  overflow-y:auto;
+  padding:6px 10px;
+}
+.diff-verse-line{
+  display:block;
+  padding:10px 4px;
+  border-bottom:1px dashed var(--border);
+  text-align:justify;
+}
+.diff-verse-line:last-child{border-bottom:none;}
+.verse-pct{
+  font-family:'Tajawal',sans-serif;
+  font-size:12px;
+  font-weight:700;
+  border-radius:6px;
+  padding:1px 8px;
+  margin-inline-start:8px;
+  vertical-align:middle;
+}
+.verse-pct.good{background:var(--green-bg); color:var(--green);}
+.verse-pct.mid{background:var(--orange-bg); color:var(--orange);}
+.verse-pct.low{background:var(--red-bg); color:var(--red);}
+.w-ok{color: var(--green); font-weight:700;}
+.w-wrong{
+  color: var(--red);
+  font-weight:700;
+  border-bottom:2px solid var(--red);
+  position:relative;
+}
+.w-missing{
+  color: var(--orange);
+  text-decoration: line-through;
+  opacity:.75;
+}
+.verse-mark{
+  display:inline-block;
+  font-family:'Tajawal',sans-serif;
+  font-size:12px;
+  color:#fff;
+  background:var(--gold);
+  border-radius:6px;
+  padding:0 6px;
+  margin:0 4px;
+  vertical-align:middle;
+}
+.extra-line{
+  margin-top:12px;
+  text-align:center;
+  font-size:15px;
+  color: var(--gray);
+}
+.extra-line b{background:var(--gray); border-radius:6px; padding:1px 8px; color:#fff; font-weight:700;}
+.legend{
+  display:flex; justify-content:center; gap:18px; margin-top:14px; flex-wrap:wrap;
+  font-size:13px; color:var(--gray);
+}
+.legend span{display:flex; align-items:center; gap:5px;}
+.dot{width:10px; height:10px; border-radius:50%; display:inline-block;}
+.stats{
+  display:flex; justify-content:center; gap:26px; flex-wrap:wrap;
+  font-size:14px; color:var(--gray); margin-top:6px;
+}
+.stats b{color:var(--ink); font-size:16px;}
+.warn{
+  text-align:center;
+  background: var(--orange-bg);
+  color: var(--orange);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:14px;
+  margin-bottom:14px;
+}
+.mic-status{
+  text-align:center; font-size:13px; color:var(--gray); min-height:18px; margin-top:6px;
+}
+.lang-row{
+  display:flex; justify-content:center; align-items:center; gap:10px; margin-top:6px;
+}
+.lang-row label{font-size:13px; color:var(--gray);}
+.verse-scores{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px,1fr));
+  gap:6px;
+}
+.vs-cell{
+  text-align:center;
+  border-radius:8px;
+  padding:6px 2px;
+  font-size:12px;
+  font-family:'Tajawal',sans-serif;
+  cursor:default;
+}
+.vs-cell b{display:block; font-family:'Amiri',serif; font-size:14px;}
+footer{
+  text-align:center;
+  color:var(--gray);
+  font-size:12px;
+  margin-top:20px;
+}
+.hint{
+  text-align:center; font-size:13px; color:var(--gray); margin-top:8px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>اختبار حفظ المنظومة البيقونية</h1>
+  <div class="subtitle">اتكلمي من حفظك، وهنقارن كلامك بالمتن الأصلي كلمة بكلمة</div>
+
+  <div id="unsupportedWarn" class="warn" style="display:none;">
+    المتصفح ده مش بيدعم تحويل الصوت لنص (Web Speech API). ينفع تستخدمي جوجل كروم، أو تكتبي اللي انتي فاكراه يدويًا في المربع وتضغطي "قارن".
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tabSingle">📖 بيت / أبيات محددة</button>
+    <button class="mode-tab" id="tabFull">📜 القصيدة كاملة</button>
+  </div>
+
+  <!-- ============ MODE 1: SINGLE VERSE ============ -->
+  <div id="modeSingle">
+    <div class="card">
+      <div class="nav-row">
+        <button class="nav-btn" id="prevBtn">التالي ▶</button>
+        <div class="verse-picker">
+          اذهب لبيت رقم:
+          <select id="verseSelect"></select>
+        </div>
+        <button class="nav-btn" id="nextBtn">◀ السابق</button>
+      </div>
+
+      <div class="verse-box">
+        <span class="verse-badge" id="verseNum">١</span>
+        <div id="verseArea" style="margin-top:14px;">
+          <div class="verse-hidden-note" id="hiddenNote">
+            البيت رقم <span id="hiddenNoteNum"></span> — مخفي. اتكلمي من حفظك، أو اضغطي "اظهار البيت" لو عايزة تشوفيه الأول.
+          </div>
+          <div class="verse-text" id="verseText" style="display:none;"></div>
+        </div>
+        <button class="reveal-btn" id="revealBtn">👁 اظهار البيت</button>
+      </div>
+
+      <div class="controls">
+        <button class="mic-btn" id="micBtn">🎙 ابدأ التسميع</button>
+        <button class="compare-btn" id="compareBtn" disabled>قارن بالنص الأصلي</button>
+        <button class="clear-btn" id="clearBtn">🗑 امسح وابدأ من دلوقتي</button>
+      </div>
+      <div class="lang-row">
+        <label>لهجة التعرف الصوتي:</label>
+        <select id="langSelect">
+          <option value="ar-EG">مصرية</option>
+          <option value="ar-SA">فصحى / سعودية</option>
+          <option value="ar">عربي عام</option>
+        </select>
+      </div>
+      <div class="mic-status" id="micStatus"></div>
+      <div class="hint">لو اتلعثمتي وكررتي بداية البيت تاني، الأداة هتمسح المحاولة القديمة تلقائيًا وتبدأ من التكرار الجديد. أو دوسي "امسح وابدأ من دلوقتي" في أي وقت.</div>
+
+      <div class="transcript-box">
+        <div class="transcript-label">اللي اتسجل من كلامك (تقدري تعدّليه يدويًا قبل ما تقارني):</div>
+        <textarea id="transcriptArea" placeholder="هيظهر هنا كلامك أول ما تتكلمي... أو اكتبي يدويًا لو مفيش ميكروفون"></textarea>
+      </div>
+
+      <div class="result-box" id="resultBox" style="display:none;">
+        <div class="score-line">
+          <div class="score-pill" id="scorePill">٠٪</div>
+        </div>
+        <div class="diff-text" id="diffText"></div>
+        <div class="extra-line" id="extraLine" style="display:none;"></div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--green);"></i> مطابق</span>
+          <span><i class="dot" style="background:var(--red);"></i> غلط / مكانه كلمة تانية</span>
+          <span><i class="dot" style="background:var(--orange);"></i> ناقص (اتنسيت)</span>
+          <span><i class="dot" style="background:var(--gray);"></i> زيادة عن الأصل</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <div class="stats">
+        <span>محاولات: <b id="statAttempts">0</b></span>
+        <span>متوسط الدقة: <b id="statAvg">—</b></span>
+        <span>أفضل بيت: <b id="statBest">—</b></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODE 2: FULL POEM ============ -->
+  <div id="modeFull" style="display:none;">
+    <div class="card">
+      <div class="verse-box" style="margin-top:0;">
+        <div class="verse-hidden-note" id="fullHiddenNote">
+          القصيدة كاملة (٣٤ بيت) — مخفية. اتكلمي من حفظك من أول البيت الأول للأخير.
+        </div>
+        <div class="verse-text" id="fullVerseText" style="display:none; text-align:justify; font-size:22px;"></div>
+        <button class="reveal-btn" id="fullRevealBtn">👁 اظهار القصيدة</button>
+      </div>
+
+      <div class="controls">
+        <button class="mic-btn" id="micBtnFull">🎙 ابدأ التسميع</button>
+        <button class="compare-btn" id="compareBtnFull" disabled>قارن بالقصيدة كاملة</button>
+        <button class="clear-btn" id="clearBtnFull">🗑 امسح وابدأ من دلوقتي</button>
+      </div>
+      <div class="lang-row">
+        <label>لهجة التعرف الصوتي:</label>
+        <select id="langSelectFull">
+          <option value="ar-EG">مصرية</option>
+          <option value="ar-SA">فصحى / سعودية</option>
+          <option value="ar">عربي عام</option>
+        </select>
+      </div>
+      <div class="mic-status" id="micStatusFull"></div>
+      <div class="hint">لو رجعتي بدأتي القصيدة من الأول تاني، الأداة هتمسح المحاولة القديمة تلقائيًا. أو دوسي "امسح وابدأ من دلوقتي" لو عايزة تبدأي من نقطة تانية.</div>
+
+      <div class="transcript-box">
+        <div class="transcript-label">اللي اتسجل من كلامك:</div>
+        <textarea id="transcriptAreaFull" placeholder="هيظهر هنا كلامك وانتي بتسمّعي القصيدة كاملة..."></textarea>
+      </div>
+
+      <div class="result-box" id="resultBoxFull" style="display:none;">
+        <div class="score-line">
+          <div class="score-pill" id="scorePillFull">٠٪</div>
+        </div>
+        <div class="diff-text long" id="diffTextFull"></div>
+        <div class="extra-line" id="extraLineFull" style="display:none;"></div>
+        <div class="legend">
+          <span><i class="dot" style="background:var(--green);"></i> مطابق</span>
+          <span><i class="dot" style="background:var(--red);"></i> غلط / مكانه كلمة تانية</span>
+          <span><i class="dot" style="background:var(--orange);"></i> ناقص (اتنسيت)</span>
+          <span><i class="dot" style="background:var(--gray);"></i> زيادة عن الأصل</span>
+        </div>
+        <div class="transcript-label" style="margin-top:16px; text-align:center;">الدقة في كل بيت (دوسي على أي رقم عشان تراجعيه في وضع "بيت محدد"):</div>
+        <div class="verse-scores" id="verseScoresGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>منظومة البيقونية — ٣٤ بيتًا في مصطلح الحديث</footer>
+</div>
+
+<script>
+const VERSES = [
+"أبدأُ بالحمدِ مُصَلِّياً على مُحمَّدٍ خَيِر نبيْ أُرسلا",
+"وذِي مِنَ أقسَامِ الحديث عدَّة وكُلُّ واحدٍ أتى وحدَّه",
+"أوَّلُها «الصحيحُ» وهوَ ما اتَّصَلْ إسنادُهُ ولْم يُشَذّ أو يُعلّ",
+"يَرْويهِ عَدْلٌ ضَابِطٌ عَنْ مِثْلِهِ مُعْتَمَدٌ في ضَبْطِهِ ونَقْلهِ",
+"وَ«الَحسَنُ» الَمعْرُوفُ طُرْقاً وغَدَتْ رِجَالُهُ لا كالصّحيحِ اشْتَهَرَتْ",
+"وكُلُّ ما عَنْ رُتبةِ الُحسْنِ قَصْر فَهْوَ «الضعيفُ» وهوَ أقْسَاماً كُثُرْ",
+"وما أُضيفَ للنبي «الَمرْفوعُ» وما لتَابِعٍ هُوَ «المقْطوعُ»",
+"وَ«الُمسْنَدُ» الُمتَّصِلُ الإسنادِ مِنْ رَاويهِ حتَّى الُمصْطفى ولْم يَبنْ",
+"ومَا بِسَمْعِ كُلِّ رَاوٍ يَتَّصِلْ إسْنَادُهُ للمُصْطَفى فَ«الُمتَّصلْ»",
+"«مُسَلْسَلٌ» قُلْ مَا عَلَى وَصْفٍ أتَى مِثْلُ أمَا والله أنْبأنِي الفتى",
+"كذَاكَ قَدْ حَدَّثَنِيهِ قائِماً أوْ بَعْدَ أنْ حَدَّثَنِي تَبَسَّمَا",
+"«عَزيزٌ» مَروِيُّ اثنَيِن أوْ ثَلاثهْ «مَشْهورٌ» مَرْوِيُّ فَوْقَ ما ثَلاثهْ",
+"«مَعَنْعَنٌ» كَعَن سَعيدٍ عَنْ كَرَمْ «وَمُبهَمٌ» مَا فيهِ رَاوٍ لْم يُسَمْ",
+"وكُلُّ مَا قَلَّت رِجَالُهُ «عَلا» وضِدُّهُ ذَاكَ الذِي قَدْ «نَزَلا»",
+"ومَا أضَفْتَهُ إلى الأصْحَابِ مِنْ قَوْلٍ وفعْلٍ فهْوَ «مَوْقُوفٌ» زُكنْ",
+"«وَمُرْسلٌ» مِنهُ الصَّحَابُّي سَقَطْ وقُلْ «غَريبٌ» ما رَوَى رَاوٍ فَقطْ",
+"وكلُّ مَا لْم يَتَّصِلْ بِحَالٍ إسْنَادُهُ «مُنْقَطِعُ» الأوْصالِ",
+"«والُمعْضَلُ» السَّاقِطُ مِنْهُ اثْنَانِ ومَا أتى «مُدَلَّساً» نَوعانِ",
+"الأوَّل الإسْقاطُ للشَّيخِ وأنْ يَنْقُلَ مَّمنْ فَوْقَهُ بعنْ وأنْ",
+"والثَّانِ لا يُسْقِطُهُ لكنْ يَصِفْ أوْصَافَهُ بما بهِ لا يَنْعرِفْ",
+"ومَا يَخالِفُ ثِقةٌ فيهِ الَملا فـ«الشَّاذُّ» و«الَمقْلوبُ» قِسْمَانِ تَلا",
+"إبْدَالُ راوٍ ما بِرَاوٍ قِسْمُ وقَلْبُ إسْنَادٍ لمتنٍ قِسمُ",
+"وَ«الفَرَدُ» ما قَيَّدْتَهُ بثِقَةِ أوْ جْمعٍ أوْ قَصِر على روايةِ",
+"ومَا بعِلَّةٍ غُمُوضٍ أوْ خَفَا «مُعَلَّلٌ» عِنْدَهُمُ قَدْ عُرِفَا",
+"وذُو اخْتِلافِ سنَدٍ أو مَتْنٍ «مُضْطربٌ» عِنْدَ أهيْلِ الفَنِّ",
+"وَ«الُمدْرَجاتُ» في الحديثِ ما أتَتْ مِنْ بَعْضِ ألفاظِ الرُّوَاةِ اتَّصَلَتْ",
+"ومَا رَوى كلُّ قَرِينٍ عنْ أخهْ «مُدَبَّجٌ» فَاعْرِفْهُ حَقًّا وانْتَخهْ",
+"مُتَّفِقٌ لَفْظاً وخطاً «مُتَّفقْ» وضِدُّهُ فيما ذَكَرْنَا «الُمفْترقْ»",
+"«مُؤْتَلِفٌ» مُتَّفِقُ الخطِّ فَقَطْ وضِدُّهُ «مُختَلِفٌ» فَاخْشَ الغَلَطْ",
+"«والُمنْكَرُ» الفَردُ بهِ رَاوٍ غَدَا تَعْدِيلُهُ لا يْحمِلُ التَّفَرُّدَا",
+"«مَتُروكُهُ» مَا وَاحِدٌ بهِ انفَردْ وأجَمعُوا لضَعْفِه فَهُوَ كرَدّ",
+"والكذِبُ الُمخْتَلَقُ المصنُوعُ علَى النَّبيِّ فذَلِكَ «الموْضوعُ»",
+"وقَدْ أتَتْ كالَجوْهَرِ المكْنُونِ سَمَّيْتُهَا: مَنْظُومَةَ البَيْقُوني",
+"فَوْقَ الثَّلاثيَن بأرْبَعٍ أتَتْ أقْسامُهَا ثمَّ بخيٍر خُتِمتْ"
+];
+
+const arabicIndex = n => n.toString().split("").map(d=>"٠١٢٣٤٥٦٧٨٩"[+d] || d).join("");
+
+// ===== normalization =====
+// ملحوظات على القواعد دي:
+// - الألف الخنجرية (ـٰ / U+0670) هي "مد" مش حركة قصيرة زي الفتحة، فمبتتشالش زي باقي
+//   التشكيل، بل بتتحول لألف كاملة عشان الصوت متعتبرش مفقود.
+// - الألف المقصورة (ى) بتتحول لألف عادي (ا) مش لياء، لأن صوتها "ألف" مش "ياء".
+// - كل أشكال الهمزة (أ إ آ ء) بتتوحّد مع الألف، لأن التعرف الصوتي غالبًا مش بيفرّق
+//   في نطق الهمزة، فمفيش داعي نعتبرها غلط.
+function normalizeWord(word){
+  return word
+    .replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g,'') // تشكيل (بدون الألف الخنجرية)
+    .replace(/\u0640/g,'') // تطويل
+    .replace(/[«»"“”.,؛:،!؟\-]/g,'')
+    .replace(/[أإآءٱ\u0670]/g,'ا') // كل أشكال الهمزة على الألف + الألف الخنجرية + ألف الوصل
+    .replace(/ى/g,'ا') // الألف المقصورة = ألف، مش ياء
+    .replace(/ة/g,'ه')
+    .replace(/ؤ/g,'و')
+    .replace(/ئ/g,'ي')
+    .trim();
+}
+function normalizeStr(str){
+  return str
+    .replace(/[\u0610-\u061A\u064B-\u065F\u06D6-\u06ED]/g,'')
+    .replace(/\u0640/g,'')
+    .replace(/[«»"“”.,؛:،!؟\-]/g,' ')
+    .replace(/[أإآءٱ\u0670]/g,'ا')
+    .replace(/ى/g,'ا')
+    .replace(/ة/g,'ه')
+    .replace(/ؤ/g,'و')
+    .replace(/ئ/g,'ي')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+// ===== word-level diff (edit distance alignment) =====
+function alignWords(correctWords, spokenWords){
+  const n = correctWords.length, m = spokenWords.length;
+  const dp = Array.from({length:n+1},()=>new Array(m+1).fill(0));
+  for(let i=0;i<=n;i++) dp[i][0]=i;
+  for(let j=0;j<=m;j++) dp[0][j]=j;
+  for(let i=1;i<=n;i++){
+    for(let j=1;j<=m;j++){
+      if(correctWords[i-1] === spokenWords[j-1]){
+        dp[i][j] = dp[i-1][j-1];
+      } else {
+        dp[i][j] = 1 + Math.min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]);
+      }
+    }
+  }
+  const ops = [];
+  let i=n, j=m;
+  while(i>0 || j>0){
+    if(i>0 && j>0 && correctWords[i-1] === spokenWords[j-1]){
+      ops.push({type:'equal', correct: correctWords[i-1], spoken: spokenWords[j-1]});
+      i--; j--;
+    } else if(i>0 && j>0 && dp[i][j] === dp[i-1][j-1] + 1){
+      ops.push({type:'replace', correct: correctWords[i-1], spoken: spokenWords[j-1]});
+      i--; j--;
+    } else if(i>0 && dp[i][j] === dp[i-1][j] + 1){
+      ops.push({type:'missing', correct: correctWords[i-1]});
+      i--;
+    } else {
+      ops.push({type:'extra', spoken: spokenWords[j-1]});
+      j--;
+    }
+  }
+  ops.reverse();
+  return ops;
+}
+function escapeHtml(s){
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// نسخة خفيفة من مسافة التحرير (بترجّع الرقم بس من غير تتبّع الخطوات) — مستخدمة
+// لاختيار أقرب تخمين من التعرف الصوتي لنص المتن، مش لعرض الفروق
+function editDistanceCost(a,b){
+  const n=a.length, m=b.length;
+  if(n===0) return m;
+  if(m===0) return n;
+  let prev = new Array(m+1);
+  let curr = new Array(m+1);
+  for(let j=0;j<=m;j++) prev[j]=j;
+  for(let i=1;i<=n;i++){
+    curr[0]=i;
+    for(let j=1;j<=m;j++){
+      curr[j] = a[i-1]===b[j-1] ? prev[j-1] : 1+Math.min(prev[j-1],prev[j],curr[j-1]);
+    }
+    const tmp = prev; prev = curr; curr = tmp;
+  }
+  return prev[m];
+}
+
+// النص الكامل للقصيدة محسوب مرة واحدة، يُستخدم في اختيار أفضل تخمين لوضع القصيدة كاملة
+const FULL_DISPLAY = [];
+const FULL_VERSE_OF_WORD = [];
+VERSES.forEach((v,vi)=>{
+  v.split(' ').forEach(w=>{ FULL_DISPLAY.push(w); FULL_VERSE_OF_WORD.push(vi); });
+});
+const FULL_NORM = FULL_DISPLAY.map(normalizeWord);
+
+let currentVerseNormWords = []; // بيتحدّث في loadVerse لكل بيت
+
+// من بين البدائل اللي رجّعها التعرف الصوتي لجملة واحدة، بتختار الأقرب لنص المتن
+// المتوقع (بدل ما تاخد التخمين الأول بس زي ما بتعمل المتصفحات افتراضيًا)
+function pickBestAlternativeText(res, target, chunksSoFar){
+  const n = Math.min(res.length, 5);
+  if(n <= 1) return res[0].transcript.trim();
+
+  let targetWords;
+  if(target === 'single'){
+    targetWords = currentVerseNormWords;
+  } else {
+    const committedCount = normalizeStr(chunksSoFar.join(' ')).split(' ').filter(Boolean).length;
+    const windowSize = 14;
+    targetWords = FULL_NORM.slice(committedCount, committedCount + windowSize);
+    if(targetWords.length === 0){
+      targetWords = FULL_NORM.slice(Math.max(0, FULL_NORM.length - windowSize));
+    }
+  }
+  if(!targetWords || targetWords.length === 0) return res[0].transcript.trim();
+
+  let bestIdx = 0, bestCost = Infinity;
+  for(let i=0;i<n;i++){
+    const words = normalizeStr(res[i].transcript).split(' ').filter(Boolean);
+    const cost = editDistanceCost(targetWords, words);
+    if(cost < bestCost){ bestCost = cost; bestIdx = i; }
+  }
+  return res[bestIdx].transcript.trim();
+}
+
+/* =========================================================
+   MODE SWITCHING
+   ========================================================= */
+const tabSingle = document.getElementById('tabSingle');
+const tabFull = document.getElementById('tabFull');
+const modeSingle = document.getElementById('modeSingle');
+const modeFull = document.getElementById('modeFull');
+
+tabSingle.addEventListener('click', ()=>{
+  tabSingle.classList.add('active'); tabFull.classList.remove('active');
+  modeSingle.style.display='block'; modeFull.style.display='none';
+  stopAnyRecognition();
+});
+tabFull.addEventListener('click', ()=>{
+  tabFull.classList.add('active'); tabSingle.classList.remove('active');
+  modeFull.style.display='block'; modeSingle.style.display='none';
+  stopAnyRecognition();
+});
+
+/* =========================================================
+   SPEECH RECOGNITION (shared engine, two "targets")
+   ========================================================= */
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let recognizing = false;
+let activeTarget = null; // 'single' | 'full'
+
+// chunk-based transcript so we can detect + trim on repeat
+let chunksSingle = [];
+let chunksFull = [];
+
+function currentOpeningWords(target){
+  // first 2 normalized words of the relevant target text, used to detect "she started over"
+  if(target === 'single'){
+    return VERSES[current].split(' ').slice(0,2).map(normalizeWord).join(' ');
+  } else {
+    return VERSES[0].split(' ').slice(0,2).map(normalizeWord).join(' ');
+  }
+}
+
+function setupRecognition(){
+  if(!SpeechRec){
+    document.getElementById('unsupportedWarn').style.display='block';
+    return;
+  }
+  recognition = new SpeechRec();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  recognition.onstart = ()=>{
+    setStatus(activeTarget, '🎙 بتسمع دلوقتي... اتكلمي');
+  };
+
+  recognition.onresult = (event)=>{
+    const chunks = activeTarget === 'single' ? chunksSingle : chunksFull;
+    let interimText = '';
+    for(let i=event.resultIndex;i<event.results.length;i++){
+      const res = event.results[i];
+      const t = res[0].transcript.trim();
+      if(res.isFinal){
+        if(t){
+          const normOpening = currentOpeningWords(activeTarget);
+          const chunkNorm = normalizeStr(t);
+          // restart detection: new chunk restates the opening of the target text,
+          // and we already had earlier chunks => treat as "بدأت تاني"، امسح القديم
+          if(chunks.length > 0 && normOpening && chunkNorm.startsWith(normOpening)){
+            chunks.length = 0;
+          }
+          chunks.push(t);
+        }
+      } else {
+        interimText += t;
+      }
+    }
+    const combined = (chunks.join(' ') + ' ' + interimText).trim();
+    if(activeTarget === 'single'){
+      document.getElementById('transcriptArea').value = combined;
+      document.getElementById('compareBtn').disabled = combined.length === 0;
+    } else {
+      document.getElementById('transcriptAreaFull').value = combined;
+      document.getElementById('compareBtnFull').disabled = combined.length === 0;
+    }
+    setStatus(activeTarget, '🎙 بتسمع دلوقتي...');
+  };
+
+  recognition.onend = ()=>{
+    recognizing = false;
+    resetMicButtons();
+    setStatus(activeTarget, '');
+  };
+
+  recognition.onerror = (e)=>{
+    recognizing = false;
+    resetMicButtons();
+    if(e.error === 'not-allowed' || e.error === 'service-not-allowed'){
+      alert('محتاجين إذن استخدام الميكروفون عشان الميزة تشتغل.');
+      setStatus(activeTarget, '');
+    } else if(e.error === 'no-speech'){
+      setStatus(activeTarget, 'مسمعتش صوت، جرّبي تاني وقربي من الميكروفون.');
+    } else {
+      setStatus(activeTarget, 'حصل خطأ في التسجيل (' + e.error + '). جرّبي تاني.');
+    }
+  };
+}
+setupRecognition();
+
+function setStatus(target, msg){
+  if(target === 'single') document.getElementById('micStatus').textContent = msg;
+  else if(target === 'full') document.getElementById('micStatusFull').textContent = msg;
+}
+function resetMicButtons(){
+  const b1 = document.getElementById('micBtn');
+  const b2 = document.getElementById('micBtnFull');
+  b1.classList.remove('recording'); b1.textContent = '🎙 ابدأ التسميع';
+  b2.classList.remove('recording'); b2.textContent = '🎙 ابدأ التسميع';
+}
+function stopAnyRecognition(){
+  if(recognizing && recognition){
+    recognition.stop();
+    recognizing = false;
+  }
+  resetMicButtons();
+}
+
+function startRecognition(target){
+  if(!recognition){
+    alert('المتصفح ده مش بيدعم التسجيل الصوتي، اكتبي كلامك يدويًا في المربع واضغطي قارن.');
+    return;
+  }
+  activeTarget = target;
+  if(target === 'single'){
+    chunksSingle = [];
+    document.getElementById('transcriptArea').value = '';
+    document.getElementById('resultBox').style.display='none';
+    recognition.lang = document.getElementById('langSelect').value;
+  } else {
+    chunksFull = [];
+    document.getElementById('transcriptAreaFull').value = '';
+    document.getElementById('resultBoxFull').style.display='none';
+    recognition.lang = document.getElementById('langSelectFull').value;
+  }
+  setStatus(target, '⏳ بتجهّز الميكروفون...');
+  try{
+    recognition.start();
+    recognizing = true;
+    const btn = document.getElementById(target === 'single' ? 'micBtn' : 'micBtnFull');
+    btn.classList.add('recording');
+    btn.textContent = '⏹ إيقاف التسجيل';
+  }catch(err){
+    console.error(err);
+    setStatus(target, 'حصل خطأ، جرّبي تضغطي تاني.');
+  }
+}
+
+document.getElementById('micBtn').addEventListener('click', ()=>{
+  if(recognizing && activeTarget === 'single'){ stopAnyRecognition(); }
+  else startRecognition('single');
+});
+document.getElementById('micBtnFull').addEventListener('click', ()=>{
+  if(recognizing && activeTarget === 'full'){ stopAnyRecognition(); }
+  else startRecognition('full');
+});
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  chunksSingle = [];
+  document.getElementById('transcriptArea').value = '';
+  document.getElementById('compareBtn').disabled = true;
+  document.getElementById('resultBox').style.display='none';
+});
+document.getElementById('clearBtnFull').addEventListener('click', ()=>{
+  chunksFull = [];
+  document.getElementById('transcriptAreaFull').value = '';
+  document.getElementById('compareBtnFull').disabled = true;
+  document.getElementById('resultBoxFull').style.display='none';
+});
+document.getElementById('transcriptArea').addEventListener('input', ()=>{
+  document.getElementById('compareBtn').disabled = document.getElementById('transcriptArea').value.trim().length === 0;
+});
+document.getElementById('transcriptAreaFull').addEventListener('input', ()=>{
+  document.getElementById('compareBtnFull').disabled = document.getElementById('transcriptAreaFull').value.trim().length === 0;
+});
+
+/* =========================================================
+   SINGLE VERSE MODE
+   ========================================================= */
+let current = 0;
+let revealed = false;
+let attempts = 0;
+let scoreSum = 0;
+let bestVerse = null;
+let bestScore = -1;
+
+const verseSelect = document.getElementById('verseSelect');
+VERSES.forEach((v,i)=>{
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.textContent = "بيت " + arabicIndex(i+1);
+  verseSelect.appendChild(opt);
+});
+
+function loadVerse(i){
+  current = i;
+  revealed = false;
+  document.getElementById('verseNum').textContent = arabicIndex(i+1);
+  document.getElementById('verseText').style.display = 'none';
+  document.getElementById('verseText').textContent = VERSES[i];
+  document.getElementById('hiddenNote').style.display = 'block';
+  document.getElementById('hiddenNoteNum').textContent = arabicIndex(i+1);
+  document.getElementById('revealBtn').textContent = '👁 اظهار البيت';
+  document.getElementById('resultBox').style.display = 'none';
+  document.getElementById('transcriptArea').value = '';
+  document.getElementById('compareBtn').disabled = true;
+  chunksSingle = [];
+  verseSelect.value = i;
+  document.getElementById('prevBtn').disabled = (i === VERSES.length-1);
+  document.getElementById('nextBtn').disabled = (i === 0);
+}
+
+document.getElementById('revealBtn').addEventListener('click', ()=>{
+  revealed = !revealed;
+  document.getElementById('verseText').style.display = revealed ? 'block':'none';
+  document.getElementById('hiddenNote').style.display = revealed ? 'none':'block';
+  document.getElementById('revealBtn').textContent = revealed ? '🙈 إخفاء البيت' : '👁 اظهار البيت';
+});
+document.getElementById('verseSelect').addEventListener('change', e=>{
+  loadVerse(parseInt(e.target.value));
+});
+document.getElementById('nextBtn').addEventListener('click', ()=>{ if(current>0) loadVerse(current-1); });
+document.getElementById('prevBtn').addEventListener('click', ()=>{ if(current<VERSES.length-1) loadVerse(current+1); });
+
+function renderDiff(correctDisplayWords, ops){
+  let correctIdx = 0;
+  let html = '';
+  const extraWords = [];
+  let equalCount = 0;
+  ops.forEach(op=>{
+    if(op.type === 'equal'){
+      html += `<span class="w-ok">${escapeHtml(correctDisplayWords[correctIdx])}</span> `;
+      equalCount++; correctIdx++;
+    } else if(op.type === 'replace'){
+      html += `<span class="w-wrong">${escapeHtml(correctDisplayWords[correctIdx])}</span> `;
+      correctIdx++;
+    } else if(op.type === 'missing'){
+      html += `<span class="w-missing">${escapeHtml(correctDisplayWords[correctIdx])}</span> `;
+      correctIdx++;
+    } else if(op.type === 'extra'){
+      extraWords.push(op.spoken);
+    }
+  });
+  return {html: html.trim(), extraWords, equalCount};
+}
+
+document.getElementById('compareBtn').addEventListener('click', ()=>{
+  const spokenRaw = document.getElementById('transcriptArea').value.trim();
+  if(!spokenRaw) return;
+
+  const correctDisplay = VERSES[current].split(' ');
+  const correctNorm = correctDisplay.map(normalizeWord);
+  const spokenNorm = normalizeStr(spokenRaw).split(' ').filter(Boolean);
+
+  const ops = alignWords(correctNorm, spokenNorm);
+  const {html, extraWords, equalCount} = renderDiff(correctDisplay, ops);
+
+  const total = correctNorm.length;
+  const pct = Math.round((equalCount/total)*100);
+
+  document.getElementById('diffText').innerHTML = html;
+  const pill = document.getElementById('scorePill');
+  pill.textContent = arabicIndex(pct) + '٪';
+  pill.className = 'score-pill ' + (pct>=90?'good': pct>=60?'mid':'low');
+
+  const extraLine = document.getElementById('extraLine');
+  if(extraWords.length){
+    extraLine.style.display='block';
+    extraLine.innerHTML = 'كلمات زيادة قلتيها مش في الأصل: <b>' + extraWords.map(escapeHtml).join('، ') + '</b>';
+  } else {
+    extraLine.style.display='none';
+  }
+  document.getElementById('resultBox').style.display = 'block';
+
+  revealed = true;
+  document.getElementById('verseText').style.display = 'block';
+  document.getElementById('hiddenNote').style.display = 'none';
+  document.getElementById('revealBtn').textContent = '🙈 إخفاء البيت';
+
+  attempts++;
+  scoreSum += pct;
+  document.getElementById('statAttempts').textContent = arabicIndex(attempts);
+  document.getElementById('statAvg').textContent = arabicIndex(Math.round(scoreSum/attempts)) + '٪';
+  if(pct > bestScore){
+    bestScore = pct;
+    bestVerse = current+1;
+    document.getElementById('statBest').textContent = 'بيت ' + arabicIndex(bestVerse) + ' (' + arabicIndex(pct) + '٪)';
+  }
+});
+
+/* =========================================================
+   FULL POEM MODE
+   ========================================================= */
+document.getElementById('fullRevealBtn').addEventListener('click', ()=>{
+  const el = document.getElementById('fullVerseText');
+  const note = document.getElementById('fullHiddenNote');
+  const shown = el.style.display === 'block';
+  if(shown){
+    el.style.display='none'; note.style.display='block';
+    document.getElementById('fullRevealBtn').textContent = '👁 اظهار القصيدة';
+  } else {
+    el.innerHTML = VERSES.map((v,i)=> `<span class="verse-mark">${arabicIndex(i+1)}</span>${escapeHtml(v)}`).join('  ');
+    el.style.display='block'; note.style.display='none';
+    document.getElementById('fullRevealBtn').textContent = '🙈 إخفاء القصيدة';
+  }
+});
+
+document.getElementById('compareBtnFull').addEventListener('click', ()=>{
+  const spokenRaw = document.getElementById('transcriptAreaFull').value.trim();
+  if(!spokenRaw) return;
+
+  // build full poem display + norm word arrays, remembering verse boundaries
+  const fullDisplay = [];
+  const verseOfWord = []; // index -> verse number (0-based)
+  VERSES.forEach((v,vi)=>{
+    v.split(' ').forEach(w=>{
+      fullDisplay.push(w);
+      verseOfWord.push(vi);
+    });
+  });
+  const fullNorm = fullDisplay.map(normalizeWord);
+  const spokenNorm = normalizeStr(spokenRaw).split(' ').filter(Boolean);
+  const ops = alignWords(fullNorm, spokenNorm);
+
+  // بدل ما نعرض كل الكلام كتلة واحدة، نجمّع كل بيت في سطر لوحده مع نسبة دقته
+  let correctIdx = 0;
+  const verseHtmlParts = VERSES.map(()=>'');
+  const verseCorrect = new Array(VERSES.length).fill(0);
+  const verseTotal = new Array(VERSES.length).fill(0);
+  const extraWords = [];
+  let equalCount = 0;
+
+  ops.forEach(op=>{
+    if(op.type === 'extra'){ extraWords.push(op.spoken); return; }
+    const vi = verseOfWord[correctIdx];
+    verseTotal[vi]++;
+    if(op.type === 'equal'){
+      verseHtmlParts[vi] += `<span class="w-ok">${escapeHtml(fullDisplay[correctIdx])}</span> `;
+      verseCorrect[vi]++; equalCount++;
+    } else if(op.type === 'replace'){
+      verseHtmlParts[vi] += `<span class="w-wrong">${escapeHtml(fullDisplay[correctIdx])}</span> `;
+    } else if(op.type === 'missing'){
+      verseHtmlParts[vi] += `<span class="w-missing">${escapeHtml(fullDisplay[correctIdx])}</span> `;
+    }
+    correctIdx++;
+  });
+
+  let html = '';
+  VERSES.forEach((v,vi)=>{
+    const p = verseTotal[vi] ? Math.round((verseCorrect[vi]/verseTotal[vi])*100) : 0;
+    const pctClass = p>=90 ? 'good' : p>=60 ? 'mid' : 'low';
+    html += `<div class="diff-verse-line"><span class="verse-mark">${arabicIndex(vi+1)}</span>${verseHtmlParts[vi].trim()}<span class="verse-pct ${pctClass}">${arabicIndex(p)}٪</span></div>`;
+  });
+  document.getElementById('diffTextFull').innerHTML = html;
+
+  const total = fullNorm.length;
+  const pct = Math.round((equalCount/total)*100);
+  const pill = document.getElementById('scorePillFull');
+  pill.textContent = arabicIndex(pct) + '٪';
+  pill.className = 'score-pill ' + (pct>=90?'good': pct>=60?'mid':'low');
+
+  const extraLine = document.getElementById('extraLineFull');
+  if(extraWords.length){
+    extraLine.style.display='block';
+    extraLine.innerHTML = 'كلمات زيادة قلتيها مش في الأصل: <b>' + extraWords.map(escapeHtml).join('، ') + '</b>';
+  } else {
+    extraLine.style.display='none';
+  }
+
+  const grid = document.getElementById('verseScoresGrid');
+  grid.innerHTML = '';
+  VERSES.forEach((v,i)=>{
+    const p = verseTotal[i] ? Math.round((verseCorrect[i]/verseTotal[i])*100) : 0;
+    const cell = document.createElement('div');
+    cell.className = 'vs-cell';
+    cell.style.background = p>=90 ? 'var(--green-bg)' : p>=60 ? 'var(--orange-bg)' : 'var(--red-bg)';
+    cell.style.color = p>=90 ? 'var(--green)' : p>=60 ? 'var(--orange)' : 'var(--red)';
+    cell.innerHTML = `<b>${arabicIndex(i+1)}</b>${arabicIndex(p)}٪`;
+    cell.title = 'اضغطي عشان تراجعي البيت ده لوحده';
+    cell.style.cursor = 'pointer';
+    cell.addEventListener('click', ()=>{
+      tabSingle.click();
+      loadVerse(i);
+    });
+    grid.appendChild(cell);
+  });
+
+  document.getElementById('resultBoxFull').style.display = 'block';
+});
+
+loadVerse(0);
+</script>
+</body>
+</html>

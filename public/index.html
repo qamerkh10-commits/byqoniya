@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>المنظومة البيقونية</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <div>جاري التحميل...</div>
+</div>
+
+<div class="app-shell" id="appShell" style="display:none;">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-block">
+      <h1 class="brand">المنظومة البيقونية</h1>
+      <div class="brand-sub">في مصطلح الحديث</div>
+    </div>
+
+    <ul class="nav-list" id="navList">
+      <!-- تُملأ ديناميكيًا -->
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <span id="usernameLabel">—</span>
+        <span class="role-badge" id="roleBadge">مستخدم</span>
+      </div>
+      <a href="/admin.html" class="btn secondary" id="adminLink" style="display:none; margin-bottom:8px;">لوحة تحكم المطور</a>
+      <button class="btn danger" id="logoutBtn">تسجيل الخروج</button>
+    </div>
+  </aside>
+
+  <div class="main-area">
+    <div class="mobile-topbar">
+      <button id="menuToggle">☰</button>
+      <strong id="mobileTitle">المنظومة البيقونية</strong>
+      <span></span>
+    </div>
+
+    <div class="topbar">
+      <div class="page-title" id="pageTitle">اختر صفحة من القائمة</div>
+      <div class="actions"></div>
+    </div>
+
+    <div class="content-frame-wrap" id="frameWrap">
+      <div class="empty-state">
+        <div class="big">📚</div>
+        <div>اختر أحد الأقسام من القائمة الجانبية للبدء</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

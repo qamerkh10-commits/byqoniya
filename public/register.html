@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنشاء حساب — المنظومة البيقونية</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="brand">المنظومة البيقونية</h1>
+      <div class="subtitle">أنشئ حسابك الجديد</div>
+
+      <div class="error-box" id="errorBox"></div>
+
+      <form id="regForm">
+        <div class="field">
+          <label>اسم المستخدم</label>
+          <input type="text" id="username" autocomplete="username" required minlength="3" maxlength="30">
+        </div>
+        <div class="field">
+          <label>كلمة المرور</label>
+          <input type="password" id="password" autocomplete="new-password" required minlength="6">
+        </div>
+        <button class="btn" type="submit" id="submitBtn">إنشاء الحساب</button>
+      </form>
+
+      <div class="switch-link">
+        عندك حساب بالفعل؟ <a href="/login.html">تسجيل الدخول</a>
+      </div>
+    </div>
+  </div>
+
+<script>
+const form = document.getElementById('regForm');
+const errorBox = document.getElementById('errorBox');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorBox.style.display = 'none';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'جاري الإنشاء...';
+
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+      }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'تعذر إنشاء الحساب');
+    window.location.href = '/index.html';
+  } catch (err) {
+    errorBox.textContent = err.message;
+    errorBox.style.display = 'block';
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'إنشاء الحساب';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شرح المنظومة البيقونية في مصطلح الحديث — عرض تفاعلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* أبعاد وانحناءات مشتركة بين كل الثيمات */
+  --radius-sm: 16px;
+  --radius-md: 28px;
+  --radius-lg: 48px;
+  --shadow: 0 10px 25px -5px rgba(0,0,0,0.06), 0 8px 10px -6px rgba(0,0,0,0.02);
+}
+
+/* ============ ثيم ١: المخطوطة — أخضر داكن + ذهبي على كريمي (افتراضي) ============ */
+:root, [data-theme="manuscript"]{
+  --bg-body: #ece3cd;
+  --bg-slide: #fdfaf2;
+  --surface: #fffdf6;
+  --primary: #21493a;
+  --primary-dark: #143025;
+  --primary-light: #e1e8d6;
+  --secondary: #a9812f;
+  --secondary-light: #f2e7c6;
+  --accent-2: #cba656;
+  --heading: #17352a;
+  --on-dark: #e1e8d6;
+  --text-main: #2c2517;
+  --text-muted: #7d7057;
+  --border-color: #ddd0a9;
+}
+
+/* ============ ثيم ٢: ليلي — أخضر مطفأ وذهبي هادئ على خلفية داكنة ============ */
+[data-theme="layali"]{
+  --bg-body: #121815;
+  --bg-slide: #1b2420;
+  --surface: #202b26;
+  --primary: #5c8a72;
+  --primary-dark: #3a5c4a;
+  --primary-light: #26332c;
+  --secondary: #c9a15a;
+  --secondary-light: #2c2718;
+  --accent-2: #dcb877;
+  --heading: #aad3bb;
+  --on-dark: #cfe3d6;
+  --text-main: #e9e4d6;
+  --text-muted: #9aa89e;
+  --border-color: #33403a;
+}
+
+/* ============ ثيم ٣: سلوي — أخضر مريمية وطيني هادئ على خلفية فاتحة ============ */
+[data-theme="salvia"]{
+  --bg-body: #f1f2ec;
+  --bg-slide: #ffffff;
+  --surface: #ffffff;
+  --primary: #5a7461;
+  --primary-dark: #3c5347;
+  --primary-light: #e7ebe1;
+  --secondary: #b17f52;
+  --secondary-light: #f2e5d6;
+  --accent-2: #cf9f6e;
+  --heading: #3c5347;
+  --on-dark: #e7ebe1;
+  --text-main: #33362f;
+  --text-muted: #7d8577;
+  --border-color: #e0e2d8;
+}
+
+html,body{height:100%;width:100%;background:var(--bg-body);font-family:'Cairo',sans-serif;color:var(--text-main);overflow:hidden;transition:background .35s ease}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+#shell{position:fixed;left:50%;top:50%;width:1600px;height:900px;transform:translate(-50%,-50%) scale(1);transform-origin:center center;display:grid;grid-template-columns:1fr;grid-template-rows:auto 1fr auto;z-index:1;overflow:hidden; background:var(--bg-slide); border-radius:var(--radius-lg); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);}
+
+#matn-pane{grid-row:1/2;background:linear-gradient(180deg,var(--primary-dark) 0%,var(--primary) 100%);border-bottom:6px solid var(--secondary);display:flex;flex-direction:column;position:relative;overflow:hidden;max-height:0;transition:max-height .45s cubic-bezier(.4,0,.2,1); border-bottom-left-radius:var(--radius-md); border-bottom-right-radius:var(--radius-md); z-index: 10;}
+#matn-pane.has-matn{max-height:200px}
+#matn-pane::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 1px,transparent 1px,transparent 40px)}
+#matn-body{padding:16px 60px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px}
+.matn-sec-label{font-size:1.05rem;color:var(--secondary-light);font-weight:700;letter-spacing:.1em;opacity:0;transition:opacity .4s ease;text-align:center; background: rgba(255,255,255,0.15); padding: 6px 20px; border-radius: 999px;}
+.matn-sec-label.vis{opacity:1}
+#matn-text{font-family:'Amiri Quran',serif;font-size:1.6rem;line-height:1.85;color:#ffffff;opacity:0;transform:translateY(-6px);transition:opacity .5s ease,transform .5s ease;text-align:center;max-width:1000px}
+#matn-text.vis{opacity:1;transform:translateY(0)}
+#slide-counter{font-size:1.1rem;color:var(--primary);font-weight:700;direction:ltr;line-height:1; background: var(--primary-light); padding: 8px 20px; border-radius: 999px;}
+#slide-counter span{color:var(--heading)}
+
+#content-pane{grid-row:2/3;position:relative;overflow:hidden;background:transparent}
+#prog{position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(to right,var(--secondary),var(--accent-2));transform-origin:right;transition:width .45s cubic-bezier(.4,0,.2,1);z-index:10; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;}
+
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;justify-content:safe center;padding:30px 100px;opacity:0;pointer-events:none;transition:opacity .5s ease;overflow-y:auto}
+.slide.active{opacity:1;pointer-events:all}
+.slide.active .s-heading{animation:up .4s ease .05s both}
+.slide.active .s-title {animation:up .45s ease .12s both}
+.slide.active .s-rule  {animation:up .4s ease .18s both}
+.slide.active .s-body  {animation:up .45s ease .22s both}
+.slide.active .hbox    {animation:up .45s ease .28s both}
+.slide.active .ibox    {animation:up .4s ease .32s both}
+.slide.active .grid2   {animation:up .45s ease .22s both}
+.slide.active .flist   {animation:up .45s ease .24s both}
+.slide.active .badge   {animation:up .35s ease .1s both}
+.slide.active .diagram-box {animation:up .45s ease .26s both}
+@keyframes up{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+
+.slide.cover{background:radial-gradient(circle at center, var(--primary) 0%, var(--primary-dark) 100%);justify-content:center;align-items:center;text-align:center; border-radius:var(--radius-lg);}
+.cover-orn{font-size:3.5rem;color:var(--secondary);opacity:.9;margin-bottom:20px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));}
+.cover-sub{font-size:1.3rem;color:var(--on-dark);letter-spacing:.15em;margin-bottom:16px; font-weight:700;}
+.cover-title{font-family:'Amiri',serif;font-size:4.5rem;color:#ffffff;line-height:1.5;margin-bottom:10px; text-shadow: 0 6px 15px rgba(0,0,0,0.4);}
+.cover-hr{width:150px;height:5px;margin:30px auto;background:var(--secondary); border-radius: 999px;}
+.cover-body{font-size:1.4rem;color:rgba(255,255,255,.9);line-height:2; font-weight: 400;}
+
+.slide.sec-slide{background:var(--secondary-light);justify-content:flex-end;padding:0;overflow:hidden; border-radius:var(--radius-lg);}
+.sec-bg{position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,0,0,0.05) 0%, transparent 55%);}
+.sec-inner{position:relative;z-index:2;padding:60px 100px;display:flex;flex-direction:column;height:100%;justify-content:center}
+.sec-num-badge{display:inline-flex;align-items:center;gap:10px;background:var(--secondary);color:white;font-size:1.25rem;font-weight:800;letter-spacing:.08em;padding:10px 30px;border-radius:999px;margin-bottom:28px;align-self:flex-start; box-shadow:0 8px 20px rgba(0,0,0,0.18);}
+.sec-title{font-family:'Amiri',serif;font-size:4rem;color:var(--text-main);line-height:1.5;max-width:850px; font-weight: 700;}
+.sec-matn-box{margin-top:35px;background:var(--surface);border-radius:var(--radius-md);padding:30px 40px;max-width:800px;box-shadow:var(--shadow); border-right: 8px solid var(--secondary);}
+.sec-matn-label{font-size:1.1rem;color:var(--secondary);letter-spacing:.1em;margin-bottom:12px; font-weight:800;}
+.sec-matn-text{font-family:'Amiri Quran',serif;font-size:1.7rem;color:var(--heading);line-height:1.9}
+
+.s-heading{font-size:1.3rem;color:var(--secondary);letter-spacing:.1em;margin-bottom:14px;font-weight:800; background: var(--secondary-light); display: inline-block; padding: 6px 20px; border-radius: 999px;}
+.s-title{font-family:'Amiri',serif;font-size:3rem;color:var(--heading);line-height:1.45;margin-bottom:18px; font-weight: 700;}
+.s-rule{height:4px;margin-bottom:22px;background:var(--primary-light); border-radius: 999px; width: 80px;}
+.s-body{font-size:1.45rem;color:var(--text-main);line-height:1.95; font-weight: 600;}
+.s-body p{margin-bottom:12px}
+.s-body strong{color:var(--heading);font-weight:800}
+
+.hbox{background:var(--surface); border-radius:var(--radius-md); padding:24px 30px; margin:14px 0; box-shadow:var(--shadow); border: 1px solid var(--border-color); border-right: 8px solid var(--secondary);}
+.hbox-text{font-family:'Amiri Quran',serif;font-size:1.65rem;color:var(--heading);line-height:1.95}
+.hbox-src{font-size:1.2rem;color:var(--text-muted);margin-top:14px;border-top:2px dashed var(--border-color);padding-top:14px; font-weight: 700;}
+
+.ibox{background:var(--primary-light); border-radius:var(--radius-md); border:none; padding:24px 30px; margin:16px 0; box-shadow:var(--shadow);}
+.ibox-lbl{font-size:1.25rem;color:var(--heading);margin-bottom:10px;font-weight:800}
+.ibox-text{font-family:'Amiri',serif;font-size:1.55rem;color:var(--heading);line-height:1.9}
+
+.flist{list-style:none;padding:0; margin: 16px 0;}
+.flist li{padding:16px 22px; margin-bottom:12px; background: var(--surface); border-radius: var(--radius-sm); color:var(--text-main); font-size:1.45rem; font-weight:600; line-height:1.75; display:flex; align-items:flex-start; gap:16px; box-shadow: 0 4px 8px rgba(0,0,0,0.03); border: 1px solid var(--border-color);}
+.flist li::before{content:'✓';color:var(--secondary);font-size:1.4rem;font-weight:900;margin-top:2px;flex-shrink:0; background: var(--secondary-light); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px}
+.gcol{background:var(--surface); border-radius:var(--radius-md); border:1px solid var(--border-color); padding:26px; box-shadow:var(--shadow);}
+.gcol-h{font-size:1.25rem;color:var(--secondary);margin-bottom:14px;font-weight:800; border-bottom: 2px solid var(--secondary-light); padding-bottom: 8px;}
+.gcol-b{font-family:'Amiri',serif;font-size:1.45rem;color:var(--text-main);line-height:1.8}
+
+.defbox{background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%); border-radius:var(--radius-md); padding:30px 40px; margin:20px 0; box-shadow:var(--shadow); border:none; position: relative; overflow: hidden;}
+.defbox::before {content: ''; position: absolute; top: -60px; right: -60px; width: 150px; height: 150px; background: rgba(255,255,255,0.08); border-radius: 50%;}
+.defbox-label{font-size:1.2rem;color:var(--on-dark);letter-spacing:.1em;margin-bottom:14px; font-weight: 800;}
+.defbox-text{font-family:'Amiri Quran',serif;font-size:1.8rem;color:white;line-height:1.95}
+
+/* تم تعديل التنسيقات هنا لحل مشكلة القص وتجاوز الحواف */
+.diagram-box { background: var(--surface); border-radius: var(--radius-md); padding: 35px 25px; margin: 20px 0; box-shadow: var(--shadow); border: 2px solid var(--border-color); text-align: center; }
+.diagram-title { font-size: 1.5rem; color: var(--secondary); font-weight: 800; margin-bottom: 30px; background: var(--secondary-light); display: inline-block; padding: 8px 30px; border-radius: 999px; }
+.chain { display: flex; align-items: center; justify-content: center; gap: 14px; direction: rtl; width: 100%; flex-wrap: nowrap;}
+.node { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 160px; height: 95px; border-radius: var(--radius-sm); background: var(--primary-light); color: var(--text-main); font-weight: 800; font-size: 1.25rem; border: 3px solid var(--primary); text-align: center; line-height: 1.4; box-shadow: 0 6px 12px rgba(0,0,0,0.1); transition: transform 0.3s;}
+.node:hover { transform: translateY(-5px); }
+.node small { font-size: 1rem; font-weight: 600; opacity: 0.85; margin-top: 4px; }
+.node.prophet { background: linear-gradient(135deg, var(--secondary-light), var(--accent-2)); border-color: var(--secondary); color:var(--heading); box-shadow: 0 6px 15px rgba(0,0,0,0.12);}
+.node.missing { background: var(--surface); border: 3px dashed #b3564a; color: #b3564a; opacity: 0.85; box-shadow: none;}
+.node.author { background: var(--primary-dark); color: #fff; border-color: var(--primary-dark); }
+.arrow { font-size: 2.2rem; color: var(--primary); font-weight: 900;}
+.arrow.broken { color: #b3564a; opacity: 0.6; }
+
+#nav-pane{grid-row:3/4;grid-column:1/2;background:var(--bg-slide);border-top:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;padding:20px 70px; border-bottom-left-radius:var(--radius-lg); border-bottom-right-radius:var(--radius-lg);}
+.nav-btn{display:flex;align-items:center;gap:10px;background:var(--primary-light);border:none; border-radius:999px; color:var(--heading);padding:12px 34px;font-family:'Cairo',sans-serif;font-size:1.3rem;cursor:pointer;transition:all .3s ease;font-weight:800}
+.nav-btn:hover:not(:disabled){background:var(--primary);color:white; transform:scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.18);}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed; background: var(--border-color); color: var(--text-muted); box-shadow:none; transform:none;}
+
+#dots{display:flex;gap:8px;align-items:center;transition:opacity .45s ease;flex-wrap:wrap;max-width:700px;justify-content:center}
+.dot{width:10px;height:10px;border-radius:999px;background:var(--border-color);transition:all .3s ease;cursor:pointer}
+.dot.on{background:var(--secondary);transform:scale(1.6); width: 22px;}
+
+.orn{position:absolute;width:80px;height:80px;opacity:.04;pointer-events:none; border-radius: 50%;}
+.orn-tr{top:-25px;left:-25px;background: var(--primary);}
+.orn-bl{bottom:-25px;right:-25px;background: var(--secondary);}
+
+body.idle .nav-btn,body.idle #dots{opacity:0.3;}
+body.idle{cursor:default}
+
+#ap-mark{animation:apPulse 1.6s ease-in-out infinite}
+@keyframes apPulse{0%,100%{opacity:.3}50%{opacity:1}}
+#ap-toast{position:absolute;bottom:100px;left:50%;transform:translateX(-50%);background:var(--primary-dark);color:white;font-family:'Cairo',sans-serif;font-size:1.2rem;padding:12px 30px;border-radius:999px;box-shadow:var(--shadow);opacity:0;transition:opacity .35s ease, transform .3s ease;pointer-events:none;z-index:20;white-space:nowrap; font-weight:700;}
+#ap-toast.show{opacity:1; transform:translate(-50%, -15px);}
+
+.frag{opacity:0;transform:translateY(20px);transition:opacity .45s ease,transform .45s cubic-bezier(0.34, 1.56, 0.64, 1)}
+.frag.frag-on{opacity:1;transform:translateY(0)}
+.slide.active .frag{animation:none}
+
+.ibox.athar{background:var(--secondary-light);}
+.ibox.athar .ibox-lbl{color:var(--secondary)}
+.ibox.athar .ibox-text{color:var(--text-main)}
+
+.slide.dense{padding:30px 100px 25px}
+.slide.dense .s-heading{margin-bottom:8px}
+.slide.dense .s-title{font-size:2.4rem}
+.slide.dense .s-rule{margin:8px 0 16px}
+.slide.dense .s-body{font-size:1.3rem;line-height:1.75}
+.slide.dense .hbox-text{font-size:1.4rem}
+.slide.dense .ibox-text{font-size:1.35rem}
+.slide.dense .defbox-text{font-size:1.45rem}
+.slide.dense .gcol-b{font-size:1.3rem}
+.slide.dense .flist li{font-size:1.3rem;padding:12px 20px}
+.slide.dense .mtable{font-size:1.25rem}
+
+.mtable-wrap{margin:16px 0;overflow:hidden;border:1px solid var(--border-color); border-radius:var(--radius-md); box-shadow:var(--shadow);}
+table.mtable{width:100%;border-collapse:collapse;font-size:1.35rem; background:var(--surface); font-weight:600;}
+table.mtable thead th{background:var(--primary);color:white;font-family:'Cairo',sans-serif;font-weight:800;padding:18px 22px;text-align:right;font-size:1.25rem}
+table.mtable tbody td{padding:16px 22px;border-top:1px solid var(--border-color);vertical-align:top;line-height:1.7}
+table.mtable tbody tr:nth-child(odd) td:first-child{background:var(--primary-light);font-weight:800;color:var(--heading)}
+table.mtable tbody tr:nth-child(even) td:first-child{background:#f8fafc;font-weight:800;color:var(--text-main)}
+
+.pageno{position:absolute;bottom:16px;left:30px;font-size:1.05rem;color:var(--text-muted);z-index:5; font-weight: 700;}
+
+#theme-switch{position:fixed;top:18px;left:18px;z-index:999;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.28);backdrop-filter:blur(6px);padding:7px 10px;border-radius:999px;box-shadow:0 6px 16px rgba(0,0,0,0.2);}
+.ts-dot{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,0.65);cursor:pointer;transition:transform .2s ease,border-color .2s ease;padding:0}
+.ts-dot:hover{transform:scale(1.12)}
+.ts-dot.on{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,0.25)}
+.ts-dot[data-t="manuscript"]{background:linear-gradient(135deg,#21493a 50%,#a9812f 50%)}
+.ts-dot[data-t="layali"]{background:linear-gradient(135deg,#1b2420 50%,#c9a15a 50%)}
+.ts-dot[data-t="salvia"]{background:linear-gradient(135deg,#5a7461 50%,#b17f52 50%)}
+</style>
+</head>
+<body>
+<div id="theme-switch" role="group" aria-label="اختيار الثيم">
+  <button class="ts-dot" data-t="manuscript" title="المخطوطة"></button>
+  <button class="ts-dot" data-t="layali" title="ليلي"></button>
+  <button class="ts-dot" data-t="salvia" title="سلوي"></button>
+</div>
+<div id="shell">
+
+  <div id="matn-pane">
+    <div id="matn-body">
+      <div class="matn-sec-label" id="matn-sec-label"></div>
+      <div id="matn-text"></div>
+    </div>
+  </div>
+
+  <div id="content-pane">
+    <div id="prog"></div>
+    <div class="orn orn-tr"></div>
+    <div class="orn orn-bl"></div>
+
+    <div class="slide cover active" data-matn="" data-matn-sec="">
+      <div style="max-width:900px;width:100%">
+        <div class="cover-orn">﷽</div>
+        <div class="cover-sub">شرح ابن عثيمين رحمه الله</div>
+        <div class="cover-title">المنظومة البيقونية<br>في مصطلح الحديث</div>
+        <div class="cover-hr"></div>
+        <div class="cover-body">تأليف: محمد بن صالح العثيمين (ت ١٤٢١هـ) — تحقيق: فهد بن ناصر السليمان<br>عرض تفاعلي شامل — ٣٤ بيتاً في ٣٢ نوعاً من أنواع الحديث</div>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <div>
+        <div class="s-heading">بطاقة الكتاب</div>
+        <div class="s-title">شرح المنظومة البيقونية</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الكتاب: شرح المنظومة البيقونية في مصطلح الحديث</li>
+            <li>المؤلف: محمد بن صالح بن محمد العثيمين (ت ١٤٢١هـ)</li>
+            <li>المحقق: فهد بن ناصر بن إبراهيم السليمان</li>
+            <li>عدد صفحات الأصل: ١٢٢ صفحة</li>
+            <li>عدد أبيات المنظومة: ٣٤ بيتاً (٣٢ نوعاً من أنواع الحديث)</li>
+            <li>ناظم المنظومة: طه بن محمد الفتحي البيقوني</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- تقسيم المتن إلى 7 أجزاء لضمان عدم ظهور شريط التمرير -->
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 1 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١)</span> &nbsp; أبدأُ بالحمدِ مُصَلِّياً على مُحمَّدٍ خَيرِ نبيٍّ أُرسلا</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢)</span> &nbsp; وذِي مِنَ أقسَامِ الحديثِ عدَّه وكُلُّ واحدٍ أتى وحَدَّه</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٣)</span> &nbsp; أوَّلُها الصحيحُ وهوَ ما اتَّصَل إسنادُهُ ولْم يُشَذَّ أو يُعَلّ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٤)</span> &nbsp; يَرْويهِ عَدْلٌ ضَابِطٌ عَنْ مِثْلِهِ مُعْتَمَدٌ في ضَبْطِهِ ونَقْلِهِ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٥)</span> &nbsp; وَالَحسَنُ الَمعْرُوفُ طُرْقاً وغَدَتْ رِجَالُهُ لا كالصّحيحِ اشْتَهَرَتْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 2 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٦)</span> &nbsp; وكُلُّ ما عَنْ رُتبةِ الُحسْنِ قَصْر فَهْوَ الضعيفُ وهوَ أقْساماً كُثُرْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٧)</span> &nbsp; وما أُضيفَ للنبي الَمرْفوعُ وما لتَابِعٍ هُوَ المقْطوعُ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٨)</span> &nbsp; والُمسْنَدُ الُمتَّصِلُ الإسنادِ مِنْ راويهِ حتَّى الُمصْطفى ولْم يَبِنْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٩)</span> &nbsp; ومَا بِسَمْعِ كُلِّ رَاوٍ يَتَّصِلْ إسْنَادُهُ للمُصْطَفى فَالُمتَّصِلْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٠)</span> &nbsp; مُسَلْسَلٌ قُلْ مَا عَلَى وَصْفٍ أتَى مِثْلُ أمَا واللهِ أنْبأنِي الفتى</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 3 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١١)</span> &nbsp; كذَاكَ قَدْ حَدَّثَنِيهِ قائِماً أوْ بَعْدَ أنْ حَدَّثَنِي تَبَسَّمَا</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٢)</span> &nbsp; عَزيزٌ مَروِيُّ اثنَيِن أوْ ثَلاثهْ مَشْهورٌ مَرْوِيُّ فَوْقَ ما ثَلاثهْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٣)</span> &nbsp; مَعَنْعَنٌ كَعَن سَعيدٍ عَنْ كَرَمْ وَمُبهَمٌ مَا فيهِ رَاوٍ لْم يُسَمْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٤)</span> &nbsp; وكُلُّ مَا قَلَّت رِجَالُهُ عَلا وضِدُّهُ ذَاكَ الذِي قَدْ نَزَلا</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٥)</span> &nbsp; ومَا أضَفْتَهُ إلى الأصْحَابِ مِنْ قَوْلٍ وفعْلٍ فهْوَ مَوْقُوفٌ زُكِنْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 4 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٦)</span> &nbsp; وَمُرْسلٌ مِنهُ الصَّحَابيُّ سَقَطْ وقُلْ غَريبٌ ما رَوَى رَاوٍ فَقطْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٧)</span> &nbsp; وكلُّ مَا لْم يَتَّصِلْ بِحَالٍ إسْنَادُهُ مُنْقَطِعُ الأوْصالِ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٨)</span> &nbsp; والُمعْضَلُ السَّاقِطُ مِنْهُ اثْنَانِ ومَا أتى مُدَلَّساً نَوعانِ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(١٩)</span> &nbsp; الأوَّلُ الإسْقاطُ للشَّيخِ وأنْ يَنْقُلَ عَمَّنْ فَوْقَهُ بعنْ وأنْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٠)</span> &nbsp; والثَّانِ لا يُسْقِطُهُ لكنْ يَصِفْ أوْصَافَهُ بما بهِ لا يَنْعرِفْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 5 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢١)</span> &nbsp; ومَا يَخالِفُ ثِقةٌ فيهِ الَملا فـالشَّاذُّ والَمقْلوبُ قِسْمَانِ تَلا</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٢)</span> &nbsp; إبْدَالُ راوٍ ما بِرَاوٍ قِسْمُ وقَلْبُ إسْنَادٍ لمتنٍ قِسمُ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٣)</span> &nbsp; وَالفَرَدُ ما قَيَّدْتَهُ بثِقَةِ أوْ جْمعٍ أوْ قَصِرَ على روايةِ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٤)</span> &nbsp; ومَا بعِلَّةٍ غُمُوضٍ أوْ خَفَا مُعَلَّلٌ عِنْدَهُمُ قَدْ عُرِفَا</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٥)</span> &nbsp; وذُو اخْتِلافِ سنَدٍ أو مَتْنٍ مُضْطربٌ عِنْدَ أهيْلِ الفَنِّ</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 6 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٦)</span> &nbsp; وَالُمدْرَجاتُ في الحديثِ ما أتَتْ مِنْ بَعْضِ ألفاظِ الرُّوَاةِ اتَّصَلَتْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٧)</span> &nbsp; ومَا رَوى كلُّ قَرِينٍ عنْ أخِهْ مُدَبَّجٌ فَاعْرِفْهُ حَقًّا وانْتَخِهْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٨)</span> &nbsp; مُتَّفِقٌ لَفْظاً وخطاً مُتَّفقْ وضِدُّهُ فيما ذَكَرْنَا الُمفْترقْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٢٩)</span> &nbsp; مُؤْتَلِفٌ مُتَّفِقُ الخطِّ فَقَطْ وضِدُّهُ مُختَلِفٌ فَاخْشَ الغَلَطْ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٣٠)</span> &nbsp; والُمنْكَرُ الفَردُ بهِ رَاوٍ غَدَا تَعْدِيلُهُ لا يْحمِلُ التَّفَرُّدَا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide dense">
+      <div>
+        <div class="s-heading">متن المنظومة كاملاً — الجزء 7 من 7</div>
+        <div class="s-title">نصّ منظومة البيقوني رحمه الله</div>
+        <div class="s-rule"></div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٣١)</span> &nbsp; مَتُروكُهُ مَا وَاحِدٌ بهِ انفَردْ وأجَمعُوا لضَعْفِه فَهُوَ كرَدّ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٣٢)</span> &nbsp; والكذِبُ الُمخْتَلَقُ المصنُوعُ علَى النَّبيِّ فذَلِكَ الموْضوعُ</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٣٣)</span> &nbsp; وقَدْ أتَتْ كالَجوْهَرِ المكْنُونِ سَمَّيْتُهَا: مَنْظُومَةَ البَيْقُوني</div>
+        </div>
+        <div class="hbox" style="text-align:center">
+          <div class="hbox-text"><span style="color:var(--secondary);font-weight:800;font-family:'Cairo',sans-serif;font-size:.8em">(٣٤)</span> &nbsp; فَوْقَ الثَّلاثيَن بأرْبَعٍ أتَتْ أقْسامُهَا ثمَّ بخيٍر خُتِمتْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="المصطلح: علمٌ يُعرف به أحوال الراوي والمروي من حيث القبول والرد" data-matn-sec="تمهيد — ص ١١ – ١٣">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">مقدمة</div>
+        <div class="sec-title">مقدمة في علم مصطلح الحديث</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">المصطلح: علمٌ يُعرف به أحوال الراوي والمروي من حيث القبول والرد</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">المقدمة</div>
+        <div class="s-title">تعريف علم المصطلح وفائدته</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>المصطلح: عِلمٌ يُعرف به أحوال الراوي والمروي من حيث القبول والرد</li>
+            <li>فائدته: تنقية الأدلة الحديثية وتخليصها مما يشوبها من ضعيفٍ وغيره، ليُتمكَّن من الاستدلال بها</li>
+            <li>المستدلُّ بالسنة يحتاج إلى أمرين: (١) ثبوتها عن النبي ﷺ  (٢) ثبوت دلالتها على الحكم</li>
+            <li>أهمية العناية بالسنة: لأنه يُبنى عليها ما كلَّف الله به العباد من عقائد وعبادات وأخلاق</li>
+        </ul>
+        <div class="s-body"><p>لماذا يختص هذا العلم بالحديث دون القرآن؟ لأن القرآن نُقل إلينا نقلاً متواتراً قطعياً لفظاً ومعنى، ونقله الأصاغر عن الأكابر، فلا يحتاج إلى بحثٍ عن ثبوته؛ بخلاف السنة فثبوتها إلى النبي ﷺ يختص بالحديث ويحتاج إلى هذا العلم.</p></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">المقدمة</div>
+        <div class="s-title">قسما علم الحديث: الرواية والدراية</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الوجه</th><th>علم الحديث رواية</th><th>علم الحديث دراية</th></tr></thead>
+        <tbody>
+            <tr><td>التعريف</td><td>يبحث عمّا يُنقل عن النبي ﷺ من أقوال وأفعال وأحوال</td><td>يبحث عن أحوال الراوي والمروي من حيث القبول والرد</td></tr>
+            <tr><td>موضوعه</td><td>ذات النبي ﷺ وما يصدر عنها؛ ومن الأفعال: الإقرار</td><td>هل الراوي مقبول أم مردود؟ وما المقبول والمردود؟</td></tr>
+            <tr><td>مثاله</td><td>هل هذا قول أو فعل أو حال؟ وهل يدلّ على كذا؟</td><td>هل هذا الراوي مقبول أم مردود؟</td></tr>
+        </tbody>
+      </table></div>
+        <div class="ibox athar">
+          <div class="ibox-text">قَبولُ الراوي لا يستلزم قَبولَ المروي؛ فقد يكون رجال السند ثقاتٍ عدولاً، لكن المتن شاذًّا أو معللاً فلا يُقبل. وقد لا يصل رجال السند إلى حدّ الثقة، ومع ذلك يكون الحديث نفسه مقبولاً لشواهد من الكتاب والسنة. فالمصطلح إذن: معرفة ما يُقبل وما يُردّ من الحديث؛ وهذا مهمٌّ لأن الأحكام الشرعية مبنية على ثبوت الدليل وعدمه، وصحته وضعفه.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="البسملة: جارٌّ ومجرور «بسم» + مضاف إليه «الله» + صفة «الرحمن الرحيم»" data-matn-sec="شرح البسملة — ص ١٧ – ٢١">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">شرح</div>
+        <div class="sec-title">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">البسملة: جارٌّ ومجرور «بسم» + مضاف إليه «الله» + صفة «الرحمن الرحيم»</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">شرح البسملة</div>
+        <div class="s-title">إعراب البسملة والمتعلَّق المحذوف</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>البسملة فيها: جارٌّ ومجرور «بسم»، ومضاف إليه هو لفظ الجلالة «الله»، وصفة «الرحمن الرحيم»</li>
+            <li>كل جارٍّ ومجرور لا بد له من التعلق بفعل أو معناه؛ فما هو المحذوف المتعلَّق به «بسم»؟</li>
+            <li>الأصح: أن المحذوف فعلٌ متأخرٌ مناسبٌ للمقام — لا اسم فاعل ولا فعل عام كـ«أبتدئ»</li>
+            <li>مثاله: يقرأ النظم ⟵ «بسم الله أقرأ» / ينظم ⟵ «بسم الله أنظم» / يتوضأ ⟵ «بسم الله أتوضأ»</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>السبب</th><th>التوضيح</th></tr></thead>
+        <tbody>
+            <tr><td>لماذا فعلٌ لا اسم فاعل؟</td><td>لأن الأصل في العمل الأفعال، فالفعل يعمل بلا شرط بخلاف العوامل الاسمية</td></tr>
+            <tr><td>لماذا مُتأخِّرٌ لا مُتقدِّم؟</td><td>(١) التيمُّن بتقديم اسم الله (٢) إفادة الحصر — «بسم الله أقرأ» أي لا باسم غيره</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">شرح البسملة</div>
+        <div class="s-title">معنى «اسم» ومعنى الباء</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>اسم: مشتقٌّ من السُّمُوّ (العلوّ) أو من السِّمَة (العلامة)</li>
+            <li>المراد به هنا العموم: كل اسم من أسماء الله الحسنى، لا اسم بعينه؛ لأن المفرد المضاف يفيد العموم</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">وَإِن تَعُدُّواْ نِعْمَةَ اللَّهِ لاَ تُحْصُوهَا</div>
+          <div class="hbox-src">سورة إبراهيم: ٣٤ — دليل على أن المفرد المضاف يفيد العموم</div>
+        </div>
+        <ul class="flist">
+            <li>الباء في «بسم الله»: للاستعانة (الراجح) — وقيل: للمصاحبة</li>
+            <li>قال بالمصاحبة: الزمخشري صاحب الكشاف (وهو معتزلي)؛ رجّحها لأن المعتزلة يرون استقلال الإنسان بعمله فلا يحتاج للاستعانة</li>
+            <li>الراجح: أنها للاستعانة التي تصاحب الفعل من أوله إلى آخره، وقد تفيد أيضاً معنى التبرك</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">شرح البسملة</div>
+        <div class="s-title">معنى «الله» و«الرحمن الرحيم»</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الله: عَلَمٌ على الذات العلية لا يُسمَّى به غيره؛ مشتقٌّ من الألوهية (التعبُّد بحبٍّ وتعظيم)</li>
+            <li>أصله «إله»، حُذفت الهمزة وعُوِّض عنها بـ«أل» فصارت «الله»</li>
+            <li>الرحمن: اسمٌ يدلّ على صفة الرحمة — معلومةُ المعنى، مجهولةُ الكيفية، معلومةُ الآثار</li>
+            <li>الرحيم: اسمٌ متضمِّنٌ للرحمة — وليس مؤكِّداً للرحمن؛ لأن الأصل في الكلام التأسيس، ولاختلاف الوزن</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>القول الراجح</th><th>التفصيل</th></tr></thead>
+        <tbody>
+            <tr><td>الرحمن</td><td>يدلّ على الصفة — ذو الرحمة الواسعة (رحمة عامة لجميع الخلق)</td></tr>
+            <tr><td>الرحيم</td><td>يدلّ على الفعل — إيصال الرحمة إلى المرحوم (رحمة خاصة بالمؤمنين)</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="أبدأُ بالحمدِ مُصَلِّياً على مُحمَّدٍ خَيرِ نبيٍّ أُرسلا" data-matn-sec="شرح البيت الأول — ص ٢٢ – ٢٥">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">البيت الأول</div>
+        <div class="sec-title">معنى الحمد والصلاة على النبي ﷺ</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">أبدأُ بالحمدِ مُصَلِّياً على مُحمَّدٍ خَيرِ نبيٍّ أُرسلا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">البيت الأول</div>
+        <div class="s-title">معنى «الحمد» ومعنى «الصلاة»</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الحمد: وصف المحمود بالكمال محبةً وتعظيماً؛ فإن كان الوصف خوفاً ورهبةً فهو مدحٌ لا حمد</li>
+            <li>«بالحمد مصلياً»: نُصبت «مصلياً» على الحال من الضمير في «أبدأ»؛ ولم يُذكر المحمود لكنه معلومٌ بالقرينة</li>
+            <li>الصلاة من البشر على النبي ﷺ: طلب الثناء عليه من الله تعالى</li>
+            <li>الصلاة من الله على النبي ﷺ: ثناؤه عليه في الملأ الأعلى (قول أبي العالية) — وهو الراجح</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">أُولَٰئِكَ عَلَيْهِمْ صَلَوَاتٌ مِّن رَّبِّهِمْ وَرَحْمَةٌ</div>
+          <div class="hbox-src">سورة البقرة: ١٥٧ — دليل بطلان القول بأن الصلاة بمعنى الرحمة (وإلا للزم عطف الشيء على نفسه)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">البيت الأول</div>
+        <div class="s-title">الفرق بين «محمد» و«أحمد» — ولماذا «نبيّ» لا «رسول»؟</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الاسم</th><th>الصيغة</th><th>المعنى</th></tr></thead>
+        <tbody>
+            <tr><td>محمد</td><td>اسم مفعول</td><td>الفعل واقعٌ من الناس — أي أن الناس يحمدونه (حُمِد بالفعل)</td></tr>
+            <tr><td>أحمد</td><td>اسم تفضيل</td><td>الفعل واقعٌ منه — أي أنه أحقُّ الناس أن يُحمد (حمِدَ استحقاقاً)</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>ذَكَر الله في القرآن اسمين للنبي ﷺ: «أحمد» على لسان عيسى عليه السلام تبشيراً وابتلاءً لبني إسرائيل، و«محمد». والدليل على مجيء أحمد فعلاً بعد عيسى، وأنه هو محمد ﷺ نفسه:</p></div>
+        <div class="hbox">
+          <div class="hbox-text">فَلَمَّا جَاءَهُم بِالْبَيِّنَاتِ قَالُوا هَٰذَا سِحْرٌ مُّبِينٌ</div>
+          <div class="hbox-src">سورة الصف: ٦</div>
+        </div>
+        <ul class="flist">
+            <li>قال «خير نبيّ أُرسلا» ولم يقل «خير رسول»: ليجمع بين النبوة والرسالة، فتكون الدلالة على النبوة نصّية لا لزومية</li>
+            <li>الدليل: حديث البراء بن عازب — علّمه النبي ﷺ دعاء النوم فقال: «وبرسولك الذي أرسلت» فقال له ﷺ: «لا، بل قل: وبنبيّك الذي أرسلت» (متفق عليه)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وذِي مِنَ أقسَامِ الحديثِ عدَّه وكُلُّ واحدٍ أتى وحَدَّه" data-matn-sec="ص ٢٦ – ٢٧">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">البيت الثاني</div>
+        <div class="sec-title">أقسام الحديث: تعريف «الحدّ» وشرطه</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وذِي مِنَ أقسَامِ الحديثِ عدَّه وكُلُّ واحدٍ أتى وحَدَّه</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">البيت الثاني</div>
+        <div class="s-title">تعريف الحدّ وشرطه (بالأمثلة)</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>المراد بـ«أقسام الحديث» هنا: علم الحديث دراية</li>
+            <li>الحدّ: الوصف المحيط بموصوفه، المميِّز له عن غيره</li>
+            <li>شرطه: أن يكون مطَّرداً منعكساً — لا يخرج عنه شيء من المحدود، ولا يدخل فيه شيء من غيره</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>التعريف المقترح</th><th>هل هو صحيح؟ ولماذا</th></tr></thead>
+        <tbody>
+            <tr><td>الإنسان: حيوان</td><td>لا؛ يدخل فيه البهيم لأنه لم يُخرَج بقيدٍ</td></tr>
+            <tr><td>الإنسان: حيوان ناطق</td><td>نعم؛ تامٌّ — أخرج «حيوان» الجماد، وأخرج «ناطق» البهيم</td></tr>
+            <tr><td>الإنسان: حيوان ناطق عاقل</td><td>لا؛ يخرج منه بعض أفراد المحدود وهو المجنون</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="أوَّلُها الصحيحُ وهوَ ما اتَّصَل إسنادُهُ ولْم يُشَذَّ أو يُعَلّ  •  يَرْويهِ عَدْلٌ ضَابِطٌ عَنْ مِثْلِهِ مُعْتَمَدٌ في ضَبْطِهِ ونَقْلِهِ" data-matn-sec="ص ٢٨ – ٣٩">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الأول</div>
+        <div class="sec-title">الحديث الصحيح</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">أوَّلُها الصحيحُ وهوَ ما اتَّصَل إسنادُهُ ولْم يُشَذَّ أو يُعَلّ  •  يَرْويهِ عَدْلٌ ضَابِطٌ عَنْ مِثْلِهِ مُعْتَمَدٌ في ضَبْطِهِ ونَقْلِهِ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الأول — الصحيح</div>
+        <div class="s-title">التعريف وشروطه الأربعة</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>أوَّلُها الصحيح: قدَّمه المؤلف لأنه أشرف أقسام الحديث. وهو: ما اتَّصل إسناده — بحيث يأخذه كل راوٍ عمَّن فوقه دون سقوطٍ — ولم يُشذَّ ولم يُعلّ.</p></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>م</th><th>الشرط</th></tr></thead>
+        <tbody>
+            <tr><td>١</td><td>اتصال السند — أن يأخذ كل راوٍ الحديث عمَّن فوقه مباشرة، بلا سقوط</td></tr>
+            <tr><td>٢</td><td>السلامة من الشذوذ</td></tr>
+            <tr><td>٣</td><td>السلامة من العلة القادحة</td></tr>
+            <tr><td>٤</td><td>أن يرويه عدلٌ ضابطٌ عن مثله، معتمَدٍ في ضبطه ونقله</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الأول — الصحيح</div>
+        <div class="s-title">الشرط الثاني: السلامة من الشذوذ</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الشاذّ: ما يرويه الثقة مخالفاً لمن هو أرجح منه — في العدد، أو الصدق، أو العدالة</li>
+            <li>لا يُشترط في الشذوذ أن يكون الاختلاف في حديثٍ واحد؛ فقد يكون الشذوذ بين حديثين منفصلين</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>مثال</th><th>بيانه</th></tr></thead>
+        <tbody>
+            <tr><td>نهي الصيام بعد نصف شعبان (السنن)</td><td>شاذّ؛ يخالف الأرجح في الصحيحين: «لا تقدَّموا رمضان بصوم يوم أو يومين...»</td></tr>
+            <tr><td>نهي صوم يوم السبت (أبو داود)</td><td>قيل: شاذّ لمخالفته حديث الصحيح؛ وقيل: لا شذوذ، ويُحمل على إفراده بالصوم</td></tr>
+            <tr><td>«يبقى في النار فضلٌ فينشئ الله أقواماً»</td><td>شاذّ لمخالفته ما عُلم من عدل الله؛ والصواب المقلوب: «يبقى في الجنة...»</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الأول — الصحيح</div>
+        <div class="s-title">الشرط الثالث: السلامة من العلة القادحة</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>العلة لغةً: وصفٌ يُخرج البدن عن الاعتدال الطبيعي (المرض)</li>
+            <li>العلة اصطلاحاً: وصفٌ يوجب خروج الحديث عن القبول — بشرط أن تكون قادحة، أي في صميم موضوع الحديث</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>نوع العلة</th><th>المثال</th></tr></thead>
+        <tbody>
+            <tr><td>غير قادحة (لا تضرّ)</td><td>اختلاف الرواة في ثمن قلادة فضالة بن عبيد (١٢ أو ٩ أو ١٠ دنانير) — لا تمسّ صميم الحكم</td></tr>
+            <tr><td>قادحة (تضرّ)</td><td>أن يروي اثنان الحديث أحدهما بصفة النفي والآخر بصفة الإثبات — وهذا يدخل في «المضطرب»</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الأول — الصحيح</div>
+        <div class="s-title">الشرط الرابع: عدلٌ ضابطٌ عن مثله</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>العدل: الاستقامة في الدين والمروءة؛ فالفاسق لا يُقبل خبره لقوله تعالى:</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">يَا أَيُّهَا الَّذِينَ آمَنُوا إِن جَاءَكُمْ فَاسِقٌ بِنَبَإٍ فَتَبَيَّنُوا</div>
+          <div class="hbox-src">سورة الحجرات: ٦</div>
+        </div>
+        <ul class="flist">
+            <li>المروءة: أن يفعل ما يجمِّله ويزيِّنه، ويدع ما يدنِّسه ويشينه بحسب عُرف الناس</li>
+            <li>الضبط: حفظ المروي تحمُّلاً وأداءً؛ وعلاج كثرة النسيان: الكتابة</li>
+            <li>«عن مثله»: يُشترط في الشيخ المرويّ عنه أيضاً العدالة والضبط، فلا يصحّ رواية عدلٍ عن فاسق</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">مباحث حديثية</div>
+        <div class="s-title">الحديث والأثر والخبر — وأحوال التلقّي</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المصطلح</th><th>التعريف</th></tr></thead>
+        <tbody>
+            <tr><td>الحديث</td><td>ما أُضيف إلى النبي ﷺ</td></tr>
+            <tr><td>الأثر</td><td>ما أُضيف إلى مَن دونه من الصحابة والتابعين فمن بعدهم</td></tr>
+            <tr><td>الخبر</td><td>يعمّ الحديث والأثر</td></tr>
+        </tbody>
+      </table></div>
+        <ul class="flist">
+            <li>أحوال التلقّي ثلاثة: (١) التصريح بالسماع  (٢) ثبوت اللُّقيا دون السماع  (٣) المعاصرة دون ثبوت اللُّقيا</li>
+            <li>البخاري: لا يُحمل على الاتصال إلا بثبوت اللُّقيا — شرطُه أقوى، ولذا صحيح البخاري أصحُّ من صحيح مسلم</li>
+            <li>مسلم: يكفي ثبوت المعاصرة</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">مباحث حديثية</div>
+        <div class="s-title">مراتب الأحاديث السبع</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المرتبة</th><th>الوصف</th></tr></thead>
+        <tbody>
+            <tr><td>١</td><td>ما اتَّفق عليه البخاري ومسلم</td></tr>
+            <tr><td>٢</td><td>ما انفرد به البخاري</td></tr>
+            <tr><td>٣</td><td>ما انفرد به مسلم</td></tr>
+            <tr><td>٤</td><td>ما كان على شرطهما</td></tr>
+            <tr><td>٥</td><td>ما كان على شرط البخاري</td></tr>
+            <tr><td>٦</td><td>ما كان على شرط مسلم</td></tr>
+            <tr><td>٧</td><td>ما كان على شرط غيرهما</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">مباحث حديثية</div>
+        <div class="s-title">تنبيه على الصحيحين</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>هل كل ما اتفق عليه الشيخان صحيح؟ نعم عند أكثر العلماء؛ لأن الأمة تلقَّته بالقبول (رأي ابن الصلاح، وابن تيمية وابن القيم). وما انفرد به أحدهما صحيحٌ لكن دون المتفق عليه؛ وقد أُجيب عمَّا انتُقِد من أحاديثهما بوجهين: أن قول المنتقِد يعارضه قول البخاري وهو أحفظ منه، وأن أهل العلم ردُّوا على المنتقِد حديثاً حديثاً.</p></div>
+        <div class="ibox">
+          <div class="ibox-text">تشاجرَ قومٌ في البخاري ومسلمٍ لديَّ وقالوا: أيُّ ذَيْنِ تُقدَّمُ؟<br>فقلتُ: لقد فاق البخاريُّ صحةً كما فاق في حُسنِ الصناعةِ مسلمُ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وَالَحسَنُ الَمعْرُوفُ طُرْقاً وغَدَتْ رِجَالُهُ لا كالصّحيحِ اشْتَهَرَتْ" data-matn-sec="ص ٤٤">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الثاني</div>
+        <div class="sec-title">الحديث الحسن</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وَالَحسَنُ الَمعْرُوفُ طُرْقاً وغَدَتْ رِجَالُهُ لا كالصّحيحِ اشْتَهَرَتْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثاني — الحسن</div>
+        <div class="s-title">تعريف الحسن وعلاقته بالصحيح</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الحسن: المعروف طرقاً (معلومٌ من أي بلدٍ يروي راويه)، ورجاله لا كالصحيح اشتهروا</li>
+            <li>الفرق الوحيد بينه وبين الصحيح (ابن حجر): بدل «تامّ الضبط» في الصحيح يُقال في الحسن «خفيف الضبط»</li>
+            <li>أما بقية الشروط (اتصال السند، العدالة، السلامة من الشذوذ والعلة القادحة) فواحدة في البابين</li>
+        </ul>
+        <div class="defbox">
+          <div class="defbox-label">تعريف الحسن لذاته</div>
+          <div class="defbox-text">ما رواه عدلٌ خفيفُ الضبط، بسندٍ متصل، وخلا من الشذوذ والعلة القادحة</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وكُلُّ ما عَنْ رُتبةِ الُحسْنِ قَصْر فَهْوَ الضعيفُ وهوَ أقْساماً كُثُرْ" data-matn-sec="ص ٤٥ – ٤٨">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الثالث</div>
+        <div class="sec-title">الحديث الضعيف وأقسامه</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وكُلُّ ما عَنْ رُتبةِ الُحسْنِ قَصْر فَهْوَ الضعيفُ وهوَ أقْساماً كُثُرْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثالث — الضعيف</div>
+        <div class="s-title">تعريفه وأقسام الحديث الخمسة</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>الضعيف: ما خلا عن رتبة الحسن (وبالتالي عن رتبة الصحة أيضاً)؛ فذكر المؤلف ثلاثة أقسام (صحيح، حسن، ضعيف)، لكن الأقسام الحقيقية عند ابن حجر وغيره خمسة:</p></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>القسم</th><th>تعريفه</th></tr></thead>
+        <tbody>
+            <tr><td>صحيح لذاته</td><td>عدل تامّ الضبط، سندٌ متصل، سالمٌ من الشذوذ والعلة</td></tr>
+            <tr><td>صحيح لغيره</td><td>الحسنُ إذا تعدَّدت طرقه فبلغ درجة الصحة بمجموعها</td></tr>
+            <tr><td>حسن لذاته</td><td>ما رواه عدلٌ خفيف الضبط، بسندٍ متصل، وسالم</td></tr>
+            <tr><td>حسن لغيره</td><td>الضعيفُ إذا تعدَّدت طرقه على وجهٍ يجبر بعضها بعضاً</td></tr>
+            <tr><td>ضعيف</td><td>ما ليس بصحيحٍ ولا حسن</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثالث — الضعيف</div>
+        <div class="s-title">حكم رواية الحديث الضعيف</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>يجوز نقل الأقسام الأربعة الأولى والتحديث بها لأنها كلها مقبولة وحجة</li>
+            <li>لا يجوز نقل الضعيف أو التحديث به إلا مبيَّناً ضعفه؛ وإلا فراويه أحد الكاذبين على النبي ﷺ</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">من حدَّث عني بحديثٍ يُرى أنه كذبٌ فهو أحد الكاذبين</div>
+          <div class="hbox-src">رواه مسلم في المقدمة</div>
+        </div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>شروط جواز رواية الضعيف في الترغيب والترهيب (عند من أجازها)</th></tr></thead>
+        <tbody>
+            <tr><td>١ — أن يكون الحديث في الترغيب والترهيب</td><td>٣ — أن يكون له أصلٌ صحيحٌ ثابت في الكتاب أو السنة</td></tr>
+            <tr><td>٢ — ألا يكون الضعف شديداً</td><td>٤ — ألا يُعتقد أن النبي ﷺ قاله جزماً</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثالث — الضعيف</div>
+        <div class="s-title">الراجح، وتنبيهٌ على الوضّاعين</div>
+        <div class="s-rule"></div>
+        <div class="ibox athar">
+          <div class="ibox-text">رجَّح المؤلف: عدم جواز روايته إلا مبيَّناً ضعفُه مطلقاً، لا سيَّما بين العامة؛ لأن قاعدتهم «ما قيل في المحراب فهو صواب» تجعلهم يصدِّقون أي حديث دون تمييز.</div>
+        </div>
+        <div class="ibox">
+          <div class="ibox-text">بعض الوضّاعين وضعوا أحاديث في الحثّ على التمسك بالسنة، وزعموا أنهم «كذبوا له لا عليه» — وهذا تحريفٌ للكلم عن مواضعه، وكذبٌ صريح على النبي ﷺ.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وما أُضيفَ للنبي الَمرْفوعُ وما لتَابِعٍ هُوَ المقْطوعُ" data-matn-sec="ص ٤٩ – ٥٦">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ٤ – ٥</div>
+        <div class="sec-title">المرفوع والمقطوع</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وما أُضيفَ للنبي الَمرْفوعُ وما لتَابِعٍ هُوَ المقْطوعُ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٤ – ٥</div>
+        <div class="s-title">المرفوع والموقوف والمقطوع (باعتبار منتهى السند)</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>النوع</th><th>منتهى السند</th></tr></thead>
+        <tbody>
+            <tr><td>المرفوع</td><td>النبي ﷺ</td></tr>
+            <tr><td>الموقوف</td><td>الصحابي (سيأتي لاحقاً)</td></tr>
+            <tr><td>المقطوع</td><td>التابعي فمن بعده</td></tr>
+        </tbody>
+      </table></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>أقسام المرفوع</th><th>المثال</th></tr></thead>
+        <tbody>
+            <tr><td>قول</td><td>«إنما الأعمالُ بالنيّات وإنما لكلِّ امرئٍ ما نوى» (متفق عليه)</td></tr>
+            <tr><td>فعل</td><td>توضَّأ النبي ﷺ فمسح على خُفَّيه</td></tr>
+            <tr><td>تقرير</td><td>قال ﷺ للجارية: «أين الله؟» قالت: في السماء. فأقرَّها (رواه مسلم)</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>ما فُعل في زمنه ﷺ وعَلِمَ به فهو مرفوعٌ (لأنه إقرار). وما أُضيف إلى الله تعالى يُسمَّى: القدسي أو الإلهي.</p></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٤ – ٥</div>
+        <div class="s-title">المرفوع حُكماً — ضابطه وأمثلته (١)</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>ضابطه: ما ليس للاجتهاد والرأي فيه مجال، وإنما يُؤخذ عن الشرع محضاً.</p></div>
+        <ul class="flist">
+            <li>إخبار الصحابي عن أمور الغيب أو أخبار يوم القيامة</li>
+            <li>فِعل الصحابي عبادةً لم ترد بها السنة — مثاله: صلاة عليٍّ في الكسوف بثلاث ركوعات في كل ركعة</li>
+            <li>قول الصحابي: «من السنّة كذا» — كقول ابن عباس في جهره بالفاتحة في صلاة الجنازة</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٤ – ٥</div>
+        <div class="s-title">المرفوع حُكماً — أمثلته (٢)</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>إخبار الصحابي عن الجنة والنار (بشرط ألا يكون ممّن عُرف بالأخذ عن بني إسرائيل)</li>
+            <li>نسبة فعلٍ إلى عهد النبي ﷺ دون التصريح بعلمه، كقول أسماء: «نحرنا فرساً في عهد النبي ﷺ فأكلناه»</li>
+            <li>قول الصحابي «رواية» دون تصريحٍ بالرفع، وقول التابعي عن الصحابي «رفعه» أو «يبلغ به»</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٤ – ٥</div>
+        <div class="s-title">حجية قول الصحابي والتابعي</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>خلاف العلماء في حجية قول الصحابي: (١) حجة مطلقاً بشرط عدم المخالفة (٢) ليس بحجة لأنه بشرٌ يجتهد (٣) الحجة قول أبي بكر وعمر فقط</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">اقتدوا بالذين من بعدي: أبو بكر وعمر</div>
+          <div class="hbox-src">رواه أحمد والترمذي وابن ماجه</div>
+        </div>
+        <ul class="flist">
+            <li>الراجح (اختيار المؤلف): قول الصحابي حجة بثلاثة شروط: أن يكون من فقهاء الصحابة، وألا يخالف نصاً، وألا يخالف صحابياً آخر</li>
+            <li>المقطوع: ما أُضيف إلى التابعي فمن بعده — سُمِّي بذلك لانقطاعه في الرتبة عن المرفوع والموقوف</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="والُمسْنَدُ الُمتَّصِلُ الإسنادِ مِنْ راويهِ حتَّى الُمصْطفى ولْم يَبِنْ" data-matn-sec="ص ٥٧ – ٥٩">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم السادس</div>
+        <div class="sec-title">المسند وضابطه</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">والُمسْنَدُ الُمتَّصِلُ الإسنادِ مِنْ راويهِ حتَّى الُمصْطفى ولْم يَبِنْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السادس — المسند</div>
+        <div class="s-title">المصطلحات الخمسة المتعلقة بالسند</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>المسند: المرفوعُ المتصلُ الإسناد من راويه حتى النبي ﷺ (رأي جمهور المحدّثين)</li>
+            <li>وقيل: المسند أعمّ — كل ما أُسند إلى راويه ولو موقوفاً أو مقطوعاً أو منقطعاً</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المصطلح</th><th>معناه</th></tr></thead>
+        <tbody>
+            <tr><td>مُسنِد</td><td>من نسب الحديث إلى قائله (قال: حدثني فلان)</td></tr>
+            <tr><td>مُسنَد إليه</td><td>من نُسب إليه الحديث</td></tr>
+            <tr><td>السَّنَد</td><td>رجال الحديث ورواته</td></tr>
+            <tr><td>الإسناد</td><td>يُطلق على السند (الرواة)، ويُطلق على نسبة الحديث إلى راويه</td></tr>
+        </tbody>
+      </table></div>
+        <div class="ibox">
+          <div class="ibox-text">ليس كل مسندٍ صحيحاً (فقد يتصل السند وفيه ضعفاء)، وليس كل صحيحٍ مسنداً (فقد يكون موقوفاً بسندٍ صحيح، وهو غير مرفوع فلا يُسمَّى مسنداً).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="ومَا بِسَمْعِ كُلِّ رَاوٍ يَتَّصِلْ إسْنَادُهُ للمُصْطَفى فَالُمتَّصِلْ" data-matn-sec="ص ٦٠ – ٦٣">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم السابع</div>
+        <div class="sec-title">المتصل وضابطه</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">ومَا بِسَمْعِ كُلِّ رَاوٍ يَتَّصِلْ إسْنَادُهُ للمُصْطَفى فَالُمتَّصِلْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السابع — المتصل</div>
+        <div class="s-title">تعريف المتصل — قولان</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>القول</th><th>التعريف</th></tr></thead>
+        <tbody>
+            <tr><td>قول الناظم</td><td>المرفوعُ الذي أخذه كل راوٍ عمَّن فوقه سماعاً (يشترط: السماع + الرفع إلى النبي ﷺ)</td></tr>
+            <tr><td>الأصحّ</td><td>كل ما اتَّصل إسناده — ولو موقوفاً أو مقطوعاً، وسواء كانت الصيغة سماعاً أو غيره</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>مسألة: هل يُشترط ثبوت سماع هذا الحديث بعينه من الشيخ؟ الصواب أن الحصر في مثل هذا صعبٌ جداً، فلا يُجزم بعدم الاتصال في غيره إلا بقرينة واضحة.</p></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="مُسَلْسَلٌ قُلْ مَا عَلَى وَصْفٍ أتَى مِثْلُ أمَا واللهِ أنْبأنِي الفتى  •  كذَاكَ قَدْ حَدَّثَنِيهِ قائِماً أوْ بَعْدَ أنْ حَدَّثَنِي تَبَسَّمَا" data-matn-sec="ص ٦٣ – ٦٦">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الثامن</div>
+        <div class="sec-title">المسلسل ومثاله</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">مُسَلْسَلٌ قُلْ مَا عَلَى وَصْفٍ أتَى مِثْلُ أمَا واللهِ أنْبأنِي الفتى  •  كذَاكَ قَدْ حَدَّثَنِيهِ قائِماً أوْ بَعْدَ أنْ حَدَّثَنِي تَبَسَّمَا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثامن — المسلسل</div>
+        <div class="s-title">تعريفه وأمثلته</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>المسلسل: ما اتَّفق فيه الرواة على وصفٍ أو حالٍ معيّنة — في السند أو المتن أو كليهما</li>
+            <li>فائدته: التنبيه على أن الراوي قد ضبط الرواية</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الصورة</th><th>المثال</th></tr></thead>
+        <tbody>
+            <tr><td>اتفاق صيغة الأداء</td><td>كلّهم يقول: «أنبأني فلان» — حديث معاذ: «إني أُحبُّك فلا تدعنَّ...»</td></tr>
+            <tr><td>اتفاق حال الراوي</td><td>«حدَّثني فلانٌ على الغداء»، أو «حدَّثني قائماً»، أو «حدَّثني مضطجعاً»</td></tr>
+            <tr><td>اتفاق فعلٍ عند الأداء</td><td>كلّهم يتبسَّم عند روايته — حديث الرجل المجامِع في رمضان وضحك النبي ﷺ</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثامن — المسلسل</div>
+        <div class="s-title">فوائد معرفة المسلسل</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>أولاً: فنٌّ طريف — اتفاق الرواة كلّهم على حالٍ واحدة أمرٌ لطيف</li>
+            <li>ثانياً: دليلٌ على تمام ضبط الرواة، حيث ضبطوا حتى حال الراوي حين التحديث</li>
+            <li>ثالثاً: قد يكون التسلسل نفسه قربةً وعبادة، كحديث معاذ «إني أُحبُّك» الذي يزيد الإيمان</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="عَزيزٌ مَروِيُّ اثنَيِن أوْ ثَلاثهْ مَشْهورٌ مَرْوِيُّ فَوْقَ ما ثَلاثهْ" data-matn-sec="ص ٦٧ – ٧١">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ٩ – ١٠</div>
+        <div class="sec-title">العزيز والمشهور</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">عَزيزٌ مَروِيُّ اثنَيِن أوْ ثَلاثهْ مَشْهورٌ مَرْوِيُّ فَوْقَ ما ثَلاثهْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٩ – ١٠ — العزيز والمشهور</div>
+        <div class="s-title">التعريف والراجح فيه</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المصطلح</th><th>قول الناظم</th><th>القول الراجح عند المتأخرين</th></tr></thead>
+        <tbody>
+            <tr><td>العزيز</td><td>ما رواه اثنان أو ثلاثة في كل طبقة</td><td>ما رواه اثنان فقط في كل طبقة</td></tr>
+            <tr><td>المشهور</td><td>ما رواه أربعةٌ فأكثر</td><td>ما رواه ثلاثةٌ فأكثر، ولم يبلغ حدَّ التواتر</td></tr>
+        </tbody>
+      </table></div>
+        <ul class="flist">
+            <li>لا يُشترط في العزيز أن يكون مرفوعاً؛ فيشمل المرفوع والموقوف والمقطوع</li>
+            <li>هل العزيز شرطٌ للصحيح؟ الراجح: لا؛ فحديث عمر «إنما الأعمال بالنيات» تفرَّد به واحدٌ في ثلاث طبقاتٍ وهو صحيح متفقٌ عليه</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٩ – ١٠ — المشهور</div>
+        <div class="s-title">أنواع الشهرة — وأمثلة أحاديث مشهورة باطلة</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>المشهور عند العامة: لا حكم له ولا عبرة به؛ فقد يشتهر حديثٌ موضوع</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الحديث المشهور عند العامة</th><th>حكمه</th></tr></thead>
+        <tbody>
+            <tr><td>«خير الأسماء ما حُمِّد وعُبِّد»</td><td>لا أصل له</td></tr>
+            <tr><td>«حبُّ الوطن من الإيمان»</td><td>موضوعٌ مكذوب</td></tr>
+            <tr><td>«يوم صومكم يوم نحركم»</td><td>لا أصل له</td></tr>
+            <tr><td>«رابعة رجب غرّة رمضان فيها تُنحرون»</td><td>باطلٌ غير صحيح</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>المشهور عند أهل العلم: يُنظر فيه، فإن خالف نصاً فمردود (مثاله: «لا يُقاد الوالد بالولد» يخالف نص القصاص)، وإن لم يخالف نصاً فمقبول لأنّ تداول العلماء له يدلّ على أصل.</p></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="مَعَنْعَنٌ كَعَن سَعيدٍ عَنْ كَرَمْ وَمُبهَمٌ مَا فيهِ رَاوٍ لْم يُسَمْ" data-matn-sec="ص ٧٢ – ٧٤">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ١١ – ١٢</div>
+        <div class="sec-title">المعنعن والمبهم</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">مَعَنْعَنٌ كَعَن سَعيدٍ عَنْ كَرَمْ وَمُبهَمٌ مَا فيهِ رَاوٍ لْم يُسَمْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ١١ – ١٢</div>
+        <div class="s-title">المعنعن (والمؤنَّن) والمبهم</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المصطلح</th><th>التعريف</th><th>الحكم</th></tr></thead>
+        <tbody>
+            <tr><td>المعنعن</td><td>ما أُدِّي بصيغة «عن» — مثاله: «عن سعيدٍ عن كرم»</td><td>محمولٌ على الاتصال، إلا من عُرف بالتدليس فلا يُحكم له بالاتصال حتى يصرِّح بالسماع</td></tr>
+            <tr><td>المؤنَّن</td><td>ما أُدِّي بصيغة «أنَّ» — «حدَّثني فلانٌ أنَّ فلاناً قال...»</td><td>نفس حكم المعنعن</td></tr>
+            <tr><td>المبهم</td><td>ما فيه راوٍ لم يُسمَّ — «حدَّثني رجلٌ»، أو «حدَّثني الثقة»</td><td>لا يُقبل حتى يُعرف، إلا المبهم من الصحابة لعدالتهم جميعاً</td></tr>
+        </tbody>
+      </table></div>
+        <div class="hbox">
+          <div class="hbox-text">وَكُلًّا وَعَدَ اللَّهُ الْحُسْنَىٰ</div>
+          <div class="hbox-src">سورة الحديد: ١٠ — دليل عدالة الصحابة، فلا يضرّ إبهام أحدهم</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وكُلُّ مَا قَلَّت رِجَالُهُ عَلا وضِدُّهُ ذَاكَ الذِي قَدْ نَزَلا" data-matn-sec="ص ٧٥ – ٧٦">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ١٣ – ١٤</div>
+        <div class="sec-title">العلوّ والنزول</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وكُلُّ مَا قَلَّت رِجَالُهُ عَلا وضِدُّهُ ذَاكَ الذِي قَدْ نَزَلا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ١٣ – ١٤</div>
+        <div class="s-title">قسما العلوّ، وأيّهما يُقدَّم؟</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>النوع</th><th>تعريفه</th></tr></thead>
+        <tbody>
+            <tr><td>علوّ العدد</td><td>قِلّة رجال السند — كلما قلَّت الوسائط قلَّ احتمال الخطأ</td></tr>
+            <tr><td>علوّ الصفة</td><td>كون رجال السند أوثق حفظاً وعدالة من سندٍ آخر ولو تساوى العدد</td></tr>
+            <tr><td>النازل</td><td>ضدّ العالي — كثرة رجال السند</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>لا يلزم من علوّ العدد أن يكون الإسناد أصحّ، لاحتمال ضعف رجاله؛ فإذا تعارض علوّ العدد وعلوّ الصفة قُدِّم علوّ الصفة، لأنه المعتمَد في صحة الحديث.</p></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="ومَا أضَفْتَهُ إلى الأصْحَابِ مِنْ قَوْلٍ وفعْلٍ فهْوَ مَوْقُوفٌ زُكِنْ" data-matn-sec="ص ٧٧ – ٧٨">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الخامس عشر</div>
+        <div class="sec-title">الموقوف وضابطه</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">ومَا أضَفْتَهُ إلى الأصْحَابِ مِنْ قَوْلٍ وفعْلٍ فهْوَ مَوْقُوفٌ زُكِنْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الخامس عشر — الموقوف</div>
+        <div class="s-title">التعريف والاستثناء</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الموقوف: ما أضافه الراوي إلى الصحابة من قولٍ أو فعل</li>
+            <li>الصحابي: من اجتمع بالنبي ﷺ مؤمناً به ومات على ذلك، ولو كان الاجتماع لحظة — وهذا من خصائصه ﷺ</li>
+            <li>يُستثنى ما ثبت له حكم الرفع فيكون «مرفوعاً حكماً» لا موقوفاً — كصلاة عليّ في الكسوف بثلاث ركوعات، وكلّ ما تحدَّث فيه الصحابي عن أمرٍ غيبي مستقبلي</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وَمُرْسلٌ مِنهُ الصَّحَابيُّ سَقَطْ وقُلْ غَريبٌ ما رَوَى رَاوٍ فَقطْ" data-matn-sec="ص ٧٩">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم السادس عشر</div>
+        <div class="sec-title">المرسل</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وَمُرْسلٌ مِنهُ الصَّحَابيُّ سَقَطْ وقُلْ غَريبٌ ما رَوَى رَاوٍ فَقطْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السادس عشر — المرسل</div>
+        <div class="s-title">التعريف وحكمه ومواضع الاستثناء</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>لغة: المطلق (كإرسال الناقة في المرعى)</li>
+            <li>اصطلاحاً (الناظم): ما سقط منه الصحابي — وهذا فيه قصور</li>
+            <li>الأدقّ: ما رفعه التابعي، أو الصحابي الذي لم يسمع من النبي ﷺ</li>
+            <li>حكمه: من أقسام الضعيف؛ لأن الواسطة بين النبي ﷺ ومن رفعه مجهولة</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>يُستثنى من الضعف في أربعة مواضع</th></tr></thead>
+        <tbody>
+            <tr><td>١ — إذا عُلمت الواسطة وحالها</td><td>٣ — إذا عُلم أنه لا يرفعه إلا عن صحابي</td></tr>
+            <tr><td>٢ — إذا كان الرافع له صحابياً</td><td>٤ — إذا تلقَّته الأمة بالقبول</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وكلُّ مَا لْم يَتَّصِلْ بِحَالٍ إسْنَادُهُ مُنْقَطِعُ الأوْصالِ" data-matn-sec="ص ٨٠">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم السابع عشر</div>
+        <div class="sec-title">الغريب</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وكلُّ مَا لْم يَتَّصِلْ بِحَالٍ إسْنَادُهُ مُنْقَطِعُ الأوْصالِ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السابع عشر — الغريب</div>
+        <div class="s-title">التعريف ومواضع الغرابة</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الغريب: ما رواه راوٍ واحدٌ فقط، ولو كان صحابياً</li>
+            <li>قد تكون الغرابة في أول السند، أو في أثنائه، أو في آخره</li>
+            <li>مثال: حديث «إنما الأعمال بالنيّات» غريبٌ في طبقتَي الصحابة والتابعين، ثم انتشر انتشاراً عظيماً بعد ذلك</li>
+            <li>الغالب على الأفراد الضعف، وقد يكون الغريب صحيحاً</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="والُمعْضَلُ السَّاقِطُ مِنْهُ اثْنَانِ ومَا أتى مُدَلَّساً نَوعانِ" data-matn-sec="ص ٨١ – ٨٣">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ١٨ – ١٩</div>
+        <div class="sec-title">المنقطع وأقسام الانقطاع</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">والُمعْضَلُ السَّاقِطُ مِنْهُ اثْنَانِ ومَا أتى مُدَلَّساً نَوعانِ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ١٨ – ١٩</div>
+        <div class="s-title">أقسام الانقطاع الأربعة</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>المنقطع بمعناه العام: كل حديثٍ لم يتَّصل إسناده بأي حال، وله أربع صورٍ اصطلاحية حسب مكان السقط:</p></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>موضع السقط</th><th>الاسم الاصطلاحي</th><th>الحكم</th></tr></thead>
+        <tbody>
+            <tr><td>أول السند</td><td>المعلَّق</td><td>ضعيف؛ إلا ما علَّقه البخاري جازماً به فهو صحيحٌ عنده</td></tr>
+            <tr><td>آخر السند</td><td>المرسَل</td><td>ضعيف (سبق بيانه)</td></tr>
+            <tr><td>راوٍ واحد من الأثناء</td><td>المنقطع (اصطلاحاً)</td><td>ضعيف</td></tr>
+            <tr><td>راويان فأكثر توالياً من الأثناء</td><td>المعضَل</td><td>أشدُّ ضعفاً من المنقطع</td></tr>
+        </tbody>
+      </table></div>
+        <div class="ibox">
+          <div class="ibox-text">تنبيه: إن سقط الأول والأخير معاً فهو «معلَّقٌ مرسل»؛ ولا يُشترط في المعضل إلا سقوط اثنين فأكثر متتاليين من وسط السند.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- شرائح الرسوم التوضيحية (الآن مقسمة) -->
+    <div class="slide sec-slide" data-matn="" data-matn-sec="">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">رسوم توضيحية</div>
+        <div class="sec-title">صور اتصال وانقطاع السند</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">توضيح بصري</div>
+          <div class="sec-matn-text">شرح مبسط لأشكال الانقطاع في سلسلة الرواة لفهم الفروق الاصطلاحية.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الرسوم التوضيحية الجزء الأول -->
+    <div class="slide">
+      <div>
+        <div class="s-heading">توضيح بصري للسند (١)</div>
+        <div class="s-title">الإسناد المتصل مقابل المرسل</div>
+        <div class="s-rule"></div>
+        
+        <div class="diagram-box frag">
+          <div class="diagram-title">١. الحديث المتصل (جميع الرواة متواجدون)</div>
+          <div class="chain">
+            <div class="node author">المصنف<br><small>(كالبخاري)</small></div>
+            <div class="arrow">←</div>
+            <div class="node">شيخ المصنف<br><small>(أخذ عنه)</small></div>
+            <div class="arrow">←</div>
+            <div class="node">التابعي<br><small>(عاصر الصحابة)</small></div>
+            <div class="arrow">←</div>
+            <div class="node">الصحابي<br><small>(كأبي هريرة)</small></div>
+            <div class="arrow">←</div>
+            <div class="node prophet">النبي ﷺ<br><small>(صاحب القول)</small></div>
+          </div>
+        </div>
+
+        <div class="diagram-box frag">
+          <div class="diagram-title">٢. الحديث المرسَل (سقوط الصحابي من آخر السند)</div>
+          <div class="chain">
+            <div class="node author">المصنف</div>
+            <div class="arrow">←</div>
+            <div class="node">شيخ المصنف</div>
+            <div class="arrow">←</div>
+            <div class="node">التابعي</div>
+            <div class="arrow broken">←</div>
+            <div class="node missing">الصحابي<br><small>(ساقط)</small></div>
+            <div class="arrow broken">←</div>
+            <div class="node prophet">النبي ﷺ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الرسوم التوضيحية الجزء الثاني -->
+    <div class="slide">
+      <div>
+        <div class="s-heading">توضيح بصري للسند (٢)</div>
+        <div class="s-title">المعلق والمنقطع</div>
+        <div class="s-rule"></div>
+        
+        <div class="diagram-box frag">
+          <div class="diagram-title">٣. الحديث المعلَّق (سقوط من أول السند جهة المصنف)</div>
+          <div class="chain">
+            <div class="node author">المصنف</div>
+            <div class="arrow broken">←</div>
+            <div class="node missing">شيخ المصنف<br><small>(ساقط)</small></div>
+            <div class="arrow broken">←</div>
+            <div class="node">التابعي</div>
+            <div class="arrow">←</div>
+            <div class="node">الصحابي</div>
+            <div class="arrow">←</div>
+            <div class="node prophet">النبي ﷺ</div>
+          </div>
+        </div>
+
+        <div class="diagram-box frag">
+          <div class="diagram-title">٤. المنقطع (سقوط راوٍ واحد من الأثناء)</div>
+          <div class="chain">
+            <div class="node author">المصنف</div>
+            <div class="arrow">←</div>
+            <div class="node">شيخ المصنف</div>
+            <div class="arrow broken">←</div>
+            <div class="node missing">التابعي<br><small>(ساقط)</small></div>
+            <div class="arrow broken">←</div>
+            <div class="node">الصحابي</div>
+            <div class="arrow">←</div>
+            <div class="node prophet">النبي ﷺ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- الرسوم التوضيحية الجزء الثالث -->
+    <div class="slide">
+      <div>
+        <div class="s-heading">توضيح بصري للسند (٣)</div>
+        <div class="s-title">المعضل</div>
+        <div class="s-rule"></div>
+        
+        <div class="diagram-box frag">
+          <div class="diagram-title">٥. المعضل (سقوط راويين متتاليين أو أكثر)</div>
+          <div class="chain">
+            <div class="node author">المصنف</div>
+            <div class="arrow broken">←</div>
+            <div class="node missing">شيخ المصنف<br><small>(ساقط)</small></div>
+            <div class="arrow broken">←</div>
+            <div class="node missing">التابعي<br><small>(ساقط)</small></div>
+            <div class="arrow broken">←</div>
+            <div class="node">الصحابي</div>
+            <div class="arrow">←</div>
+            <div class="node prophet">النبي ﷺ</div>
+          </div>
+        </div>
+        
+        <div class="ibox frag" style="margin-top:30px;">
+          <div class="ibox-text" style="text-align: center;">ملاحظة: السقوط في هذه الأمثلة وضع للتوضيح فقط، وقد يختلف موضع السقوط الفعلي من حديث لآخر، لكن العبرة بتطبيق القاعدة (مكان السقوط وعدد الرواة الساقطين).</div>
+        </div>
+      </div>
+    </div>
+    <!-- نهاية شرائح الرسوم التوضيحية المحدثة والمقسمة -->
+
+    <div class="slide sec-slide" data-matn="الأوَّلُ الإسْقاطُ للشَّيخِ وأنْ يَنْقُلَ عَمَّنْ فَوْقَهُ بعنْ وأنْ  •  والثَّانِ لا يُسْقِطُهُ لكنْ يَصِفْ أوْصَافَهُ بما بهِ لا يَنْعرِفْ" data-matn-sec="ص ٨٤ – ٨٦">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم العشرون</div>
+        <div class="sec-title">أنواع التدليس</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">الأوَّلُ الإسْقاطُ للشَّيخِ وأنْ يَنْقُلَ عَمَّنْ فَوْقَهُ بعنْ وأنْ  •  والثَّانِ لا يُسْقِطُهُ لكنْ يَصِفْ أوْصَافَهُ بما بهِ لا يَنْعرِفْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم العشرون — التدليس</div>
+        <div class="s-title">تدليس الإسناد وتدليس الشيوخ</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>النوع</th><th>تعريفه</th><th>مثاله</th></tr></thead>
+        <tbody>
+            <tr><td>تدليس الإسناد</td><td>إسقاط الراوي شيخَه، والرواية عمَّن فوقه بصيغةٍ توهم الاتصال</td><td>أن يقول خالدٌ: «إنَّ عليًّا قال...» وقد أسقط بينهما محمداً</td></tr>
+            <tr><td>تدليس الشيوخ</td><td>ألا يُسقط الشيخ، لكن يصفه بما لا يُعرف به</td><td>«حدَّثني من أنفه بين عينيه» أو «حدَّثني من جلس للتحديث»</td></tr>
+        </tbody>
+      </table></div>
+        <ul class="flist">
+            <li>دواعي التدليس: كتمان ضعف الشيخ أو قلّة دينه، أو غرضٌ سياسي، أو خشية سلطان، أو كون الشيخ أقلَّ مرتبةً</li>
+            <li>الحكم: التدليس أصله حرامٌ لأنه من الغشّ، وإن كان بعض التابعين فعله مجتهداً لغرضٍ حسن</li>
+            <li>لا يُقبل حديث المدلِّس المعنعن حتى يصرِّح بالتحديث أو السماع</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="ومَا يَخالِفُ ثِقةٌ فيهِ الَملا فـالشَّاذُّ والَمقْلوبُ قِسْمَانِ تَلا" data-matn-sec="ص ٨٧ – ٩٨">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ٢١ – ٢٢</div>
+        <div class="sec-title">الشاذّ والمقلوب</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">ومَا يَخالِفُ ثِقةٌ فيهِ الَملا فـالشَّاذُّ والَمقْلوبُ قِسْمَانِ تَلا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٢١ — الشاذّ</div>
+        <div class="s-title">التعريف والأقسام الأربعة المرتبطة به</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>الشاذّ: ما يخالف فيه الثقةُ من هو أرجح منه — عدداً، أو عدالةً، أو ضبطاً. ويقابله المحفوظ؛ فإن كان المخالِف ضعيفاً سُمّي منكراً، ويقابله المعروف.</p></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المصطلح</th><th>تعريفه</th></tr></thead>
+        <tbody>
+            <tr><td>المحفوظ</td><td>ما رواه الأرجح مخالفاً لثقةٍ دونه (يقابل الشاذّ)</td></tr>
+            <tr><td>الشاذّ</td><td>ما رواه الثقة مخالفاً لمن هو أرجح منه</td></tr>
+            <tr><td>المعروف</td><td>ما رواه الثقة مخالفاً للضعيف (يقابل المنكر)</td></tr>
+            <tr><td>المنكر</td><td>ما رواه الضعيف مخالفاً للثقة — أسوأ من الشاذّ</td></tr>
+        </tbody>
+      </table></div>
+        <div class="ibox">
+          <div class="ibox-text">مثال المحفوظ/الشاذّ: في مسح الرأس بالوضوء — رواية مسلم «أخذ لرأسه ماءً غير فَضل يديه» هي المحفوظة، ورواية ابن ماجه «مسح أذنيه بماءٍ غير فضل رأسه» شاذّة.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٢١ — الشاذّ</div>
+        <div class="s-title">لا يُشترط اتحاد الحديث في الشذوذ</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>المسألة</th><th>خلاصة الخلاف</th></tr></thead>
+        <tbody>
+            <tr><td>حكم الصيام بعد نصف شعبان</td><td>قيل: يُكره (تصحيحاً لحديث السنن)؛ وقال أحمد: لا يُكره لأنه شاذّ يخالف حديث الصحيحين الأرجح</td></tr>
+            <tr><td>حكم صيام يوم السبت منفرداً</td><td>أقوال: منسوخ (ضعيف) / شاذّ يخالف الصحيح / محمولٌ على الإفراد فلا تعارض (الأقرب)</td></tr>
+            <tr><td>حكم لبس الذهب المحلَّق</td><td>أقوال: النهي حجةٌ يُعمل بها / شاذّ يخالف الصحيحين (رأي ابن باز) / منسوخٌ بالترخيص لاحقاً</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>زيادة الثقة لا تكون شاذّة إن أمكن الجمع؛ مثال: زيادة «إنك لا تُخلف الميعاد» في دعاء الأذان لا تخالف بقية الرواية بل توافق قوله تعالى {وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ}.</p></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٢٢ — المقلوب</div>
+        <div class="s-title">أقسام المقلوب الثلاثة</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>القسم</th><th>تعريفه ومثاله</th></tr></thead>
+        <tbody>
+            <tr><td>قلب الإسناد</td><td>إبدال راوٍ براوٍ (خطأً غالباً) — كأن يقول «حدثني يوسف عن يعقوب» بدل العكس</td></tr>
+            <tr><td>قلب إسناد المتن</td><td>تركيب إسناد حديثٍ على متن حديثٍ آخر — غالباً للاختبار كصنيع أهل بغداد مع البخاري</td></tr>
+            <tr><td>قلب المتن</td><td>انقلاب ألفاظ المتن نفسه على الراوي — ويُعنى به الفقهاء لأنه يغيِّر الحكم</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٢٢ — المقلوب</div>
+        <div class="s-title">أمثلة قلب المتن</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الرواية المقلوبة</th><th>الصواب</th></tr></thead>
+        <tbody>
+            <tr><td>«...حتى لا تعلم يمينه ما تُنفق شماله»</td><td>«حتى لا تعلم شماله ما تُنفق يمينه» — عكس اليمين والشمال</td></tr>
+            <tr><td>«يبقى في النار فضلٌ...فينشئ الله أقواماً»</td><td>«يبقى في الجنة فضلٌ...» — لمنافاة الأول لعدل الله</td></tr>
+            <tr><td>«إذا سجد أحدكم فلا يبرك كما يبرك البعير، وليضع يديه قبل ركبتيه»</td><td>«وليضع ركبتيه قبل يديه» — لأن تقديم اليدين هو عين هيئة بروك البعير المنهيّ عنها</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وَالفَرَدُ ما قَيَّدْتَهُ بثِقَةِ أوْ جْمعٍ أوْ قَصِرَ على روايةِ" data-matn-sec="ص ٩٩ – ١٠١">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الثالث والعشرون</div>
+        <div class="sec-title">الفرد وأنواعه</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وَالفَرَدُ ما قَيَّدْتَهُ بثِقَةِ أوْ جْمعٍ أوْ قَصِرَ على روايةِ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثالث والعشرون — الفرد</div>
+        <div class="s-title">أنواعه الثلاثة</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>النوع</th><th>تعريفه</th><th>مثاله</th></tr></thead>
+        <tbody>
+            <tr><td>مقيَّدٌ بثقة</td><td>انفرد به ثقةٌ عن ثقة دون مخالفة</td><td>حديث عمر «إنما الأعمال بالنيات»</td></tr>
+            <tr><td>مقيَّدٌ بجمع</td><td>انفرد به عن أهل بلدٍ معيَّن (فردٌ نسبي)</td><td>«تفرَّد به أهل الشام» عن فلان</td></tr>
+            <tr><td>مقصورٌ على رواية</td><td>لم يُروَ بهذا اللفظ إلا من طريقٍ واحد</td><td>مع كون الحديث من طرقٍ أخرى مشهوراً</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>الغالب على الأفراد الضعف، خصوصاً فيما بعد القرون الثلاثة (لكثرة الرواة حينئذٍ)؛ والفرد النسبي أقرب إلى الصحة من الفرد المطلق.</p></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="ومَا بعِلَّةٍ غُمُوضٍ أوْ خَفَا مُعَلَّلٌ عِنْدَهُمُ قَدْ عُرِفَا" data-matn-sec="ص ١٠٢ – ١٠٣">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الرابع والعشرون</div>
+        <div class="sec-title">الحديث المعلَّل</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">ومَا بعِلَّةٍ غُمُوضٍ أوْ خَفَا مُعَلَّلٌ عِنْدَهُمُ قَدْ عُرِفَا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الرابع والعشرون — المعلَّل</div>
+        <div class="s-title">تعريفه واللغات الثلاث فيه</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>يُقال: المعلَّل، والمُعَلّ، والمعلول — والأصوب لغةً «المُعَلّ» (من: أعلَّه يُعلُّه)</li>
+            <li>المعلّ: حديثٌ ظاهرُه الصحة، لكن يتبيَّن بعد البحث أن فيه علةً قادحةً خفية</li>
+            <li>مثاله: حديثٌ يُروى مرفوعاً متصلاً وهو المشهور، ثم يتبيَّن أن الحفّاظ رَوَوه مرسلاً أو موقوفاً</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">هذا القسم من أغمض أنواع الحديث، لا يطَّلع عليه إلا أهل العلم النقّاد</div>
+          <div class="hbox-src">قول الحافظ ابن حجر في شرح النخبة</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وذُو اخْتِلافِ سنَدٍ أو مَتْنٍ مُضْطربٌ عِنْدَ أهيْلِ الفَنِّ" data-matn-sec="ص ١٠٤ – ١٠٩">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الخامس والعشرون</div>
+        <div class="sec-title">الحديث المضطرب</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وذُو اخْتِلافِ سنَدٍ أو مَتْنٍ مُضْطربٌ عِنْدَ أهيْلِ الفَنِّ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الخامس والعشرون — المضطرب</div>
+        <div class="s-title">تعريفه وحالاته الثلاث</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>المضطرب: اختلاف الرواة في السند أو المتن، على وجهٍ لا يمكن فيه جمعٌ ولا ترجيح</li>
+        </ul>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الحالة</th><th>الحكم</th></tr></thead>
+        <tbody>
+            <tr><td>إن أمكن الجمع بين الروايات</td><td>فلا اضطراب</td></tr>
+            <tr><td>إن أمكن الترجيح</td><td>يُؤخذ بالراجح، ولا اضطراب</td></tr>
+            <tr><td>إن كان الاختلاف في أمرٍ جانبي لا يمسّ أصل المعنى</td><td>فلا اضطراب (مثاله: اختلافهم في ثمن جمل جابر أو قلادة فضالة)</td></tr>
+            <tr><td>إن تعذَّر الجمع والترجيح وكان في صميم المعنى</td><td>فهو مضطربٌ، وحكمه الضعف لعدم الضبط</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الخامس والعشرون — المضطرب</div>
+        <div class="s-title">مثال الجمع: حجّ النبي ﷺ</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>النُّسك</th><th>تعريفه</th></tr></thead>
+        <tbody>
+            <tr><td>الإفراد</td><td>الإحرام بالحجّ وحده؛ يطوف للقدوم ويسعى للحجّ، ويبقى على إحرامه حتى يوم العيد</td></tr>
+            <tr><td>القِران</td><td>الإحرام بالعمرة والحجّ معاً؛ فعله كالمفرد لكن تختلف النية</td></tr>
+            <tr><td>التمتّع</td><td>الإحرام بالعمرة وحدها، والتحلُّل الكامل، ثم الإحرام بالحجّ من مكة في اليوم الثامن</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>اختلفت الروايات: من قائلٍ إنه حجّ مفرداً، ومن قائلٍ متمتعاً، ومن قائلٍ قارناً. والجمع الراجح (رأي أحمد وشيخ الإسلام ابن تيمية): كان قارناً حقيقةً؛ فمن روى «مفرداً» أراد اقتصاره على أعمال الحجّ فقط؛ ومن روى «متمتعاً» أراد جمعه بين النسكين في سفرةٍ واحدة.</p></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الخامس والعشرون — المضطرب</div>
+        <div class="s-title">مثال الترجيح: حديث بريرة رضي الله عنها</div>
+        <div class="s-rule"></div>
+        <div class="s-body"><p>لمّا أُعتقت بريرة خيَّرها النبي ﷺ بين البقاء مع زوجها مغيث أو فسخ نكاحها. اختلفت الروايات: هل كان زوجها حرًّا أم عبداً؟ ولمّا تعذَّر الجمع، عُمل بالترجيح: الراجح أنه كان عبداً — فتُلغى الرواية المرجوحة، ويُؤخذ بالراجحة سالمةً من الاضطراب.</p></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وَالُمدْرَجاتُ في الحديثِ ما أتَتْ مِنْ بَعْضِ ألفاظِ الرُّوَاةِ اتَّصَلَتْ" data-matn-sec="ص ١١٠ – ١١٢">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم السادس والعشرون</div>
+        <div class="sec-title">المدرَجات في الحديث</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وَالُمدْرَجاتُ في الحديثِ ما أتَتْ مِنْ بَعْضِ ألفاظِ الرُّوَاةِ اتَّصَلَتْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السادس والعشرون — المدرَج</div>
+        <div class="s-title">مواضع الإدراج الثلاثة بالأمثلة</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الموضع</th><th>المثال</th><th>الحدّ الفاصل</th></tr></thead>
+        <tbody>
+            <tr><td>أول الحديث</td><td>«أسبغوا الوضوء، ويلٌ للأعقاب من النار»</td><td>المرفوع هو الشطر الثاني فقط؛ «أسبغوا الوضوء» من كلام أبي هريرة</td></tr>
+            <tr><td>وسط الحديث</td><td>حديث بدء الوحي: «كان يتحنَّث في غار حراء، والتحنُّث التعبُّد»</td><td>«والتحنث التعبد» تفسيرٌ من الزهري أُدرج دون بيان</td></tr>
+            <tr><td>آخر الحديث</td><td>«يُدعَون غُرًّا محجَّلين... فمن استطاع أن يُطيل غُرَّته فليفعل»</td><td>الجملة الأخيرة من كلام أبي هريرة اجتهاداً، لا من كلامه ﷺ</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السادس والعشرون — المدرَج</div>
+        <div class="s-title">طرق معرفته وحكمه</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>يُعرف الإدراج: بنصٍّ من طريقٍ آخر يبيّنه، أو باستحالة كونه من كلامه ﷺ، أو بنصّ أحد الحفّاظ الأئمة</li>
+            <li>إن غيَّر الإدراج المعنى: لا يجوز إلا ببيانه صراحة</li>
+            <li>إن لم يغيِّر المعنى (كتفسير الزهري): فلا بأس بذكره على سبيل الإيضاح</li>
+            <li>المدرَج (كلام الراوي) ليس حجةً بحال، لأنه ليس من كلامه ﷺ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="ومَا رَوى كلُّ قَرِينٍ عنْ أخِهْ مُدَبَّجٌ فَاعْرِفْهُ حَقًّا وانْتَخِهْ" data-matn-sec="ص ١١٣ – ١١٤">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم السابع والعشرون</div>
+        <div class="sec-title">المدبَّج</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">ومَا رَوى كلُّ قَرِينٍ عنْ أخِهْ مُدَبَّجٌ فَاعْرِفْهُ حَقًّا وانْتَخِهْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم السابع والعشرون — المدبَّج</div>
+        <div class="s-title">القرين، ورواية الأقران، والمدبَّج</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>القرين: المشارك لمن روى عنه في السنّ، أو في الأخذ عن نفس الشيخ</li>
+            <li>رواية الأقران: أن يروي أحد القرينين عن الآخر (من جانبٍ واحد فقط)</li>
+            <li>المدبَّج: أن يروي كلُّ قرينٍ عن الآخر — من الجانبين معاً</li>
+            <li>سُمِّي «مدبَّجاً» من ديباجة الوجه؛ لأن كلَّ قرينٍ يلتفت إلى صاحبه محدِّثاً إياه فيقابله بديباجة وجهه</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="مُتَّفِقٌ لَفْظاً وخطاً مُتَّفقْ وضِدُّهُ فيما ذَكَرْنَا الُمفْترقْ  •  مُؤْتَلِفٌ مُتَّفِقُ الخطِّ فَقَطْ وضِدُّهُ مُختَلِفٌ فَاخْشَ الغَلَطْ" data-matn-sec="ص ١١٥ – ١١٧">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم ٢٨ – ٢٩</div>
+        <div class="sec-title">المتفق والمفترق — المؤتلف والمختلف</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">مُتَّفِقٌ لَفْظاً وخطاً مُتَّفقْ وضِدُّهُ فيما ذَكَرْنَا الُمفْترقْ  •  مُؤْتَلِفٌ مُتَّفِقُ الخطِّ فَقَطْ وضِدُّهُ مُختَلِفٌ فَاخْشَ الغَلَطْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم ٢٨ – ٢٩</div>
+        <div class="s-title">مقارنة بين البابين</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>الباب</th><th>التعريف</th><th>المثال</th></tr></thead>
+        <tbody>
+            <tr><td>المتفق والمفترق</td><td>اتفاق الاسم لفظاً وخطًّا، مع افتراق المسمَّى (شخصان أو أكثر بنفس الاسم)</td><td>«عباس»: اسمٌ لثقةٍ، واسمٌ لآخر ضعيف — فيلتبس الحديث حتى يُعرف أيّهما</td></tr>
+            <tr><td>المؤتلف والمختلف</td><td>اتفاق الاسمين خطًّا فقط، مع اختلافهما نطقاً</td><td>عبَّاس / عيَّاش، خيَّاط / حبَّاط</td></tr>
+        </tbody>
+      </table></div>
+        <div class="s-body"><p>الفائدة: تمييز الرواة الموثَّقين من غيرهم لئلا يقع الاشتباه في الحكم على الحديث؛ ويُعان على ذلك بمعرفة شيوخ الراوي وتلاميذه، والكتب المصنَّفة في هذا الباب.</p></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="والُمنْكَرُ الفَردُ بهِ رَاوٍ غَدَا تَعْدِيلُهُ لا يْحمِلُ التَّفَرُّدَا" data-matn-sec="ص ١١٨">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الثلاثون</div>
+        <div class="sec-title">المنكر</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">والُمنْكَرُ الفَردُ بهِ رَاوٍ غَدَا تَعْدِيلُهُ لا يْحمِلُ التَّفَرُّدَا</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثلاثون — المنكر</div>
+        <div class="s-title">تعريفه — قولان</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>القول</th><th>التعريف</th></tr></thead>
+        <tbody>
+            <tr><td>قول الأكثر</td><td>ما رواه الضعيف مخالفاً للثقة (ولو كانا تلميذَي شيخٍ واحد)</td></tr>
+            <tr><td>قول الناظم وابن حجر في النخبة</td><td>ما انفرد به راوٍ لا يُحتمل تفرُّده — فهو مردود ولو كان له شواهد، لشدة ضعفه</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="مَتُروكُهُ مَا وَاحِدٌ بهِ انفَردْ وأجَمعُوا لضَعْفِه فَهُوَ كرَدّ" data-matn-sec="ص ١١٩">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الحادي والثلاثون</div>
+        <div class="sec-title">المتروك</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">مَتُروكُهُ مَا وَاحِدٌ بهِ انفَردْ وأجَمعُوا لضَعْفِه فَهُوَ كرَدّ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الحادي والثلاثون — المتروك</div>
+        <div class="s-title">تعريفه — قولان</div>
+        <div class="s-rule"></div>
+        <div class="mtable-wrap"><table class="mtable">
+        <thead><tr><th>القول</th><th>التعريف</th></tr></thead>
+        <tbody>
+            <tr><td>قول الناظم</td><td>ما انفرد به راوٍ أجمع المحدِّثون على تضعيفه — فهو مردود</td></tr>
+            <tr><td>قول ابن حجر في النخبة</td><td>ما رواه راوٍ متَّهمٌ بالكذب — فحديثه يقارب الموضوع دون الجزم بوضعه</td></tr>
+        </tbody>
+      </table></div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="والكذِبُ الُمخْتَلَقُ المصنُوعُ علَى النَّبيِّ فذَلِكَ الموْضوعُ" data-matn-sec="ص ١٢٠ – ١٢١">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">القسم الثاني والثلاثون</div>
+        <div class="sec-title">الحديث الموضوع</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">والكذِبُ الُمخْتَلَقُ المصنُوعُ علَى النَّبيِّ فذَلِكَ الموْضوعُ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثاني والثلاثون — الموضوع</div>
+        <div class="s-title">تعريفه ومصنَّفاته وأسبابه</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>الموضوع: الكذب المختلَق المصنوع على النبي ﷺ</li>
+            <li>من مصنَّفاته: «اللآلئ المصنوعة في الأحاديث الموضوعة» / «الفوائد المجموعة» للشوكاني / «الموضوعات» لابن الجوزي</li>
+            <li>من أسباب الوضع: التعصب المذهبي أو الطائفي — كأحاديث الرافضة الموضوعة في فضائل آل البيت وذمّ بني أميّة</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">القسم الثاني والثلاثون — الموضوع</div>
+        <div class="s-title">حكمه وتنبيه</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>التحديث بالموضوع حرامٌ إلا مع بيان وضعه، وبصيغة تمريضٍ («قيل»، «يُروى») لا بصيغة الجزم</li>
+            <li>وضع الحديث على النبي ﷺ من كبائر الذنوب</li>
+        </ul>
+        <div class="hbox">
+          <div class="hbox-text">من كذب عليَّ متعمِّداً فليتبوَّأ مقعده من النار</div>
+          <div class="hbox-src">متفق عليه</div>
+        </div>
+        <div class="ibox athar">
+          <div class="ibox-text">تنبيه: يُلاحَظ في تفسير «الكشّاف» للزمخشري تصديرُ كل سورةٍ أو ختمُها بأحاديث ضعيفة جداً أو موضوعة في فضلها؛ وقد يسَّر الله للحافظ ابن حجر تخريج أحاديث الكشّاف وبيَّن صحيحها من ضعيفها وموضوعها.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide sec-slide" data-matn="وقَدْ أتَتْ كالَجوْهَرِ المكْنُونِ سَمَّيْتُهَا: مَنْظُومَةَ البَيْقُوني  •  فَوْقَ الثَّلاثيَن بأرْبَعٍ أتَتْ أقْسامُهَا ثمَّ بخيٍر خُتِمتْ" data-matn-sec="ص ١٢٢">
+      <div class="sec-bg"></div>
+      <div class="sec-inner">
+        <div class="sec-num-badge">خاتمة</div>
+        <div class="sec-title">خاتمة المنظومة</div>
+        <div class="sec-matn-box">
+          <div class="sec-matn-label">نصّ الأبيات</div>
+          <div class="sec-matn-text">وقَدْ أتَتْ كالَجوْهَرِ المكْنُونِ سَمَّيْتُهَا: مَنْظُومَةَ البَيْقُوني  •  فَوْقَ الثَّلاثيَن بأرْبَعٍ أتَتْ أقْسامُهَا ثمَّ بخيٍر خُتِمتْ</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div>
+        <div class="s-heading">خاتمة</div>
+        <div class="s-title">عدد أبيات المنظومة، ودعاء الشارح</div>
+        <div class="s-rule"></div>
+        <ul class="flist">
+            <li>«كالجوهر المكنون»: أي المحفوظ عن الشمس والرياح والغبار، فيبقى نضراً مشرقاً دائماً — تشبيهٌ لنفاسة المنظومة</li>
+            <li>سمَّاها ناظمها: «منظومة البيقوني» نسبةً إلى ناظمها طه بن محمد الفتحي البيقوني</li>
+            <li>عدد أبياتها: أربعةٌ وثلاثون بيتاً، اشتملت على اثنين وثلاثين نوعاً من أنواع علوم الحديث</li>
+        </ul>
+        <div class="ibox athar">
+          <div class="ibox-lbl">ختام الشيخ ابن عثيمين رحمه الله لشرحه</div>
+          <div class="ibox-text">نسأل الله تعالى أن يتقبَّل منّا صالح الأعمال، وأن يغفر الزلل والخطأ، إنه سميعٌ مجيب. وصلى الله وسلم وبارك على نبينا وإمامنا محمد بن عبد الله وعلى آله وأصحابه وأتباعه بإحسانٍ إلى يوم الدين.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div style="text-align:center;width:100%">
+        <div class="cover-orn" style="color:var(--secondary)">تمّ بحمد الله</div>
+        <div class="s-title" style="text-align:center; margin-bottom: 25px; font-size: 3.5rem;">شرح المنظومة البيقونية في مصطلح الحديث</div>
+        <div class="s-body" style="text-align:center; font-size: 2rem;">للشيخ محمد بن صالح العثيمين رحمه الله</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="nav-pane">
+    <button class="nav-btn" id="bp">→ السابق</button>
+    <div id="dots"></div>
+    <div id="slide-counter"><span id="sc-cur">١</span> / <span id="sc-tot"></span><span id="ap-mark" style="display:none;color:var(--secondary);margin-left:8px">▶</span></div>
+    <button class="nav-btn" id="bn">التالي ←</button>
+  </div>
+
+</div><!-- /shell -->
+
+<script>
+(function(){
+  const KEY = 'bayquniyya-theme';
+  const dots = [...document.querySelectorAll('.ts-dot')];
+  function setTheme(t){
+    document.documentElement.setAttribute('data-theme', t);
+    dots.forEach(d=>d.classList.toggle('on', d.dataset.t===t));
+    try{ localStorage.setItem(KEY, t); }catch(e){}
+  }
+  dots.forEach(d=> d.addEventListener('click', ()=> setTheme(d.dataset.t)));
+  let saved = 'manuscript';
+  try{ saved = localStorage.getItem(KEY) || 'manuscript'; }catch(e){}
+  setTheme(saved);
+})();
+
+const slides = [...document.querySelectorAll('.slide')];
+const tot = slides.length;
+let cur = 0;
+let frag = 0;
+
+const FRAG_SEL = '.s-body p, .hbox, .ibox, .defbox, .flist li, .grid2 .gcol, .tnode, .kard, .tl-item, .hukm, .subbox, .fork, .dbox, .chips, .talil-block, .mtable-wrap, .diagram-box';
+slides.forEach(sl=>{
+  if(sl.classList.contains('cover') || sl.classList.contains('sec-slide')) return;
+  const fr = [...sl.querySelectorAll(FRAG_SEL)];
+  fr.forEach((el,i)=>{ el.classList.add('frag'); el.dataset.fi = i; });
+  sl.dataset.fragCount = fr.length;
+});
+function fragCount(){ return +slides[cur].dataset.fragCount || 0; }
+function applyFrags(){
+  slides[cur].querySelectorAll('.frag').forEach(el=>{
+    el.classList.toggle('frag-on', +el.dataset.fi < frag);
+  });
+  bn.disabled = (cur===tot-1 && frag >= fragCount());
+  bp.disabled = (cur===0   && frag <= 0);
+}
+
+let matnMap = [];
+let activMatn = '';
+let activSec  = '';
+for(let i=0;i<tot;i++){
+  const sl = slides[i];
+  if(sl.classList.contains('sec-slide')){
+    activMatn = sl.dataset.matn || '';
+    activSec  = sl.dataset.matnSec || '';
+  }
+  matnMap.push({matn: activMatn, sec: activSec});
+}
+
+const toAr = n => n.toString().replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+
+const matnTextEl  = document.getElementById('matn-text');
+const matnSecLbl  = document.getElementById('matn-sec-label');
+const scCur       = document.getElementById('sc-cur');
+const scTot       = document.getElementById('sc-tot');
+const progEl      = document.getElementById('prog');
+const dotsEl      = document.getElementById('dots');
+const bp          = document.getElementById('bp');
+const bn          = document.getElementById('bn');
+
+function buildDots(){
+  dotsEl.innerHTML='';
+  const step = Math.ceil(tot/28);
+  for(let i=0;i<tot;i+=step){
+    const d = document.createElement('div');
+    d.className='dot'; d.dataset.i=i;
+    d.onclick=()=>go(i);
+    dotsEl.appendChild(d);
+  }
+}
+function updDots(){
+  const step=Math.ceil(tot/28);
+  document.querySelectorAll('.dot').forEach(d=>{
+    const i=+d.dataset.i;
+    d.classList.toggle('on', cur>=i && cur<i+step);
+  });
+}
+
+let prevMatn = null;
+const matnPane = document.getElementById('matn-pane');
+
+let apOn = false, apSec = 20, apT = null, toastT = null;
+const apMark = document.getElementById('ap-mark');
+function apToast(msg){
+  let t = document.getElementById('ap-toast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'ap-toast';
+    document.getElementById('content-pane').appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 1600);
+}
+function apSchedule(){
+  clearTimeout(apT);
+  if(apOn && (cur < tot-1 || frag < fragCount())) apT = setTimeout(()=>next(), apSec*1000);
+}
+function apToggle(){
+  apOn = !apOn;
+  apMark.style.display = apOn ? 'inline' : 'none';
+  apToast(apOn ? 'تقدُّم تلقائي: نقطة كل ' + toAr(apSec) + ' ثانية' : 'إيقاف التقدُّم التلقائي');
+  apSchedule();
+}
+
+function go(n, fragStart){
+  slides[cur].classList.remove('active');
+  cur = Math.max(0, Math.min(n, tot-1));
+  slides[cur].classList.add('active');
+
+  frag = (fragStart === 0) ? 0 : fragCount();
+  applyFrags();
+
+  scCur.textContent = toAr(cur+1);
+  progEl.style.width = ((cur+1)/tot*100)+'%';
+
+  const {matn, sec} = matnMap[cur];
+  if(matn !== prevMatn){
+    prevMatn = matn;
+    if(matn){
+      matnTextEl.classList.remove('vis');
+      matnSecLbl.classList.remove('vis');
+      matnPane.classList.add('has-matn');
+      setTimeout(()=>{
+        matnTextEl.textContent = matn;
+        matnSecLbl.textContent = sec;
+        matnTextEl.classList.add('vis');
+        matnSecLbl.classList.add('vis');
+      }, 180);
+    } else {
+      matnTextEl.classList.remove('vis');
+      matnSecLbl.classList.remove('vis');
+      matnPane.classList.remove('has-matn');
+    }
+  }
+
+  updDots();
+  apSchedule();
+}
+
+function next(){
+  if(frag < fragCount()){ frag++; applyFrags(); apSchedule(); }
+  else go(cur+1, 0);
+}
+function prev(){
+  if(frag > 0){ frag--; applyFrags(); apSchedule(); }
+  else go(cur-1);
+}
+
+scTot.textContent = toAr(tot);
+buildDots();
+go(0, 0);
+
+bn.onclick = ()=>{next(); bn.blur();};
+bp.onclick = ()=>{prev(); bp.blur();};
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowLeft'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault(); next();}
+  else if(e.key==='ArrowRight'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault(); prev();}
+  else if(e.key==='Home'){e.preventDefault(); go(0, 0);}
+  else if(e.key==='End'){e.preventDefault(); go(tot-1);}
+  else if(e.key==='f'||e.key==='F'){
+    document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+  }
+  else if(e.key==='a'||e.key==='A'||e.key==='ش'){apToggle();}
+  else if(e.key==='+'||e.key==='='){apSec=Math.min(120,apSec+5); apToast('الفاصل: '+toAr(apSec)+' ثانية'); apSchedule();}
+  else if(e.key==='-'||e.key==='_'){apSec=Math.max(5,apSec-5); apToast('الفاصل: '+toAr(apSec)+' ثانية'); apSchedule();}
+});
+let tx=0;
+document.addEventListener('touchstart', e=>tx=e.touches[0].clientX, {passive:true});
+document.addEventListener('touchend', e=>{
+  const dx=tx-e.changedTouches[0].clientX;
+  if(Math.abs(dx)>50) dx>0?next():prev();
+});
+
+const shell = document.getElementById('shell');
+const SW = 1600, SH = 900;
+function fitStage(){
+  const s = Math.min(innerWidth/SW, innerHeight/SH);
+  shell.style.transform = `translate(-50%,-50%) scale(${s})`;
+}
+addEventListener('resize', fitStage);
+fitStage();
+
+let idleT;
+function wake(){
+  document.body.classList.remove('idle');
+  clearTimeout(idleT);
+  idleT = setTimeout(()=>document.body.classList.add('idle'), 3000);
+}
+['mousemove','mousedown','touchstart'].forEach(ev=>addEventListener(ev, wake, {passive:true}));
+wake();
+</script>
+</body>
+</html>

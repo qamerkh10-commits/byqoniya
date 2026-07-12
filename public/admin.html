@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم المطور — المنظومة البيقونية</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <div>جاري التحميل...</div>
+</div>
+
+<div id="adminRoot" style="display:none;">
+  <div class="topbar">
+    <div class="page-title">لوحة تحكم المطور</div>
+    <div class="actions">
+      <a href="/index.html" class="btn secondary" style="width:auto; padding:8px 14px;">↩ الرجوع للموقع</a>
+      <button class="btn danger" id="logoutBtn" style="width:auto; padding:8px 14px;">تسجيل الخروج</button>
+    </div>
+  </div>
+
+  <div class="admin-wrap">
+
+    <div class="panel">
+      <h2>➕ رفع ملف جديد وإضافته للقائمة الجانبية</h2>
+      <div class="error-box" id="uploadError"></div>
+      <div class="success-box" id="uploadSuccess"></div>
+      <form id="uploadForm" enctype="multipart/form-data">
+        <div class="upload-grid">
+          <div class="field">
+            <label>عنوان الصفحة (يظهر في القائمة)</label>
+            <input type="text" id="uTitle" required>
+          </div>
+          <div class="field">
+            <label>أيقونة (اختياري - إيموجي)</label>
+            <input type="text" id="uIcon" placeholder="📄" maxlength="4">
+          </div>
+        </div>
+        <div class="field">
+          <label>الملف (html, htm, txt, pdf, png, jpg, svg)</label>
+          <input type="file" id="uFile" required accept=".html,.htm,.txt,.pdf,.png,.jpg,.jpeg,.svg">
+        </div>
+        <button class="btn" type="submit" id="uploadBtn">رفع الملف</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>📑 الصفحات الحالية</h2>
+      <table class="pages-table">
+        <thead>
+          <tr>
+            <th>الترتيب</th>
+            <th>الأيقونة</th>
+            <th>العنوان</th>
+            <th>الملف</th>
+            <th>آخر تعديل</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody id="pagesBody"></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>👥 المستخدمون</h2>
+      <table class="pages-table">
+        <thead>
+          <tr><th>#</th><th>اسم المستخدم</th><th>الصلاحية</th><th>تاريخ التسجيل</th></tr>
+        </thead>
+        <tbody id="usersBody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- مودال تعديل المحتوى -->
+<div class="modal-backdrop" id="editModal" style="display:none;">
+  <div class="modal">
+    <h3 id="editModalTitle">تعديل الصفحة</h3>
+    <div class="error-box" id="editError"></div>
+
+    <div class="upload-grid">
+      <div class="field">
+        <label>العنوان</label>
+        <input type="text" id="editTitle">
+      </div>
+      <div class="field">
+        <label>الأيقونة</label>
+        <input type="text" id="editIcon">
+      </div>
+    </div>
+
+    <div id="editContentField" class="field" style="display:none;">
+      <label>محتوى الملف (HTML/نص)</label>
+      <textarea class="code-edit" id="editContent"></textarea>
+    </div>
+
+    <div class="field" id="replaceFileField" style="display:none;">
+      <label>أو استبدل الملف بالكامل برفع ملف جديد</label>
+      <input type="file" id="replaceFile">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" id="saveEditBtn" style="width:auto;">حفظ التعديلات</button>
+      <button class="btn secondary" id="cancelEditBtn" style="width:auto;">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

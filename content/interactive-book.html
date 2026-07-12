@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شرح ابن عثيمين على المنظومة البيقونية في مصطلح الحديث</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3ECDC;
+  --paper-2:#EAE0C6;
+  --paper-3:#E2D5B3;
+  --ink:#241C12;
+  --ink-soft:#54493A;
+  --gold:#A9782E;
+  --gold-soft:#C79A4C;
+  --teal:#1C5F52;
+  --teal-soft:#dfeae6;
+  --maroon:#7C2A2A;
+  --maroon-soft:#f3e3e0;
+  --line:#D6C69C;
+  --shadow: 0 6px 24px rgba(36,28,18,0.10);
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Amiri', serif;
+  font-size:19px;
+  line-height:2;
+  direction:rtl;
+  unicode-bidi:embed;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  pointer-events:none;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(169,120,46,0.05), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(28,95,82,0.05), transparent 40%);
+  z-index:0;
+}
+a{color:var(--teal); text-decoration:none;}
+a:hover{text-decoration:underline;}
+
+/* ---------- layout shell ---------- */
+.shell{
+  display:flex;
+  width:100%;
+  margin:0;
+  position:relative;
+  z-index:1;
+}
+.sidebar{
+  flex:0 0 280px;
+}
+.main{
+  flex:1 1 auto;
+  min-width:0;
+}
+@media (max-width: 900px){
+  .shell{flex-direction:column;}
+  .sidebar{position:relative; top:0; height:auto; max-height:none; order:2;}
+  .main{order:1;}
+}
+
+/* ---------- sidebar / nav ---------- */
+.sidebar{
+  position:sticky; top:0; align-self:start;
+  height:100vh; overflow-y:auto;
+  padding:28px 22px 40px 10px;
+  border-left:1px solid var(--line);
+  background:var(--paper-2);
+}
+.sidebar-title{
+  font-family:'Cairo', sans-serif;
+  font-weight:700;
+  font-size:14px;
+  color:var(--teal);
+  letter-spacing:.5px;
+  margin:0 0 14px;
+  padding-bottom:10px;
+  border-bottom:2px solid var(--gold-soft);
+}
+.nav-list{list-style:none; margin:0; padding:0;}
+.nav-list li{margin:0;}
+.nav-link{
+  display:block;
+  font-family:'Cairo', sans-serif;
+  font-size:14.5px;
+  color:var(--ink-soft);
+  padding:7px 10px;
+  border-radius:6px;
+  line-height:1.5;
+}
+.nav-link:hover{background:var(--paper-3); color:var(--teal); text-decoration:none;}
+
+/* ---------- main content ---------- */
+.main{padding:0 0 60px;}
+
+/* ---------- cover ---------- */
+.cover{
+  min-height:72vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center;
+  padding:60px 30px;
+  background:
+    linear-gradient(180deg, var(--paper-2), var(--paper));
+  border-bottom:1px solid var(--line);
+}
+.cover-orn{font-size:22px; color:var(--gold); opacity:.8; margin:0 0 18px;}
+.cover-orn.bottom{margin-top:22px;}
+.cover-kicker{
+  font-family:'Cairo', sans-serif;
+  font-size:15px; letter-spacing:2px; color:var(--teal);
+  margin:0 0 10px;
+}
+.cover-title{
+  font-family:'Aref Ruqaa', serif;
+  font-weight:700;
+  font-size:clamp(38px, 6vw, 64px);
+  margin:0;
+  color:var(--ink);
+}
+.cover-sub{
+  font-family:'Amiri', serif;
+  font-style:italic;
+  font-size:20px;
+  color:var(--ink-soft);
+  margin:6px 0 0;
+}
+.cover-rule{width:120px; height:2px; background:var(--gold); margin:26px 0;}
+.cover-meta p{margin:4px 0; font-size:16px; color:var(--ink-soft);}
+
+/* ---------- generic section ---------- */
+.section{
+  padding:46px clamp(20px,5vw,64px);
+  border-bottom:1px solid var(--line);
+  scroll-margin-top: 16px;
+}
+.eyebrow{
+  font-family:'Cairo', sans-serif;
+  font-weight:600;
+  font-size:14px;
+  letter-spacing:1px;
+  color:var(--teal);
+  margin:0 0 6px;
+}
+.section h2{
+  font-family:'Aref Ruqaa', serif;
+  font-size:32px;
+  margin:0 0 6px;
+  color:var(--ink);
+}
+.section h3{
+  font-family:'Cairo', sans-serif;
+  font-weight:700;
+  font-size:19px;
+  color:var(--maroon);
+  margin:34px 0 12px;
+  padding-right:14px;
+  border-right:3px solid var(--gold-soft);
+}
+.pageref{
+  display:inline-block;
+  font-family:'Cairo', sans-serif;
+  font-size:13px;
+  color:var(--ink-soft);
+  background:var(--paper-3);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:3px 14px;
+  margin:4px 0 22px;
+}
+.section-note{color:var(--ink-soft); font-size:16px; margin:0 0 26px;}
+.section p{margin:14px 0;}
+
+/* ---------- بطاقة الكتاب ---------- */
+.info-card{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:6px 26px;
+  margin-top:22px;
+  box-shadow:var(--shadow);
+}
+.info-row{
+  display:flex; justify-content:space-between; gap:20px;
+  padding:14px 0;
+  border-bottom:1px solid var(--line);
+  font-size:17px;
+}
+.info-row:last-child{border-bottom:none;}
+.info-key{
+  font-family:'Cairo', sans-serif;
+  font-weight:600;
+  color:var(--teal);
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+.info-val{color:var(--ink); text-align:left;}
+
+/* ---------- verse / بيت ---------- */
+.verse-group{
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 8px;
+  margin:18px 0;
+}
+.verse-group.standalone{background:transparent; border:none; padding:0;}
+.verse-group.full-matn{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px,1fr));
+  gap:2px 26px;
+  background:transparent; border:none; padding:0;
+}
+.bayt{
+  display:flex; align-items:baseline; gap:14px;
+  padding:12px 16px;
+  border-bottom:1px dashed var(--line);
+}
+.full-matn .bayt{border-bottom:1px dashed var(--line);}
+.verse-group .bayt:last-child{border-bottom:none;}
+.bayt-num{
+  flex:0 0 auto;
+  width:30px; height:30px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cairo', sans-serif;
+  font-weight:700;
+  font-size:13px;
+  color:#fff;
+  background:var(--gold);
+  border-radius:50%;
+}
+.bayt-text{
+  font-family:'Aref Ruqaa', serif;
+  font-size:20px;
+  color:var(--ink);
+  line-height:1.9;
+}
+
+/* ---------- lists ---------- */
+.pt-list{
+  margin:16px 0;
+  padding:0;
+  list-style:none;
+}
+.pt-list li{
+  position:relative;
+  padding:8px 30px 8px 0;
+  margin:0;
+  border-bottom:1px solid var(--line);
+}
+.pt-list li:last-child{border-bottom:none;}
+.pt-list li::before{
+  content:"◆";
+  position:absolute;
+  right:0; top:10px;
+  font-size:10px;
+  color:var(--gold);
+}
+
+/* ---------- tables ---------- */
+.tbl-wrap{overflow-x:auto; margin:20px 0;}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:var(--paper-2);
+  border-radius:10px;
+  overflow:hidden;
+  font-size:16.5px;
+}
+thead th{
+  font-family:'Cairo', sans-serif;
+  font-weight:700;
+  font-size:14.5px;
+  color:#fff;
+  background:var(--teal);
+  padding:12px 16px;
+  text-align:right;
+}
+tbody td{
+  padding:12px 16px;
+  border-bottom:1px solid var(--line);
+  text-align:right;
+  vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:nth-child(even){background:var(--paper-3);}
+
+/* ---------- quotes: ayah / hadith ---------- */
+.quote-block{
+  margin:20px 0;
+  padding:20px 24px;
+  border-radius:12px;
+  text-align:center;
+}
+.quote-block.ayah{
+  background:var(--maroon-soft);
+  border-inline-start:4px solid var(--maroon);
+}
+.quote-block.hadith{
+  background:var(--teal-soft);
+  border-inline-start:4px solid var(--teal);
+}
+.quote-text{
+  font-family:'Aref Ruqaa', serif;
+  font-size:22px;
+  margin:0 0 8px;
+}
+.quote-block.ayah .quote-text{color:var(--maroon);}
+.quote-block.hadith .quote-text{color:var(--teal);}
+.quote-attrib{
+  font-family:'Cairo', sans-serif;
+  font-size:13.5px;
+  color:var(--ink-soft);
+  margin:0;
+}
+
+/* ---------- matn section ---------- */
+.matn-section{background:var(--paper-2);}
+
+/* ---------- closing ---------- */
+.closing{
+  text-align:center;
+  padding:70px 30px 90px;
+}
+.closing .cover-orn{font-size:26px; color:var(--gold); margin-bottom:20px;}
+.closing h2{
+  font-family:'Aref Ruqaa', serif;
+  font-size:40px;
+  margin:0 0 14px;
+  color:var(--ink);
+}
+.closing-sub{font-size:18px; color:var(--ink-soft); margin:0;}
+.closing-author{font-size:16px; color:var(--ink-soft); margin:6px 0 0;}
+
+/* ---------- print ---------- */
+@media print{
+  .sidebar{display:none;}
+  .shell{grid-template-columns:1fr;}
+  .section{break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<a id="top"></a>
+<div class="shell">
+  <nav class="sidebar">
+    <p class="sidebar-title">فهرس المحتوى</p>
+    <ul class="nav-list"><li><a href="#top" class="nav-link">الغلاف</a></li><li><a href="#book-card" class="nav-link">بطاقة الكتاب</a></li><li><a href="#matn" class="nav-link">متن المنظومة</a></li><li><a href="#s8" class="nav-link">مقدمة</a></li><li><a href="#s11" class="nav-link">شرح</a></li><li><a href="#s15" class="nav-link">البيت الأول</a></li><li><a href="#s18" class="nav-link">البيت الثاني</a></li><li><a href="#s20" class="nav-link">القسم الأول</a></li><li><a href="#s25" class="nav-link">مباحث حديثية</a></li><li><a href="#s27" class="nav-link">القسم الثاني</a></li><li><a href="#s29" class="nav-link">القسم الثالث</a></li><li><a href="#s32" class="nav-link">القسم ٤ – ٥</a></li><li><a href="#s36" class="nav-link">القسم السادس</a></li><li><a href="#s38" class="nav-link">القسم السابع</a></li><li><a href="#s40" class="nav-link">القسم الثامن</a></li><li><a href="#s43" class="nav-link">القسم ٩ – ١٠</a></li><li><a href="#s46" class="nav-link">القسم ١١ – ١٢</a></li><li><a href="#s48" class="nav-link">القسم ١٣ – ١٤</a></li><li><a href="#s50" class="nav-link">القسم الخامس عشر</a></li><li><a href="#s52" class="nav-link">القسم السادس عشر</a></li><li><a href="#s54" class="nav-link">القسم السابع عشر</a></li><li><a href="#s56" class="nav-link">القسم ١٨ – ١٩</a></li><li><a href="#s58" class="nav-link">القسم العشرون</a></li><li><a href="#s60" class="nav-link">القسم ٢١ – ٢٢</a></li><li><a href="#s65" class="nav-link">القسم الثالث والعشرون</a></li><li><a href="#s67" class="nav-link">القسم الرابع والعشرون</a></li><li><a href="#s69" class="nav-link">القسم الخامس والعشرون</a></li><li><a href="#s73" class="nav-link">القسم السادس والعشرون</a></li><li><a href="#s76" class="nav-link">القسم السابع والعشرون</a></li><li><a href="#s78" class="nav-link">القسم ٢٨ – ٢٩</a></li><li><a href="#s80" class="nav-link">القسم الثلاثون</a></li><li><a href="#s82" class="nav-link">القسم الحادي والثلاثون</a></li><li><a href="#s84" class="nav-link">القسم الثاني والثلاثون</a></li><li><a href="#s87" class="nav-link">خاتمة</a></li></ul>
+  </nav>
+  <main class="main">
+    
+<header class="cover">
+  <div class="cover-orn top">۞</div>
+  <p class="cover-kicker">شرح ابن عثيمين</p>
+  <h1 class="cover-title">المنظومة البيقونية</h1>
+  <p class="cover-sub">في مصطلح الحديث</p>
+  <div class="cover-rule"></div>
+  <div class="cover-meta">
+    <p>تأليف: محمد بن صالح بن محمد العثيمين (ت ١٤٢١هـ)</p><p>تحقيق: فهد بن ناصر بن إبراهيم السليمان</p><p>عرض تقديمي شامل — ٣٤ بيتاً في ٣٢ نوعاً من أنواع الحديث</p>
+  </div>
+  <div class="cover-orn bottom">۞</div>
+</header>
+
+    
+<section class="section book-card" id="book-card">
+  <p class="eyebrow">بطاقة الكتاب</p>
+  <h2>شرح المنظومة البيقونية</h2>
+  <div class="info-card"><div class="info-row"><span class="info-key">المؤلف</span><span class="info-val">محمد بن صالح بن محمد العثيمين (ت ١٤٢١هـ)</span></div><div class="info-row"><span class="info-key">المحقق</span><span class="info-val">فهد بن ناصر بن إبراهيم السليمان</span></div><div class="info-row"><span class="info-key">عدد صفحات الأصل</span><span class="info-val">١٢٢ صفحة</span></div><div class="info-row"><span class="info-key">عدد أبيات المنظومة</span><span class="info-val">٣٤ بيتاً (٣٢ نوعاً من أنواع الحديث)</span></div><div class="info-row"><span class="info-key">ناظم المنظومة</span><span class="info-val">طه بن محمد الفتحي البيقوني</span></div></div>
+</section>
+
+    
+<section class="section matn-section" id="matn">
+  <p class="eyebrow">متن المنظومة</p>
+  <h2>نصّ منظومة البيقوني رحمه الله كاملاً</h2>
+  <p class="section-note">أربعة وثلاثون بيتاً، اشتملت على اثنين وثلاثين نوعاً من أنواع علوم الحديث</p>
+  <div class="verse-group full-matn"><div class="bayt"><span class="bayt-num">1</span><span class="bayt-text">أبدأُ بالحمدِ مُصَلِّياً على مُحمَّدٍ خَيرِ نبيٍّ أُرسلا</span></div><div class="bayt"><span class="bayt-num">2</span><span class="bayt-text">وذِي مِنَ أقسَامِ الحديثِ عدَّه وكُلُّ واحدٍ أتى وحَدَّه</span></div><div class="bayt"><span class="bayt-num">3</span><span class="bayt-text">أوَّلُها الصحيحُ وهوَ ما اتَّصَل إسنادُهُ ولْم يُشَذَّ أو يُعَلّ</span></div><div class="bayt"><span class="bayt-num">4</span><span class="bayt-text">يَرْويهِ عَدْلٌ ضَابِطٌ عَنْ مِثْلِهِ مُعْتَمَدٌ في ضَبْطِهِ ونَقْلِهِ</span></div><div class="bayt"><span class="bayt-num">5</span><span class="bayt-text">وَالَحسَنُ الَمعْرُوفُ طُرْقاً وغَدَتْ رِجَالُهُ لا كالصّحيحِ اشْتَهَرَتْ</span></div><div class="bayt"><span class="bayt-num">6</span><span class="bayt-text">وكُلُّ ما عَنْ رُتبةِ الُحسْنِ قَصْر فَهْوَ الضعيفُ وهوَ أقْساماً كُثُرْ</span></div><div class="bayt"><span class="bayt-num">7</span><span class="bayt-text">وما أُضيفَ للنبي الَمرْفوعُ وما لتَابِعٍ هُوَ المقْطوعُ</span></div><div class="bayt"><span class="bayt-num">8</span><span class="bayt-text">والُمسْنَدُ الُمتَّصِلُ الإسنادِ مِنْ راويهِ حتَّى الُمصْطفى ولْم يَبِنْ</span></div><div class="bayt"><span class="bayt-num">9</span><span class="bayt-text">ومَا بِسَمْعِ كُلِّ رَاوٍ يَتَّصِلْ إسْنَادُهُ للمُصْطَفى فَالُمتَّصِلْ</span></div><div class="bayt"><span class="bayt-num">10</span><span class="bayt-text">مُسَلْسَلٌ قُلْ مَا عَلَى وَصْفٍ أتَى مِثْلُ أمَا واللهِ أنْبأنِي الفتى</span></div><div class="bayt"><span class="bayt-num">11</span><span class="bayt-text">كذَاكَ قَدْ حَدَّثَنِيهِ قائِماً أوْ بَعْدَ أنْ حَدَّثَنِي تَبَسَّمَا</span></div><div class="bayt"><span class="bayt-num">12</span><span class="bayt-text">عَزيزٌ مَروِيُّ اثنَيِن أوْ ثَلاثهْ مَشْهورٌ مَرْوِيُّ فَوْقَ ما ثَلاثهْ</span></div><div class="bayt"><span class="bayt-num">13</span><span class="bayt-text">مَعَنْعَنٌ كَعَن سَعيدٍ عَنْ كَرَمْ وَمُبهَمٌ مَا فيهِ رَاوٍ لْم يُسَمْ</span></div><div class="bayt"><span class="bayt-num">14</span><span class="bayt-text">وكُلُّ مَا قَلَّت رِجَالُهُ عَلا وضِدُّهُ ذَاكَ الذِي قَدْ نَزَلا</span></div><div class="bayt"><span class="bayt-num">15</span><span class="bayt-text">ومَا أضَفْتَهُ إلى الأصْحَابِ مِنْ قَوْلٍ وفعْلٍ فهْوَ مَوْقُوفٌ زُكِنْ</span></div><div class="bayt"><span class="bayt-num">16</span><span class="bayt-text">وَمُرْسلٌ مِنهُ الصَّحَابيُّ سَقَطْ وقُلْ غَريبٌ ما رَوَى رَاوٍ فَقطْ</span></div><div class="bayt"><span class="bayt-num">17</span><span class="bayt-text">وكلُّ مَا لْم يَتَّصِلْ بِحَالٍ إسْنَادُهُ مُنْقَطِعُ الأوْصالِ</span></div><div class="bayt"><span class="bayt-num">18</span><span class="bayt-text">والُمعْضَلُ السَّاقِطُ مِنْهُ اثْنَانِ ومَا أتى مُدَلَّساً نَوعانِ</span></div><div class="bayt"><span class="bayt-num">19</span><span class="bayt-text">الأوَّلُ الإسْقاطُ للشَّيخِ وأنْ يَنْقُلَ عَمَّنْ فَوْقَهُ بعنْ وأنْ</span></div><div class="bayt"><span class="bayt-num">20</span><span class="bayt-text">والثَّانِ لا يُسْقِطُهُ لكنْ يَصِفْ أوْصَافَهُ بما بهِ لا يَنْعرِفْ</span></div><div class="bayt"><span class="bayt-num">21</span><span class="bayt-text">ومَا يَخالِفُ ثِقةٌ فيهِ الَملا فـالشَّاذُّ والَمقْلوبُ قِسْمَانِ تَلا</span></div><div class="bayt"><span class="bayt-num">22</span><span class="bayt-text">إبْدَالُ راوٍ ما بِرَاوٍ قِسْمُ وقَلْبُ إسْنَادٍ لمتنٍ قِسمُ</span></div><div class="bayt"><span class="bayt-num">23</span><span class="bayt-text">وَالفَرَدُ ما قَيَّدْتَهُ بثِقَةِ أوْ جْمعٍ أوْ قَصِرَ على روايةِ</span></div><div class="bayt"><span class="bayt-num">24</span><span class="bayt-text">ومَا بعِلَّةٍ غُمُوضٍ أوْ خَفَا مُعَلَّلٌ عِنْدَهُمُ قَدْ عُرِفَا</span></div><div class="bayt"><span class="bayt-num">25</span><span class="bayt-text">وذُو اخْتِلافِ سنَدٍ أو مَتْنٍ مُضْطربٌ عِنْدَ أهيْلِ الفَنِّ</span></div><div class="bayt"><span class="bayt-num">26</span><span class="bayt-text">وَالُمدْرَجاتُ في الحديثِ ما أتَتْ مِنْ بَعْضِ ألفاظِ الرُّوَاةِ اتَّصَلَتْ</span></div><div class="bayt"><span class="bayt-num">27</span><span class="bayt-text">ومَا رَوى كلُّ قَرِينٍ عنْ أخِهْ مُدَبَّجٌ فَاعْرِفْهُ حَقًّا وانْتَخِهْ</span></div><div class="bayt"><span class="bayt-num">28</span><span class="bayt-text">مُتَّفِقٌ لَفْظاً وخطاً مُتَّفقْ وضِدُّهُ فيما ذَكَرْنَا الُمفْترقْ</span></div><div class="bayt"><span class="bayt-num">29</span><span class="bayt-text">مُؤْتَلِفٌ مُتَّفِقُ الخطِّ فَقَطْ وضِدُّهُ مُختَلِفٌ فَاخْشَ الغَلَطْ</span></div><div class="bayt"><span class="bayt-num">30</span><span class="bayt-text">والُمنْكَرُ الفَردُ بهِ رَاوٍ غَدَا تَعْدِيلُهُ لا يْحمِلُ التَّفَرُّدَا</span></div><div class="bayt"><span class="bayt-num">31</span><span class="bayt-text">مَتُروكُهُ مَا وَاحِدٌ بهِ انفَردْ وأجَمعُوا لضَعْفِه فَهُوَ كرَدّ</span></div><div class="bayt"><span class="bayt-num">32</span><span class="bayt-text">والكذِبُ الُمخْتَلَقُ المصنُوعُ علَى النَّبيِّ فذَلِكَ الموْضوعُ</span></div><div class="bayt"><span class="bayt-num">33</span><span class="bayt-text">وقَدْ أتَتْ كالَجوْهَرِ المكْنُونِ سَمَّيْتُهَا: مَنْظُومَةَ البَيْقُوني</span></div><div class="bayt"><span class="bayt-num">34</span><span class="bayt-text">فَوْقَ الثَّلاثيَن بأرْبَعٍ أتَتْ أقْسامُهَا ثمَّ بخيٍر خُتِمتْ</span></div></div>
+</section>
+
+    <section class="section" id="s8"><p class="eyebrow">مقدمة</p><h2>مقدمة في علم مصطلح الحديث</h2><p class="pageref">ص ١١ – ١٣ من الأصل</p><p>المصطلح: علم يُعرف به أحوال الراوي والمروي من حيث القبول والرد</p><h3>تعريف علم المصطلح وفائدته</h3><ul class="pt-list"><li>المصطلح: عِلمٌ يُعرف به أحوال الراوي والمروي من حيث القبول والرد</li><li>فائدته: تنقية الأدلة الحديثية وتخليصها مما يشوبها من ضعيفٍ وغيره، ليُتمكَّن من الاستدلال بها</li><li>المستدلُّ بالسنة يحتاج إلى أمرين: (١) ثبوتها عن النبي ﷺ  (٢) ثبوت دلالتها على الحكم</li><li>أهمية العناية بالسنة: لأنه يُبنى عليها ما كلَّف الله به العباد من عقائد وعبادات وأخلاق</li></ul><p>لماذا يختص هذا العلم بالحديث دون القرآن؟ لأن القرآن نُقل إلينا نقلاً متواتراً قطعياً لفظاً ومعنى، ونقله الأصاغر عن الأكابر، فلا يحتاج إلى بحثٍ عن ثبوته؛ بخلاف السنة فثبوتها إلى النبي ﷺ يختص بالحديث ويحتاج إلى هذا العلم.</p><h3>قسما علم الحديث: الرواية والدراية</h3><div class="tbl-wrap"><table><thead><tr><th>الوجه</th><th>علم الحديث رواية</th><th>علم الحديث دراية</th></tr></thead><tbody><tr><td>التعريف</td><td>يبحث عمّا يُنقل عن النبي ﷺ من أقوال وأفعال وأحوال (لا في النقل نفسه)</td><td>يبحث عن أحوال الراوي والمروي من حيث القبول والرد</td></tr><tr><td>موضوعه</td><td>ذات النبي ﷺ وما يصدر عنها؛ ومن الأفعال: الإقرار، ومن الأحوال: صفاته كالطول والقِصَر</td><td>هل الراوي مقبول أم مردود؟ وما المقبول والمردود من المروي؟</td></tr><tr><td>مثاله</td><td>جاءنا حديث: نبحث هل هو قول أو فعل أو حال؟ وهل يدلّ على كذا أم لا؟</td><td>وجدنا راوياً: نبحث هل هو مقبول أم مردود؟</td></tr></tbody></table></div><p>فائدة مهمة: قَبولُ الراوي لا يستلزم قَبولَ المروي؛ فقد يكون رجال السند ثقاتٍ عدولاً، لكن المتن شاذًّا أو معللاً فلا يُقبل. وقد لا يصل رجال السند إلى حدّ الثقة، ومع ذلك يكون الحديث نفسه مقبولاً؛ لأن له شواهد من الكتاب والسنة أو تؤيده قواعد الشريعة. فالمصطلح إذن: معرفة ما يُقبل وما يُردّ من الحديث؛ وهذا مهمٌّ لأن الأحكام الشرعية مبنية على ثبوت الدليل وعدمه، وصحته وضعفه.</p></section>
+<section class="section" id="s11"><p class="eyebrow">شرح</p><h2>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</h2><p class="pageref">ص ١٧ – ٢١ من الأصل</p><p>البسملة: جارٌّ ومجرور «بسم» + مضاف إليه «الله» + صفة «الرحمن الرحيم»</p><h3>لماذا لا تُبدأ سورة براءة بالبسملة؟</h3><ul class="pt-list"><li>البسملة آيةٌ من كتاب الله، يُبتدأ بها في كل سورةٍ إلا سورة «براءة» اتِّباعاً للصحابة رضي الله عنهم</li><li>لو كانت قد نزلت في أولها لكانت محفوظةً كباقي السور، لكنها لم تنزل عليه ﷺ في أولها</li><li>السبب: أشكل على الصحابة هل «براءة» من «الأنفال» أم سورةٌ مستقلة؟ فوضعوا فاصلاً بينهما دون بسملة، احتياطاً</li></ul><h3>إعراب البسملة والمتعلَّق المحذوف</h3><ul class="pt-list"><li>البسملة فيها: جارٌّ ومجرور «بسم»، ومضاف إليه هو لفظ الجلالة «الله»، وصفة «الرحمن الرحيم»</li><li>كل جارٍّ ومجرور لا بد له من التعلق بفعل أو معناه (كاسم الفاعل)؛ فما هو المحذوف المتعلَّق به «بسم»؟</li><li>الأصح: أن المحذوف فعلٌ متأخرٌ مناسبٌ للمقام — لا اسم فاعل ولا فعل عام كـ«أبتدئ»</li><li>مثاله: يقرأ النظم ⟵ «بسم الله أقرأ» / ينظم ⟵ «بسم الله أنظم» / يتوضأ ⟵ «بسم الله أتوضأ»</li></ul><div class="tbl-wrap"><table><thead><tr><th>السبب</th><th>التوضيح</th></tr></thead><tbody><tr><td>لماذا فعلٌ لا اسم فاعل؟</td><td>لأن الأصل في العمل الأفعال، فالفعل يعمل بلا شرط بخلاف العوامل الاسمية</td></tr><tr><td>لماذا مُتأخِّرٌ لا مُتقدِّم؟</td><td>(١) التيمُّن بتقديم اسم الله (٢) إفادة الحصر — «بسم الله أقرأ» أي لا باسم غيره</td></tr></tbody></table></div><h3>معنى «اسم» ومعنى الباء</h3><ul class="pt-list"><li>اسم: مشتقٌّ من السُّمُوّ (العلوّ) أو من السِّمَة (العلامة)</li><li>المراد به هنا العموم: كل اسم من أسماء الله الحسنى، لا اسم بعينه؛ لأن المفرد المضاف يفيد العموم</li></ul><div class="quote-block ayah"><p class="quote-text">وَإِن تَعُدُّواْ نِعْمَةَ اللَّهِ لاَ تُحْصُوهَا</p><p class="quote-attrib">سورة إبراهيم: ٣٤ — دليل على أن المفرد المضاف يفيد العموم</p></div><ul class="pt-list"><li>الباء في «بسم الله»: للاستعانة (الراجح) — وقيل: للمصاحبة</li><li>قال بالمصاحبة: الزمخشري صاحب الكشاف (وهو معتزلي)؛ رجّحها لأن المعتزلة يرون استقلال الإنسان بعمله فلا يحتاج للاستعانة</li><li>كتاب الكشّاف فيه اعتزاليات كثيرة خفية لا يستطيع كل إنسان اكتشافها، حتى قال البلقيني: «أخرجت من الكشاف اعتزاليات بالمناقيش» — أي بصعوبة بالغة لخفائها</li><li>الراجح: أنها للاستعانة التي تصاحب الفعل من أوله إلى آخره، وقد تفيد أيضاً معنى التبرك</li></ul><h3>معنى «الله» و«الرحمن الرحيم»</h3><ul class="pt-list"><li>الله: عَلَمٌ على الذات العلية لا يُسمَّى به غيره؛ مشتقٌّ من الألوهية (التعبُّد بحبٍّ وتعظيم)</li><li>أصله «إله»، حُذفت الهمزة وعُوِّض عنها بـ«أل» فصارت «الله» (كحذفها من: خير وشر، أصلها أخير وأشر، وكحذفها من الناس وأصلها الأناس)</li><li>وقيل: أصله «الإله» و«أل» موجودة في بنائه من الأصل، وحُذفت الهمزة للتخفيف لا للتعويض</li><li>معنى الألوهية: التعبُّد بحبٍّ وتعظيم؛ يقال أَلِهَ إليه أي اشتاق إليه وأحبَّه وأناب إليه وعظَّمه، فإله بمعنى مألوه أي معبود</li><li>مسألة: هل «فِعال» تأتي بمعنى «مفعول»؟ نعم، مثل: فراش بمعنى مفروش، وبناء بمعنى مبنيّ، وغراس بمعنى مغروس</li><li>الرحمن: اسمٌ يدلّ على صفة الرحمة — معلومةُ المعنى، مجهولةُ الكيفية، معلومةُ الآثار</li><li>الرحيم: اسمٌ متضمِّنٌ للرحمة؛ وليس مؤكِّداً للرحمن لوجهين: الأصل في الكلام التأسيس لا التوكيد، واختلاف الوزن (فعلان/فعيل) يدلّ على اختلاف المعنى</li></ul><div class="tbl-wrap"><table><thead><tr><th>القول الراجح</th><th>التفصيل</th></tr></thead><tbody><tr><td>الرحمن</td><td>يدلّ على الصفة — ذو الرحمة الواسعة (رحمة عامة لجميع الخلق)</td></tr><tr><td>الرحيم</td><td>يدلّ على الفعل — إيصال الرحمة إلى المرحوم (رحمة خاصة بالمؤمنين)</td></tr></tbody></table></div></section>
+<section class="section" id="s15"><p class="eyebrow">البيت الأول</p><h2>معنى الحمد والصلاة على النبي ﷺ</h2><p class="pageref">ص ٢٢ – ٢٥ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">1</span><span class="bayt-text">أبدأُ بالحمدِ مُصَلِّياً على مُحمَّدٍ خَيرِ نبيٍّ أُرسلا</span></div></div><h3>معنى «الحمد» ومعنى «الصلاة»</h3><ul class="pt-list"><li>الحمد: وصف المحمود بالكمال محبةً وتعظيماً؛ فإن كان الوصف خوفاً ورهبةً فهو مدحٌ لا حمد</li><li>«بالحمد مصلياً»: نُصبت «مصلياً» على الحال من الضمير في «أبدأ»</li><li>لم يُذكر المحمود، لكنه معلومٌ بقرينة الحال (المؤلف مسلم) فالمراد حمد الله سبحانه</li><li>الصلاة من البشر على النبي ﷺ: طلب الثناء عليه من الله تعالى</li><li>الصلاة من الله على النبي ﷺ: ثناؤه عليه في الملأ الأعلى (قول أبي العالية) — وهو الراجح</li><li>القول بأنها بمعنى الرحمة: ضعيف؛ إذ لو صحّ للزم عطف الشيء على نفسه في قوله تعالى</li></ul><div class="quote-block ayah"><p class="quote-text">أُولَٰئِكَ عَلَيْهِمْ صَلَوَاتٌ مِّن رَّبِّهِمْ وَرَحْمَةٌ</p><p class="quote-attrib">سورة البقرة: ١٥٧</p></div><h3>الفرق بين «محمد» و«أحمد» — ولماذا «نبيّ» لا «رسول»؟</h3><div class="tbl-wrap"><table><thead><tr><th>الاسم</th><th>الصيغة</th><th>المعنى</th></tr></thead><tbody><tr><td>محمد</td><td>اسم مفعول</td><td>الفعل واقعٌ من الناس — أي أن الناس يحمدونه (حُمِد بالفعل)</td></tr><tr><td>أحمد</td><td>اسم تفضيل</td><td>الفعل واقعٌ منه — أي أنه أحقُّ الناس أن يُحمد (حمِدَ استحقاقاً)</td></tr></tbody></table></div><p>ذَكَر الله في القرآن اسمين للنبي ﷺ: «أحمد» على لسان عيسى عليه السلام، و«محمد». أما «أحمد» فذكره الله نقلاً عن عيسى، إما لأنه لم يُوحَ إليه إلا بذلك، أو لأنه اسم تفضيل (كقولك: فلانٌ أحمد الناس) فخاطب به بني إسرائيل ليبيّن كماله ﷺ.</p><h3>سبب التسمية بمحمد لا بأحمد فقط</h3><ul class="pt-list"><li>الأقرب: أن الله أوحى بـ«محمد» لسببين: (١) ليبيّن لبني إسرائيل أنه ﷺ أحمدُ الناس وأفضلهم (٢) ليبتلي بني إسرائيل ويمتحنهم</li><li>وجه الابتلاء: زعمت النصارى أن الذي بشَّر به عيسى هو «أحمد»، وأن الذي جاء للعرب هو «محمد»، وأن أحمد لم يأتِ بعد — وهذا زيغٌ وكذب</li></ul><div class="quote-block ayah"><p class="quote-text">فَأَمَّا الَّذِينَ فِي قُلُوبِهِمْ زَيْغٌ فَيَتَّبِعُونَ مَا تَشَابَهَ مِنْهُ</p><p class="quote-attrib">سورة آل عمران: ٧</p></div><p>والدليل على مجيء أحمد فعلاً بعد عيسى، وأنه هو محمد ﷺ نفسه:</p><div class="quote-block ayah"><p class="quote-text">فَلَمَّا جَاءَهُم بِالْبَيِّنَاتِ قَالُوا هَٰذَا سِحْرٌ مُّبِينٌ</p><p class="quote-attrib">سورة الصف: ٦ — و«جاء» فعلٌ ماضٍ يفيد أن أحمد قد جاء فعلاً، ولم يأتِ أحدٌ بعد عيسى غير محمد ﷺ</p></div><h3>الفرق بينهما في المعنى</h3><p>في «محمد» يكون الفعل واقعاً من الناس (الناس يحمدونه)، وفي «أحمد» يكون واقعاً منه أو عليه (هو أحقُّ الناس أن يُحمد)؛ فمحمدٌ حُمِد بالفعل، وأحمد كان حمده على وجهٍ يستحقه.</p><ul class="pt-list"><li>قال «خير نبيّ أُرسلا» ولم يقل «خير رسول»: ليجمع بين النبوة والرسالة، فتكون الدلالة على النبوة نصّية لا لزومية</li><li>الدليل: حديث البراء بن عازب — علّمه النبي ﷺ دعاء النوم فقال: «وبرسولك الذي أرسلت» فقال له ﷺ: «لا، بل قل: وبنبيّك الذي أرسلت» (متفق عليه)</li><li>أيضاً: لفظ «الرسول» يشمل الرسول الملَكي (جبريل) والبشري، أما «محمد» فيخرج منه جبريل عليه السلام</li><li>الألف في «أُرسلا» تُسمَّى عند العلماء «ألف الإطلاق»، أي إطلاق الرَّويّ (نهاية البيت الشعري)</li></ul></section>
+<section class="section" id="s18"><p class="eyebrow">البيت الثاني</p><h2>أقسام الحديث: تعريف «الحدّ» وشرطه</h2><p class="pageref">ص ٢٦ – ٢٧ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">2</span><span class="bayt-text">وذِي مِنَ أقسَامِ الحديثِ عدَّه وكُلُّ واحدٍ أتى وحَدَّه</span></div></div><h3>تعريف الحدّ وشرطه (بالأمثلة)</h3><ul class="pt-list"><li>المراد بـ«أقسام الحديث» هنا: علم الحديث دراية</li><li>الحدّ: الوصف المحيط بموصوفه، المميِّز له عن غيره</li><li>شرطه: أن يكون مطَّرداً منعكساً — لا يخرج عنه شيء من المحدود، ولا يدخل فيه شيء من غيره</li></ul><div class="tbl-wrap"><table><thead><tr><th>التعريف المقترح</th><th>هل هو صحيح؟ ولماذا</th></tr></thead><tbody><tr><td>الإنسان: حيوان</td><td>لا؛ يدخل فيه البهيم لأنه لم يُخرَج بقيدٍ</td></tr><tr><td>الإنسان: حيوان ناطق</td><td>نعم؛ تام — أخرج «حيوان» الجماد، وأخرج «ناطق» البهيم</td></tr><tr><td>الإنسان: حيوان ناطق عاقل</td><td>لا؛ يخرج منه بعض أفراد المحدود وهو المجنون</td></tr></tbody></table></div></section>
+<section class="section" id="s20"><p class="eyebrow">القسم الأول</p><h2>الحديث الصحيح</h2><p class="pageref">ص ٢٨ – ٣٩ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">3</span><span class="bayt-text">أوَّلُها الصحيحُ وهوَ ما اتَّصَل إسنادُهُ ولْم يُشَذَّ أو يُعَلّ</span></div><div class="bayt"><span class="bayt-num">4</span><span class="bayt-text">يَرْويهِ عَدْلٌ ضَابِطٌ عَنْ مِثْلِهِ مُعْتَمَدٌ في ضَبْطِهِ ونَقْلِهِ</span></div></div><h3>التعريف وشروطه الأربعة</h3><p>أوَّلُها الصحيح: قدَّمه المؤلف لأنه أشرف أقسام الحديث. وهو: ما اتَّصل إسناده — بحيث يأخذه كل راوٍ عمَّن فوقه (حدثني... حدثني...) دون سقوطٍ — ولم يُشذَّ ولم يُعلّ.</p><div class="tbl-wrap"><table><thead><tr><th>م</th><th>الشرط</th></tr></thead><tbody><tr><td>١</td><td>اتصال السند — أن يأخذ كل راوٍ الحديث عمَّن فوقه مباشرة، بلا سقوط</td></tr><tr><td>٢</td><td>السلامة من الشذوذ</td></tr><tr><td>٣</td><td>السلامة من العلة القادحة</td></tr><tr><td>٤</td><td>أن يرويه عدلٌ ضابطٌ عن مثله (عدلٍ ضابط)، معتمَدٍ في ضبطه ونقله</td></tr></tbody></table></div><h3>الشرط الثاني: السلامة من الشذوذ</h3><ul class="pt-list"><li>الشاذّ: ما يرويه الثقة مخالفاً لمن هو أرجح منه — في العدد، أو الصدق، أو العدالة</li><li>لا يُشترط في الشذوذ أن يكون الاختلاف في حديثٍ واحد؛ فقد يكون الشذوذ بين حديثين منفصلين</li></ul><div class="tbl-wrap"><table><thead><tr><th>مثال</th><th>بيانه</th></tr></thead><tbody><tr><td>نهي الصيام بعد نصف شعبان (السنن)</td><td>شاذّ؛ يخالف الأرجح في الصحيحين: «لا تقدَّموا رمضان بصوم يوم أو يومين إلا رجلاً كان يصوم صوماً فليصمه»</td></tr><tr><td>نهي صوم يوم السبت (أبو داود، وحسّنه الترمذي)</td><td>قال قوم: شاذّ لمخالفته حديث الصحيح (إفطار امرأةٍ صائمة يوم الجمعة وسؤالها عن صيام السبت)؛ وقال آخرون: لا شذوذ، ويُحمل النهي على إفراده بالصوم</td></tr><tr><td>«يبقى في النار فضلٌ فينشئ الله أقواماً يدخلهم النار» (البخاري)</td><td>شاذّ لمخالفته ما عُلم بالضرورة من الدين (عدل الله)؛ والصواب المقلوب: «يبقى في الجنة... فيدخلهم الجنة»</td></tr></tbody></table></div><h3>الشرط الثالث: السلامة من العلة القادحة</h3><ul class="pt-list"><li>العلة لغةً: وصفٌ يُخرج البدن عن الاعتدال الطبيعي (المرض)</li><li>العلة اصطلاحاً: وصفٌ يوجب خروج الحديث عن القبول — بشرط أن تكون قادحة، أي في صميم موضوع الحديث</li></ul><div class="tbl-wrap"><table><thead><tr><th>نوع العلة</th><th>المثال</th></tr></thead><tbody><tr><td>غير قادحة (لا تضرّ)</td><td>اختلاف الرواة في ثمن قلادة فضالة بن عبيد (١٢ أو ٩ أو ١٠ دنانير)، أو ثمن بعير جابر — لا تمسّ صميم الحكم</td></tr><tr><td>قادحة (تضرّ)</td><td>أن يروي اثنان الحديث أحدهما بصفة النفي والآخر بصفة الإثبات — وهذا يدخل في «المضطرب»</td></tr></tbody></table></div><h3>الشرط الرابع: عدلٌ ضابطٌ عن مثله</h3><ul class="pt-list"><li>العدل: الاستقامة في الدين والمروءة؛ فالفاسق لا يُقبل خبره لقوله تعالى</li></ul><div class="quote-block ayah"><p class="quote-text">يَا أَيُّهَا الَّذِينَ آمَنُوا إِن جَاءَكُمْ فَاسِقٌ بِنَبَإٍ فَتَبَيَّنُوا</p><p class="quote-attrib">سورة الحجرات: ٦</p></div><ul class="pt-list"><li>المروءة: أن يفعل ما يجمِّله ويزيِّنه، ويدع ما يدنِّسه ويشينه بحسب عُرف الناس؛ مثال ما يخرم المروءة: أن يأكل الرجل أمام الناس في الأسواق؛ ومثال ما لا يخرمها إن جرت به العادة: شرب الشاي أمام الباب كما يفعل بعض كبار السن</li><li>عند اختلاف الحفّاظ في تعديل راوٍ أو جرحه: يُقدَّم قول الأعلم بحاله (الملازم له)؛ فإن تساوى الطرفان: خلافٌ (الأصل العدالة / الأصل عدمها)؛ ويُقدَّم المفسَّر على المبهم؛ وتعديل المتشدِّد أقرب للقبول من تعديل المتساهل، والحقُّ أن يكون الناقد قائماً بالعدل، لأن التشدد قد يردّ حديثاً صحيحاً، والتساهل قد ينسب للنبي ﷺ ما لم يصحّ</li><li>الضبط: حفظ المروي تحمُّلاً وأداءً، لا يُشترط ألا ينسى مطلقاً بل ألا يكون كثير النسيان؛ وعلاج كثرة النسيان: الكتابة — لقوله تعالى: {اقْرَأْ ... الَّذِي عَلَّمَ بِالْقَلَمِ}، وقد أصبحت الكتابة أدقّ اليوم بوجود التسجيل الصوتي</li><li>«عن مثله»: يُشترط في الشيخ المرويّ عنه أيضاً العدالة والضبط، فلا يصحّ رواية عدلٍ عن فاسق أو عن سيّئ الحفظ</li></ul></section>
+<section class="section" id="s25"><p class="eyebrow">مباحث حديثية</p><h2>الحديث والأثر والخبر — وأحوال التلقّي</h2><div class="tbl-wrap"><table><thead><tr><th>المصطلح</th><th>التعريف</th></tr></thead><tbody><tr><td>الحديث</td><td>ما أُضيف إلى النبي ﷺ</td></tr><tr><td>الأثر</td><td>ما أُضيف إلى مَن دونه من الصحابة والتابعين فمن بعدهم</td></tr><tr><td>الخبر</td><td>يعمّ الحديث والأثر</td></tr></tbody></table></div><ul class="pt-list"><li>أحوال التلقّي ثلاثة: (١) التصريح بالسماع  (٢) ثبوت اللُّقيا دون السماع  (٣) المعاصرة دون ثبوت اللُّقيا</li><li>البخاري: لا يُحمل على الاتصال إلا بثبوت اللُّقيا — شرطُه أقوى، ولذا صحيح البخاري أصحُّ من صحيح مسلم</li><li>مسلم: يكفي ثبوت المعاصرة</li><li>بعض المتشدِّدين: لا بدّ من ثبوت السماع صراحةً، لاحتمال أن يلاقيه ولا يسمع منه — وهذا أقوى نظراً، لكن لو اشتُرط لفات الكثير من السنة الصحيحة</li></ul><p>تشاجرَ قومٌ في البخاري ومسلمٍ لديَّ وقالوا: أيُّ ذَيْنِ تُقدَّمُ؟</p><p>فقلتُ: لقد فاق البخاريُّ صحةً كما فاق في حُسنِ الصناعةِ مسلمُ</p><h3>مراتب الأحاديث السبع</h3><div class="tbl-wrap"><table><thead><tr><th>المرتبة</th><th>الوصف</th></tr></thead><tbody><tr><td>١</td><td>ما اتَّفق عليه البخاري ومسلم</td></tr><tr><td>٢</td><td>ما انفرد به البخاري</td></tr><tr><td>٣</td><td>ما انفرد به مسلم</td></tr><tr><td>٤</td><td>ما كان على شرطهما</td></tr><tr><td>٥</td><td>ما كان على شرط البخاري</td></tr><tr><td>٦</td><td>ما كان على شرط مسلم</td></tr><tr><td>٧</td><td>ما كان على شرط غيرهما</td></tr></tbody></table></div><p>هل كل ما اتفق عليه الشيخان صحيح؟ نعم عند أكثر العلماء؛ لأن الأمة تلقَّته بالقبول وهي معصومة من الخطأ (رأي ابن الصلاح، وشيخ الإسلام ابن تيمية وابن القيم). وما انفرد به أحدهما صحيحٌ لكن دون المتفق عليه؛ وقد أُجيب عمَّا انتُقِد من أحاديثهما بوجهين: (١) أن قول المنتقِد يعارضه قول البخاري وهو أحفظ منه (٢) أن أهل العلم ردُّوا على المنتقِد حديثاً حديثاً.</p></section>
+<section class="section" id="s27"><p class="eyebrow">القسم الثاني</p><h2>الحديث الحسن</h2><p class="pageref">ص ٤٤ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">5</span><span class="bayt-text">وَالَحسَنُ الَمعْرُوفُ طُرْقاً وغَدَتْ رِجَالُهُ لا كالصّحيحِ اشْتَهَرَتْ</span></div></div><h3>تعريف الحسن وعلاقته بالصحيح</h3><ul class="pt-list"><li>الحسن: المعروف طرقاً (معلومٌ من أي بلدٍ يروي راويه)، ورجاله لا كالصحيح اشتهروا</li><li>الفرق الوحيد بينه وبين الصحيح (ابن حجر): بدل «تامّ الضبط» في الصحيح يُقال في الحسن «خفيف الضبط»</li><li>أما بقية الشروط (اتصال السند، العدالة، السلامة من الشذوذ والعلة القادحة) فهي واحدة في البابين</li></ul><p>تعريف الحسن لذاته: ما رواه عدلٌ خفيفُ الضبط، بسندٍ متصل، وخلا من الشذوذ والعلة القادحة</p></section>
+<section class="section" id="s29"><p class="eyebrow">القسم الثالث</p><h2>الحديث الضعيف وأقسامه</h2><p class="pageref">ص ٤٥ – ٤٨ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">6</span><span class="bayt-text">وكُلُّ ما عَنْ رُتبةِ الُحسْنِ قَصْر فَهْوَ الضعيفُ وهوَ أقْساماً كُثُرْ</span></div></div><h3>تعريفه، وأقسام الحديث الحقيقية الخمسة</h3><p>الضعيف: ما خلا عن رتبة الحسن (وبالتالي عن رتبة الصحة أيضاً)؛ فذكر المؤلف ثلاثة أقسام (صحيح، حسن، ضعيف)، لكن الأقسام الحقيقية عند ابن حجر وغيره خمسة:</p><div class="tbl-wrap"><table><thead><tr><th>القسم</th><th>تعريفه</th></tr></thead><tbody><tr><td>صحيح لذاته</td><td>المعروف آنفاً (عدل تامّ الضبط، سندٌ متصل، سالمٌ من الشذوذ والعلة)</td></tr><tr><td>صحيح لغيره</td><td>الحسنُ إذا تعدَّدت طرقه فبلغ درجة الصحة بمجموعها</td></tr><tr><td>حسن لذاته</td><td>ما رواه عدلٌ خفيف الضبط، بسندٍ متصل، سالمٌ من الشذوذ والعلة</td></tr><tr><td>حسن لغيره</td><td>الضعيفُ إذا تعدَّدت طرقه على وجهٍ يجبر بعضها بعضاً</td></tr><tr><td>ضعيف</td><td>ما ليس بصحيحٍ ولا حسن</td></tr></tbody></table></div><h3>حكم رواية الحديث الضعيف</h3><ul class="pt-list"><li>يجوز نقل الأقسام الأربعة الأولى والتحديث بها لأنها كلها مقبولة وحجة</li><li>لا يجوز نقل الضعيف أو التحديث به إلا مبيَّناً ضعفه؛ وإلا فراويه أحد الكاذبين على النبي ﷺ</li></ul><div class="quote-block hadith"><p class="quote-text">من حدَّث عني بحديثٍ يُرى أنه كذبٌ فهو أحد الكاذبين</p><p class="quote-attrib">رواه مسلم في المقدمة</p></div><ul class="pt-list"><li>استثنى بعض العلماء أحاديث الترغيب والترهيب بأربعة شروط:</li></ul><div class="tbl-wrap"><table><thead><tr><th>الشرط</th></tr></thead><tbody><tr><td>١ — أن يكون الحديث في الترغيب والترهيب</td></tr><tr><td>٢ — ألا يكون الضعف شديداً</td></tr><tr><td>٣ — أن يكون له أصلٌ صحيحٌ ثابت في الكتاب أو السنة</td></tr><tr><td>٤ — ألا يُعتقد أن النبي ﷺ قاله جزماً</td></tr></tbody></table></div><p>والذي رجَّحه المؤلف: عدم جواز روايته إلا مبيَّناً ضعفُه مطلقاً، لا سيَّما بين العامة؛ لأن قاعدتهم «ما قيل في المحراب فهو صواب» تجعلهم يصدِّقون أي حديث دون تمييز. وتنبيهٌ: بعض الوضّاعين وضعوا أحاديث في الحثّ على التمسك بالسنة، وزعموا أنهم «كذبوا له لا عليه» — وهذا تحريفٌ للكلم عن مواضعه وكذبٌ صريح.</p></section>
+<section class="section" id="s32"><p class="eyebrow">القسم ٤ – ٥</p><h2>المرفوع والمقطوع</h2><p class="pageref">ص ٤٩ – ٥٦ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">7</span><span class="bayt-text">وما أُضيفَ للنبي الَمرْفوعُ وما لتَابِعٍ هُوَ المقْطوعُ</span></div></div><h3>المرفوع والموقوف والمقطوع (باعتبار منتهى السند)</h3><div class="tbl-wrap"><table><thead><tr><th>النوع</th><th>منتهى السند</th></tr></thead><tbody><tr><td>المرفوع</td><td>النبي ﷺ</td></tr><tr><td>الموقوف</td><td>الصحابي (سيأتي لاحقاً)</td></tr><tr><td>المقطوع</td><td>التابعي فمن بعده</td></tr></tbody></table></div><ul class="pt-list"><li>المرفوع: ما أُضيف إلى النبي ﷺ من قولٍ أو فعلٍ أو تقرير</li></ul><div class="tbl-wrap"><table><thead><tr><th>نوعه</th><th>المثال</th></tr></thead><tbody><tr><td>قول</td><td>«إنما الأعمالُ بالنيّات وإنما لكلِّ امرئٍ ما نوى» (متفق عليه)</td></tr><tr><td>فعل</td><td>توضَّأ النبي ﷺ فمسح على خُفَّيه</td></tr><tr><td>تقرير</td><td>قال ﷺ للجارية: «أين الله؟» قالت: في السماء. فأقرَّها (رواه مسلم)</td></tr></tbody></table></div><p>ما فُعل في زمنه ﷺ وعَلِمَ به فهو مرفوعٌ (لأنه إقرار)؛ وما لم يعلم به فليس مرفوعاً لكنه حجة لإقرار الله إياه، كقول جابر: «كنَّا نعزِل والقرآن ينزل». والدليل على هذا احتجاج الصحابة بإقرار الله لهم فيما يفعلونه دون إنكارٍ عليهم:</p><div class="quote-block ayah"><p class="quote-text">يَسْتَخْفُونَ مِنَ النَّاسِ وَلَا يَسْتَخْفُونَ مِنَ اللَّهِ وَهُوَ مَعَهُمْ إِذْ يُبَيِّتُونَ مَا لَا يَرْضَىٰ مِنَ الْقَوْلِ</p><p class="quote-attrib">سورة النساء: ١٠٨ — دلَّ على أن ما فُعل في عهده ﷺ ولم يُنكره الله فهو حجة</p></div><p>وما أُضيف إلى الله تعالى من الحديث يُسمَّى: القدسي أو الإلهي أو الربّاني.</p><h3>المرفوع حُكماً — أمثلته</h3><p>ضابطه: ما ليس للاجتهاد والرأي فيه مجال، وإنما يُؤخذ عن الشرع محضاً.</p><ul class="pt-list"><li>إخبار الصحابي عن أمور الغيب أو أخبار يوم القيامة</li><li>فِعل الصحابي عبادةً لم ترد بها السنة — مثاله: صلاة عليٍّ في الكسوف بثلاث ركوعات في كل ركعة</li><li>قول الصحابي: «من السنّة كذا» — كقول ابن عباس في جهره بالفاتحة في صلاة الجنازة، وقول أنس بن مالك: «من السنة إذا تزوَّج البكر على الثيب أقام عندها سبعاً»</li><li>إخبار الصحابي عن الجنة والنار (بشرط ألا يكون ممّن عُرف بالأخذ عن بني إسرائيل، كعبد الله بن عمرو بن العاص الذي أخذ جملةً كبيرة عن كتب أهل الكتاب في غزوة اليرموك مما خلَّفه الروم)</li><li>نسبة فعلٍ إلى عهد النبي ﷺ دون التصريح بعلمه، كقول أسماء: «نحرنا فرساً في عهد النبي ﷺ فأكلناه»</li><li>قول الصحابي «رواية» دون تصريحٍ بالرفع، وقول التابعي عن الصحابي «رفعه» أو «يبلغ به»</li></ul><h3>حجية قول الصحابي والتابعي — والمقطوع</h3><ul class="pt-list"><li>خلاف العلماء في حجية قول الصحابي: (١) حجة مطلقاً بشرط عدم مخالفة نصٍّ أو صحابيٍّ آخر (٢) ليس بحجة لأنه بشرٌ يجتهد (٣) الحجة قول أبي بكر وعمر فقط</li></ul><div class="quote-block hadith"><p class="quote-text">اقتدوا بالذين من بعدي: أبو بكر وعمر</p><p class="quote-attrib">رواه أحمد والترمذي وابن ماجه</p></div><ul class="pt-list"><li>الراجح (اختيار المؤلف): قول الصحابي حجة بثلاثة شروط: أن يكون من فقهاء الصحابة، وألا يخالف نصاً، وألا يخالف صحابياً آخر</li><li>قول التابعي «من السنة»: خلافٌ (موقوف / مرسل منقطع)؛ وعلى القولين إمّا ضعيفٌ لعدم الاتصال أو من باب قول الصحابي</li><li>المقطوع: ما أُضيف إلى التابعي فمن بعده (كنقل كلامٍ عن الحسن البصري) — سُمِّي بذلك لانقطاعه في الرتبة عن المرفوع والموقوف</li></ul></section>
+<section class="section" id="s36"><p class="eyebrow">القسم السادس</p><h2>المسند وضابطه</h2><p class="pageref">ص ٥٧ – ٥٩ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">8</span><span class="bayt-text">والُمسْنَدُ الُمتَّصِلُ الإسنادِ مِنْ راويهِ حتَّى الُمصْطفى ولْم يَبِنْ</span></div></div><h3>المصطلحات الخمسة المتعلقة بالسند</h3><ul class="pt-list"><li>المسند: المرفوعُ المتصلُ الإسناد من راويه حتى النبي ﷺ (رأي جمهور المحدّثين)</li><li>وقيل: المسند أعمّ — كل ما أُسند إلى راويه ولو موقوفاً أو مقطوعاً أو منقطعاً (وهذا موافقٌ للغة)</li></ul><div class="tbl-wrap"><table><thead><tr><th>المصطلح</th><th>معناه</th></tr></thead><tbody><tr><td>مُسنِد</td><td>من نسب الحديث إلى قائله (قال: حدثني فلان)</td></tr><tr><td>مُسنَد إليه</td><td>من نُسب إليه الحديث</td></tr><tr><td>السَّنَد</td><td>رجال الحديث ورواته</td></tr><tr><td>الإسناد</td><td>يُطلق على السند (الرواة)، ويُطلق على نسبة الحديث إلى راويه</td></tr></tbody></table></div><p>ليس كل مسندٍ صحيحاً (فقد يتصل السند وفيه ضعفاء)، وليس كل صحيحٍ مسنداً (فقد يكون موقوفاً بسندٍ صحيح، وهو غير مرفوع فلا يُسمَّى مسنداً). فالمسند لغةً أعمّ من المسند اصطلاحاً.</p></section>
+<section class="section" id="s38"><p class="eyebrow">القسم السابع</p><h2>المتصل وضابطه</h2><p class="pageref">ص ٦٠ – ٦٣ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">9</span><span class="bayt-text">ومَا بِسَمْعِ كُلِّ رَاوٍ يَتَّصِلْ إسْنَادُهُ للمُصْطَفى فَالُمتَّصِلْ</span></div></div><h3>تعريف المتصل — قولان</h3><div class="tbl-wrap"><table><thead><tr><th>القول</th><th>التعريف</th></tr></thead><tbody><tr><td>قول الناظم</td><td>المرفوعُ الذي أخذه كل راوٍ عمَّن فوقه سماعاً (يشترط: السماع + الرفع إلى النبي ﷺ)</td></tr><tr><td>الأصحّ</td><td>كل ما اتَّصل إسناده — ولو موقوفاً أو مقطوعاً، وسواء كانت الصيغة سماعاً أو غيره</td></tr></tbody></table></div><p>مسألة: هل يُشترط ثبوت سماع هذا الحديث بعينه من الشيخ؟ مثال: قيل إن الحسن البصري لم يسمع من سَمُرة بن جُندب إلا حديث العقيقة فقط. والصحيح أن الحصر في مثل هذا صعبٌ جداً، فلا يُجزم بعدم الاتصال في غيره إلا بقرينة واضحة.</p></section>
+<section class="section" id="s40"><p class="eyebrow">القسم الثامن</p><h2>المسلسل ومثاله</h2><p class="pageref">ص ٦٣ – ٦٦ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">10</span><span class="bayt-text">مُسَلْسَلٌ قُلْ مَا عَلَى وَصْفٍ أتَى مِثْلُ أمَا واللهِ أنْبأنِي الفتى</span></div><div class="bayt"><span class="bayt-num">11</span><span class="bayt-text">كذَاكَ قَدْ حَدَّثَنِيهِ قائِماً أوْ بَعْدَ أنْ حَدَّثَنِي تَبَسَّمَا</span></div></div><h3>تعريفه وأمثلته</h3><ul class="pt-list"><li>المسلسل: ما اتَّفق فيه الرواة على وصفٍ أو حالٍ معيّنة — في السند أو المتن أو كليهما</li><li>فائدته: التنبيه على أن الراوي قد ضبط الرواية</li></ul><div class="tbl-wrap"><table><thead><tr><th>الصورة</th><th>المثال</th></tr></thead><tbody><tr><td>اتفاق صيغة الأداء</td><td>كلّهم يقول: «أنبأني فلان» — حديث معاذ: «إني أُحبُّك فلا تدعنَّ...»</td></tr><tr><td>اتفاق حال الراوي</td><td>«حدَّثني فلانٌ على الغداء»، أو «حدَّثني قائماً»، أو «حدَّثني مضطجعاً»</td></tr><tr><td>اتفاق فعلٍ عند الأداء</td><td>كلّهم يتبسَّم عند روايته — حديث الرجل المجامِع في رمضان وضحك النبي ﷺ حتى بدت نواجذه</td></tr></tbody></table></div><h3>فوائد معرفة المسلسل</h3><ul class="pt-list"><li>أولاً: فنٌّ طريف — اتفاق الرواة كلّهم على حالٍ واحدة أمرٌ لطيف</li><li>ثانياً: دليلٌ على تمام ضبط الرواة، حيث ضبطوا حتى حال الراوي حين التحديث</li><li>ثالثاً: قد يكون التسلسل نفسه قربةً وعبادة، كحديث معاذ «إني أُحبُّك» الذي يزيد الإيمان (الحبّ في الله من أوثق عرى الإيمان)</li></ul></section>
+<section class="section" id="s43"><p class="eyebrow">القسم ٩ – ١٠</p><h2>العزيز والمشهور</h2><p class="pageref">ص ٦٧ – ٧١ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">12</span><span class="bayt-text">عَزيزٌ مَروِيُّ اثنَيِن أوْ ثَلاثهْ مَشْهورٌ مَرْوِيُّ فَوْقَ ما ثَلاثهْ</span></div></div><h3>التعريف والراجح فيه</h3><div class="tbl-wrap"><table><thead><tr><th>المصطلح</th><th>قول الناظم</th><th>القول الراجح عند المتأخرين</th></tr></thead><tbody><tr><td>العزيز</td><td>ما رواه اثنان أو ثلاثة في كل طبقة</td><td>ما رواه اثنان فقط في كل طبقة</td></tr><tr><td>المشهور</td><td>ما رواه أربعةٌ فأكثر</td><td>ما رواه ثلاثةٌ فأكثر، ولم يبلغ حدَّ التواتر</td></tr></tbody></table></div><ul class="pt-list"><li>لا يُشترط في العزيز أن يكون مرفوعاً؛ فيشمل المرفوع والموقوف والمقطوع</li><li>هل العزيز شرطٌ للصحيح؟ الراجح: لا؛ فحديث عمر «إنما الأعمال بالنيات» تفرَّد به واحدٌ في ثلاث طبقاتٍ وهو صحيح متفقٌ عليه</li></ul><h3>أنواع الشهرة — وأمثلة أحاديث مشهورة باطلة</h3><ul class="pt-list"><li>المشهور عند العامة: لا حكم له ولا عبرة به؛ فقد يشتهر حديثٌ موضوع</li></ul><div class="tbl-wrap"><table><thead><tr><th>الحديث المشهور عند العامة</th><th>حكمه</th></tr></thead><tbody><tr><td>«خير الأسماء ما حُمِّد وعُبِّد»</td><td>لا أصل له</td></tr><tr><td>«حبُّ الوطن من الإيمان»</td><td>موضوعٌ مكذوب</td></tr><tr><td>«يوم صومكم يوم نحركم»</td><td>لا أصل له</td></tr><tr><td>«رابعة رجب غرّة رمضان فيها تُنحرون»</td><td>باطلٌ غير صحيح</td></tr></tbody></table></div><p>المشهور عند أهل العلم: يُنظر فيه، فإن خالف نصاً فمردود (مثاله: «لا يُقاد الوالد بالولد» يخالف نص القصاص في المائدة والبقرة)، وإن لم يخالف نصاً فمقبول لأنّ تداول العلماء له يدلّ على أصل.</p></section>
+<section class="section" id="s46"><p class="eyebrow">القسم ١١ – ١٢</p><h2>المعنعن والمبهم</h2><p class="pageref">ص ٧٢ – ٧٤ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">13</span><span class="bayt-text">مَعَنْعَنٌ كَعَن سَعيدٍ عَنْ كَرَمْ وَمُبهَمٌ مَا فيهِ رَاوٍ لْم يُسَمْ</span></div></div><h3>المعنعن (والمؤنَّن) والمبهم</h3><div class="tbl-wrap"><table><thead><tr><th>المصطلح</th><th>التعريف</th><th>الحكم</th></tr></thead><tbody><tr><td>المعنعن</td><td>ما أُدِّي بصيغة «عن» — مثاله: «عن سعيدٍ عن كرم»</td><td>محمولٌ على الاتصال، إلا من عُرف بالتدليس فلا يُحكم له بالاتصال حتى يصرِّح بالسماع</td></tr><tr><td>المؤنَّن</td><td>ما أُدِّي بصيغة «أنَّ» — «حدَّثني فلانٌ أنَّ فلاناً قال...»</td><td>نفس حكم المعنعن</td></tr><tr><td>المبهم</td><td>ما فيه راوٍ لم يُسمَّ — «حدَّثني رجلٌ»، أو «حدَّثني الثقة»</td><td>لا يُقبل حتى يُعرف، إلا المبهم من الصحابة لعدالتهم جميعاً</td></tr></tbody></table></div><div class="quote-block ayah"><p class="quote-text">وَكُلًّا وَعَدَ اللَّهُ الْحُسْنَىٰ</p><p class="quote-attrib">سورة الحديد: ١٠ — دليل عدالة الصحابة، فلا يضرّ إبهام أحدهم</p></div><p>تنبيه: المراد بـ«راوٍ لم يُسمَّ» أي في السند خاصة. أما راوٍ لم يُسمَّ في المتن نفسه — كحديث أنسٍ: «دخل أعرابيٌّ يوم الجمعة والنبي ﷺ يخطب...» — فلا يدخل في تعريف المبهم هنا، لأن الأعرابي لم يُحدِّث بالحديث، بل تحدَّث الرواة عنه.</p></section>
+<section class="section" id="s48"><p class="eyebrow">القسم ١٣ – ١٤</p><h2>العلوّ والنزول</h2><p class="pageref">ص ٧٥ – ٧٦ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">14</span><span class="bayt-text">وكُلُّ مَا قَلَّت رِجَالُهُ عَلا وضِدُّهُ ذَاكَ الذِي قَدْ نَزَلا</span></div></div><h3>قسما العلوّ، وأيّهما يُقدَّم؟</h3><div class="tbl-wrap"><table><thead><tr><th>النوع</th><th>تعريفه</th></tr></thead><tbody><tr><td>علوّ العدد</td><td>قِلّة رجال السند — كلما قلَّت الوسائط قلَّ احتمال الخطأ</td></tr><tr><td>علوّ الصفة</td><td>كون رجال السند أوثق حفظاً وعدالة من سندٍ آخر ولو تساوى العدد</td></tr><tr><td>النازل</td><td>ضدّ العالي — كثرة رجال السند</td></tr></tbody></table></div><p>لا يلزم من علوّ العدد أن يكون الإسناد أصحّ، لاحتمال ضعف رجاله؛ فإذا تعارض علوّ العدد وعلوّ الصفة قُدِّم علوّ الصفة، لأنه المعتمَد في صحة الحديث.</p></section>
+<section class="section" id="s50"><p class="eyebrow">القسم الخامس عشر</p><h2>الموقوف وضابطه</h2><p class="pageref">ص ٧٧ – ٧٨ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">15</span><span class="bayt-text">ومَا أضَفْتَهُ إلى الأصْحَابِ مِنْ قَوْلٍ وفعْلٍ فهْوَ مَوْقُوفٌ زُكِنْ</span></div></div><h3>التعريف والاستثناء</h3><ul class="pt-list"><li>الموقوف: ما أضافه الراوي إلى الصحابة من قولٍ أو فعل</li><li>الصحابي: من اجتمع بالنبي ﷺ مؤمناً به ومات على ذلك، ولو كان الاجتماع لحظة — وهذا من خصائصه ﷺ</li><li>يُستثنى ما ثبت له حكم الرفع فيكون «مرفوعاً حكماً» لا موقوفاً — كصلاة عليّ في الكسوف بثلاث ركوعات، وكلّ ما تحدَّث فيه الصحابي عن أمرٍ غيبي مستقبلي</li></ul></section>
+<section class="section" id="s52"><p class="eyebrow">القسم السادس عشر</p><h2>المرسل</h2><p class="pageref">ص ٧٩ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">16</span><span class="bayt-text">وَمُرْسلٌ مِنهُ الصَّحَابيُّ سَقَطْ وقُلْ غَريبٌ ما رَوَى رَاوٍ فَقطْ</span></div></div><h3>التعريف وحكمه ومواضع الاستثناء</h3><ul class="pt-list"><li>لغة: المطلق (كإرسال الناقة في المرعى)</li><li>اصطلاحاً (الناظم): ما سقط منه الصحابي — وهذا فيه قصور</li><li>الأدقّ: ما رفعه التابعي، أو الصحابي الذي لم يسمع من النبي ﷺ (كمحمد بن أبي بكر المولود في حجة الوداع)</li><li>حكمه: من أقسام الضعيف؛ لأن الواسطة بين النبي ﷺ ومن رفعه مجهولة</li></ul><div class="tbl-wrap"><table><thead><tr><th>يُستثنى من الضعف في أربعة مواضع</th></tr></thead><tbody><tr><td>١ — إذا عُلمت الواسطة وحالها</td></tr><tr><td>٢ — إذا كان الرافع له صحابياً</td></tr><tr><td>٣ — إذا عُلم أنه لا يرفعه إلا عن صحابي</td></tr><tr><td>٤ — إذا تلقَّته الأمة بالقبول</td></tr></tbody></table></div></section>
+<section class="section" id="s54"><p class="eyebrow">القسم السابع عشر</p><h2>الغريب</h2><p class="pageref">ص ٨٠ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">17</span><span class="bayt-text">وكلُّ مَا لْم يَتَّصِلْ بِحَالٍ إسْنَادُهُ مُنْقَطِعُ الأوْصالِ</span></div></div><h3>التعريف ومواضع الغرابة</h3><ul class="pt-list"><li>الغريب: ما رواه راوٍ واحدٌ فقط، ولو كان صحابياً</li><li>قد تكون الغرابة في أول السند، أو في أثنائه، أو في آخره</li><li>مثال: حديث «إنما الأعمال بالنيّات» غريبٌ في طبقتَي الصحابة والتابعين، ثم انتشر انتشاراً عظيماً بعد ذلك</li><li>الغالب على الأفراد الضعف، وقد يكون الغريب صحيحاً</li></ul></section>
+<section class="section" id="s56"><p class="eyebrow">القسم ١٨ – ١٩</p><h2>المنقطع وأقسام الانقطاع</h2><p class="pageref">ص ٨١ – ٨٣ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">18</span><span class="bayt-text">والُمعْضَلُ السَّاقِطُ مِنْهُ اثْنَانِ ومَا أتى مُدَلَّساً نَوعانِ</span></div></div><h3>أقسام الانقطاع الأربعة</h3><p>المنقطع بمعناه العام: كل حديثٍ لم يتَّصل إسناده بأي حال، وله أربع صورٍ اصطلاحية:</p><div class="tbl-wrap"><table><thead><tr><th>موضع السقط</th><th>الاسم الاصطلاحي</th><th>الحكم</th></tr></thead><tbody><tr><td>أول السند</td><td>المعلَّق</td><td>ضعيف؛ إلا ما علَّقه البخاري جازماً به فهو صحيحٌ عنده</td></tr><tr><td>آخر السند</td><td>المرسَل</td><td>ضعيف (سبق بيانه)</td></tr><tr><td>راوٍ واحد من الأثناء</td><td>المنقطع (اصطلاحاً)</td><td>ضعيف</td></tr><tr><td>راويان فأكثر توالياً من الأثناء</td><td>المعضَل</td><td>أشدُّ ضعفاً من المنقطع</td></tr></tbody></table></div><p>فائدة: إن سقط الأول والأخير معاً فهو «معلَّقٌ مرسل»؛ ولا يُشترط في المعضل التوالي فقط من الوسط — بل هو خاصٌّ بسقوط اثنين فأكثر متتاليين.</p></section>
+<section class="section" id="s58"><p class="eyebrow">القسم العشرون</p><h2>أنواع التدليس</h2><p class="pageref">ص ٨٤ – ٨٦ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">18</span><span class="bayt-text">والمُعْضَلُ الساقِطُ منه اثْنَانِ ومَا أتى مُدَلَّساً نَوعانِ</span></div><div class="bayt"><span class="bayt-num">19</span><span class="bayt-text">الأوَّلُ الإسْقاطُ للشَّيخِ وأنْ يَنْقُلَ عَمَّنْ فَوْقَهُ بعنْ وأنْ</span></div><div class="bayt"><span class="bayt-num">20</span><span class="bayt-text">والثَّانِ لا يُسْقِطُهُ لكنْ يَصِفْ أوْصَافَهُ بما بهِ لا يَنْعرِفْ</span></div></div><h3>تدليس الإسناد وتدليس الشيوخ</h3><div class="tbl-wrap"><table><thead><tr><th>النوع</th><th>تعريفه</th><th>مثاله</th></tr></thead><tbody><tr><td>تدليس الإسناد</td><td>إسقاط الراوي شيخَه، والرواية عمَّن فوقه بصيغةٍ توهم الاتصال</td><td>أن يقول خالدٌ: «إنَّ عليًّا قال...» وقد أسقط بينهما محمداً</td></tr><tr><td>تدليس الشيوخ</td><td>ألا يُسقط الشيخ، لكن يصفه بما لا يُعرف به (اسمٍ أو لقبٍ غير مشهور، أو وصفٍ عام)</td><td>«حدَّثني من أنفه بين عينيه» أو «حدَّثني من جلس للتحديث»</td></tr></tbody></table></div><ul class="pt-list"><li>دواعي التدليس: كتمان ضعف الشيخ أو قلّة دينه، أو غرضٌ سياسي، أو خشية سلطان، أو كون الشيخ أقلَّ مرتبةً</li><li>الحكم: التدليس أصله حرامٌ لأنه من الغشّ («من غشَّ فليس منَّا» رواه مسلم)، وإن كان بعض التابعين فعله مجتهداً لغرضٍ حسن</li><li>لا يُقبل حديث المدلِّس المعنعن حتى يصرِّح بالتحديث أو السماع</li></ul></section>
+<section class="section" id="s60"><p class="eyebrow">القسم ٢١ – ٢٢</p><h2>الشاذّ والمقلوب</h2><p class="pageref">ص ٨٧ – ٩٨ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">21</span><span class="bayt-text">ومَا يَخالِفُ ثِقةٌ فيهِ الَملا فـالشَّاذُّ والَمقْلوبُ قِسْمَانِ تَلا</span></div></div><h3>التعريف، والأقسام الأربعة المرتبطة به</h3><p>الشاذّ: ما يخالف فيه الثقةُ من هو أرجح منه — عدداً، أو عدالةً، أو ضبطاً. ويقابله المحفوظ؛ فإن كان المخالِف ضعيفاً سُمّي منكراً، ويقابله المعروف.</p><div class="tbl-wrap"><table><thead><tr><th>المصطلح</th><th>تعريفه</th></tr></thead><tbody><tr><td>المحفوظ</td><td>ما رواه الأرجح مخالفاً لثقةٍ دونه (يقابل الشاذّ)</td></tr><tr><td>الشاذّ</td><td>ما رواه الثقة مخالفاً لمن هو أرجح منه</td></tr><tr><td>المعروف</td><td>ما رواه الثقة مخالفاً للضعيف (يقابل المنكر)</td></tr><tr><td>المنكر</td><td>ما رواه الضعيف مخالفاً للثقة — أسوأ من الشاذّ</td></tr></tbody></table></div><p>مثال المحفوظ/الشاذّ: في مسح الرأس بالوضوء — رواية مسلم «أخذ لرأسه ماءً غير فَضل يديه» هي المحفوظة، ورواية ابن ماجه «مسح أذنيه بماءٍ غير فضل رأسه» شاذّة.</p><h3>لا يُشترط اتحاد الحديث في الشذوذ — ثلاثة أمثلة</h3><div class="tbl-wrap"><table><thead><tr><th>المسألة</th><th>خلاصة الخلاف</th></tr></thead><tbody><tr><td>حكم الصيام بعد نصف شعبان</td><td>قيل: يُكره (تصحيحاً لحديث السنن)؛ وقال أحمد: لا يُكره لأنه شاذّ يخالف حديث الصحيحين الأرجح</td></tr><tr><td>حكم صيام يوم السبت منفرداً</td><td>أقوال ثلاثة: منسوخ (ضعيف لجهالة التاريخ) / شاذّ لمخالفته الصحيح / محمولٌ على الإفراد فلا تعارض (وهو الأقرب)</td></tr><tr><td>حكم لبس الذهب المحلَّق (كالخاتم)</td><td>أقوال: النهي حجةٌ يُعمل بها / النهي شاذّ يخالف ما في الصحيحين من الجواز (رأي ابن باز) / النهي منسوخٌ بالترخيص لاحقاً</td></tr></tbody></table></div><p>زيادة الثقة لا تكون شاذّة إن أمكن الجمع؛ مثال: زيادة «إنك لا تُخلف الميعاد» في دعاء الأذان لا تخالف بقية الرواية بل توافق قوله تعالى {وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ}.</p><h3>أقسام المقلوب الثلاثة</h3><div class="tbl-wrap"><table><thead><tr><th>القسم</th><th>تعريفه ومثاله</th></tr></thead><tbody><tr><td>قلب الإسناد</td><td>إبدال راوٍ براوٍ (خطأً غالباً) — كأن يقول «حدثني يوسف عن يعقوب» بدل «يعقوب عن يوسف»؛ يُعرف بمخالفته لطريقٍ أوثق، أو باختلاف رواية الراوي شاباً وكبيراً</td></tr><tr><td>قلب إسناد المتن</td><td>تركيب إسناد حديثٍ على متن حديثٍ آخر — غالباً للاختبار، كصنيع أهل بغداد مع الإمام البخاري: جمعوا مائة حديثٍ وقلبوا أسانيدها، ووزَّعوها على عشرة حفّاظ أقوياء، كل واحدٍ معه عشرة أحاديث يسأله عنها، فقال البخاري في كل واحدٍ «لا أعرفه» حتى ظنَّ العامة عجزه، ثم ساق الأحاديث المائة كلها بأسانيدها الصحيحة كاملةً فأذعن له الجميع</td></tr><tr><td>قلب المتن</td><td>انقلاب ألفاظ المتن نفسه على الراوي — ويُعنى به الفقهاء لأنه يغيِّر الحكم</td></tr></tbody></table></div><h3>أمثلة قلب المتن</h3><div class="tbl-wrap"><table><thead><tr><th>الرواية المقلوبة</th><th>الصواب</th></tr></thead><tbody><tr><td>«...حتى لا تعلم يمينه ما تُنفق شماله» (حديث السبعة الذين يظلّهم الله)</td><td>«حتى لا تعلم شماله ما تُنفق يمينه» — عكس اليمين والشمال</td></tr><tr><td>«يبقى في النار فضلٌ...فينشئ الله أقواماً يدخلهم النار»</td><td>«يبقى في الجنة فضلٌ...فينشئ الله أقواماً فيدخلهم الجنة» — لمنافاة الأول لعدل الله</td></tr><tr><td>«إذا سجد أحدكم فلا يبرك كما يبرك البعير، وليضع يديه قبل ركبتيه»</td><td>«وليضع ركبتيه قبل يديه» — لأن تقديم اليدين هو عين هيئة بروك البعير المنهيّ عنها</td></tr></tbody></table></div></section>
+<section class="section" id="s65"><p class="eyebrow">القسم الثالث والعشرون</p><h2>الفرد وأنواعه</h2><p class="pageref">ص ٩٩ – ١٠١ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">23</span><span class="bayt-text">وَالفَرَدُ ما قَيَّدْتَهُ بثِقَةِ أوْ جْمعٍ أوْ قَصِرَ على روايةِ</span></div></div><h3>أنواعه الثلاثة</h3><div class="tbl-wrap"><table><thead><tr><th>النوع</th><th>تعريفه</th><th>مثاله</th></tr></thead><tbody><tr><td>مقيَّدٌ بثقة</td><td>انفرد به ثقةٌ عن ثقة دون مخالفة</td><td>حديث عمر «إنما الأعمال بالنيات» — تفرَّد به في ثلاث طبقات وهو صحيح</td></tr><tr><td>مقيَّدٌ بجمع</td><td>انفرد به عن أهل بلدٍ معيَّن (فردٌ نسبي)</td><td>«تفرَّد به أهل الشام» عن فلان</td></tr><tr><td>مقصورٌ على رواية</td><td>لم يُروَ بهذا اللفظ إلا من طريقٍ واحد</td><td>مع كون الحديث من طرقٍ أخرى مشهوراً</td></tr></tbody></table></div><p>الغالب على الأفراد الضعف، خصوصاً فيما بعد القرون الثلاثة (لكثرة الرواة حينئذٍ)؛ والفرد النسبي أقرب إلى الصحة من الفرد المطلق.</p></section>
+<section class="section" id="s67"><p class="eyebrow">القسم الرابع والعشرون</p><h2>الحديث المعلَّل</h2><p class="pageref">ص ١٠٢ – ١٠٣ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">24</span><span class="bayt-text">ومَا بعِلَّةٍ غُمُوضٍ أوْ خَفَا مُعَلَّلٌ عِنْدَهُمُ قَدْ عُرِفَا</span></div></div><h3>تعريفه واللغات الثلاث فيه</h3><ul class="pt-list"><li>يُقال: المعلَّل، والمُعَلّ، والمعلول — والأصوب لغةً «المُعَلّ» (من: أعلَّه يُعلُّه)</li><li>المعلّ: حديثٌ ظاهرُه الصحة، لكن يتبيَّن بعد البحث أن فيه علةً قادحةً خفية</li><li>مثاله: حديثٌ يُروى مرفوعاً متصلاً وهو المشهور، ثم يتبيَّن أن الحفّاظ رَوَوه مرسلاً أو موقوفاً</li></ul><div class="quote-block hadith"><p class="quote-text">هذا القسم من أغمض أنواع الحديث، لا يطَّلع عليه إلا أهل العلم النقّاد</p><p class="quote-attrib">قول الحافظ ابن حجر في شرح النخبة</p></div></section>
+<section class="section" id="s69"><p class="eyebrow">القسم الخامس والعشرون</p><h2>الحديث المضطرب</h2><p class="pageref">ص ١٠٤ – ١٠٩ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">25</span><span class="bayt-text">وذُو اخْتِلافِ سنَدٍ أو مَتْنٍ مُضْطربٌ عِنْدَ أهيْلِ الفَنِّ</span></div></div><h3>تعريفه وحالاته الثلاث</h3><ul class="pt-list"><li>المضطرب: اختلاف الرواة في السند أو المتن، على وجهٍ لا يمكن فيه جمعٌ ولا ترجيح</li></ul><div class="tbl-wrap"><table><thead><tr><th>الحالة</th><th>الحكم</th></tr></thead><tbody><tr><td>إن أمكن الجمع بين الروايات</td><td>فلا اضطراب</td></tr><tr><td>إن أمكن الترجيح</td><td>يُؤخذ بالراجح، ولا اضطراب</td></tr><tr><td>إن كان الاختلاف في أمرٍ جانبي لا يمسّ أصل المعنى</td><td>فلا اضطراب (مثاله: اختلافهم في ثمن جمل جابر أو قلادة فضالة)</td></tr><tr><td>إن تعذَّر الجمع والترجيح وكان في صميم المعنى</td><td>فهو مضطربٌ، وحكمه الضعف لعدم الضبط</td></tr></tbody></table></div><h3>مثال الجمع: حجّ النبي ﷺ (إفراد / تمتّع / قِران)</h3><p>اختلفت الروايات: من قائلٍ إنه حجّ مفرداً، ومن قائلٍ متمتعاً، ومن قائلٍ قارناً. والجمع الراجح (رأي أحمد وشيخ الإسلام ابن تيمية): كان قارناً حقيقةً؛ وكلّ رواية محمولة على معنى.</p><div class="tbl-wrap"><table><thead><tr><th>النُّسك</th><th>تعريفه</th></tr></thead><tbody><tr><td>الإفراد</td><td>الإحرام بالحجّ وحده؛ يطوف للقدوم ويسعى للحجّ، ويبقى على إحرامه حتى يوم العيد</td></tr><tr><td>القِران</td><td>الإحرام بالعمرة والحجّ معاً؛ فعله كالمفرد لكن تختلف النية</td></tr><tr><td>التمتّع</td><td>الإحرام بالعمرة وحدها، والتحلُّل الكامل، ثم الإحرام بالحجّ من مكة في اليوم الثامن</td></tr></tbody></table></div><p>فمن روى «مفرداً» أراد اقتصاره على أعمال الحجّ فقط؛ ومن روى «متمتعاً» أراد جمعه بين النسكين في سفرةٍ واحدة (فتمتَّع بسقوط أحد السفرين)؛ ومن روى «قارناً» فهو الواقع حقيقةً، لأنه ﷺ لم يتحلَّل من العمرة لسوقه الهدي.</p><h3>مثال الترجيح: حديث بريرة رضي الله عنها</h3><p>لمّا أُعتقت بريرة خيَّرها النبي ﷺ بين البقاء مع زوجها مغيث أو فسخ نكاحها. اختلفت الروايات: هل كان زوجها حرًّا أم عبداً؟ ولمّا تعذَّر الجمع، عُمل بالترجيح: الراجح أنه كان عبداً — فتُلغى الرواية المرجوحة، ويُؤخذ بالراجحة سالمةً من الاضطراب.</p></section>
+<section class="section" id="s73"><p class="eyebrow">القسم السادس والعشرون</p><h2>المدرَجات في الحديث</h2><p class="pageref">ص ١١٠ – ١١٢ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">26</span><span class="bayt-text">وَالُمدْرَجاتُ في الحديثِ ما أتَتْ مِنْ بَعْضِ ألفاظِ الرُّوَاةِ اتَّصَلَتْ</span></div></div><h3>مواضع الإدراج الثلاثة بالأمثلة</h3><div class="tbl-wrap"><table><thead><tr><th>الموضع</th><th>المثال</th><th>الحدّ الفاصل</th></tr></thead><tbody><tr><td>أول الحديث</td><td>«أسبغوا الوضوء، ويلٌ للأعقاب من النار»</td><td>المرفوع هو الشطر الثاني فقط؛ «أسبغوا الوضوء» من كلام أبي هريرة</td></tr><tr><td>وسط الحديث</td><td>حديث بدء الوحي: «كان يتحنَّث في غار حراء، والتحنُّث التعبُّد»</td><td>«والتحنث التعبد» تفسيرٌ من الزهري أُدرج دون بيان</td></tr><tr><td>آخر الحديث</td><td>«يُدعَون غُرًّا محجَّلين... فمن استطاع أن يُطيل غُرَّته فليفعل»</td><td>الجملة الأخيرة من كلام أبي هريرة اجتهاداً وتفقُّهاً، لا من كلامه ﷺ</td></tr></tbody></table></div><div class="quote-block hadith"><p class="quote-text">وأبو هريرة قال ذا من كيسه فغدا يميِّزه أولو العرفان</p><p class="quote-attrib">قول ابن القيّم رحمه الله في النونية، مشيراً إلى هذا الإدراج</p></div><h3>طرق معرفته وحكمه</h3><ul class="pt-list"><li>يُعرف الإدراج: بنصٍّ من طريقٍ آخر يبيّنه، أو باستحالة كونه من كلامه ﷺ، أو بنصّ أحد الحفّاظ الأئمة</li><li>إن غيَّر الإدراج المعنى: لا يجوز إلا ببيانه صراحة</li><li>إن لم يغيِّر المعنى (كتفسير الزهري): فلا بأس بذكره على سبيل الإيضاح</li><li>المدرَج (كلام الراوي) ليس حجةً بحال، لأنه ليس من كلامه ﷺ</li></ul></section>
+<section class="section" id="s76"><p class="eyebrow">القسم السابع والعشرون</p><h2>المدبَّج</h2><p class="pageref">ص ١١٣ – ١١٤ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">27</span><span class="bayt-text">ومَا رَوى كلُّ قَرِينٍ عنْ أخِهْ مُدَبَّجٌ فَاعْرِفْهُ حَقًّا وانْتَخِهْ</span></div></div><h3>القرين، ورواية الأقران، والمدبَّج</h3><ul class="pt-list"><li>القرين: المشارك لمن روى عنه في السنّ، أو في الأخذ عن نفس الشيخ</li><li>رواية الأقران: أن يروي أحد القرينين عن الآخر (من جانبٍ واحد فقط)</li><li>المدبَّج: أن يروي كلُّ قرينٍ عن الآخر — من الجانبين معاً</li><li>سُمِّي «مدبَّجاً» من ديباجة الوجه؛ لأن كلَّ قرينٍ يلتفت إلى صاحبه محدِّثاً إياه فيقابله بديباجة وجهه</li></ul></section>
+<section class="section" id="s78"><p class="eyebrow">القسم ٢٨ – ٢٩</p><h2>المتفق والمفترق — المؤتلف والمختلف</h2><p class="pageref">ص ١١٥ – ١١٧ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">28</span><span class="bayt-text">مُتَّفِقٌ لَفْظاً وخطاً مُتَّفقْ وضِدُّهُ فيما ذَكَرْنَا الُمفْترقْ</span></div><div class="bayt"><span class="bayt-num">29</span><span class="bayt-text">مُؤْتَلِفٌ مُتَّفِقُ الخطِّ فَقَطْ وضِدُّهُ مُختَلِفٌ فَاخْشَ الغَلَطْ</span></div></div><h3>مقارنة بين البابين</h3><div class="tbl-wrap"><table><thead><tr><th>الباب</th><th>التعريف</th><th>المثال</th></tr></thead><tbody><tr><td>المتفق والمفترق</td><td>اتفاق الاسم لفظاً وخطًّا، مع افتراق المسمَّى (شخصان أو أكثر بنفس الاسم)</td><td>«عباس»: اسمٌ لثقةٍ، واسمٌ لآخر ضعيف — فيلتبس الحديث حتى يُعرف أيّهما</td></tr><tr><td>المؤتلف والمختلف</td><td>اتفاق الاسمين خطًّا فقط، مع اختلافهما نطقاً</td><td>عبَّاس / عيَّاش، خيَّاط / حبَّاط</td></tr></tbody></table></div><ul class="pt-list"><li>الإعجام: تنقيط الحروف؛ فتمييز المؤتلف والمختلف كان يسيراً عند عدم إعجام الكلمات عند المتقدمين (فتلتبس عباس بعيّاش خطاً)، أما عند المتأخرين فيقلّ الاشتباه بالتنقيط</li><li>أما المتفق والمفترق فأصعب منه حتى عند المتأخرين، لأنه يحتاج بحثاً دقيقاً في تعيين الشخص بعينه</li></ul><p>الفائدة: تمييز الرواة الموثَّقين من غيرهم لئلا يقع الاشتباه في الحكم على الحديث؛ ويُعان على ذلك بمعرفة شيوخ الراوي وتلاميذه، والكتب المصنَّفة في هذا الباب (وعلى رأسها كتب الحافظ ابن حجر).</p></section>
+<section class="section" id="s80"><p class="eyebrow">القسم الثلاثون</p><h2>المنكر</h2><p class="pageref">ص ١١٨ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">30</span><span class="bayt-text">والُمنْكَرُ الفَردُ بهِ رَاوٍ غَدَا تَعْدِيلُهُ لا يْحمِلُ التَّفَرُّدَا</span></div></div><h3>تعريفه — قولان</h3><div class="tbl-wrap"><table><thead><tr><th>القول</th><th>التعريف</th></tr></thead><tbody><tr><td>قول الأكثر</td><td>ما رواه الضعيف مخالفاً للثقة (ولو كانا تلميذَي شيخٍ واحد)</td></tr><tr><td>قول الناظم وابن حجر في النخبة</td><td>ما انفرد به راوٍ لا يُحتمل تفرُّده — فهو مردود ولو كان له شواهد، لشدة ضعفه</td></tr></tbody></table></div></section>
+<section class="section" id="s82"><p class="eyebrow">القسم الحادي والثلاثون</p><h2>المتروك</h2><p class="pageref">ص ١١٩ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">31</span><span class="bayt-text">مَتُروكُهُ مَا وَاحِدٌ بهِ انفَردْ وأجَمعُوا لضَعْفِه فَهُوَ كرَدّ</span></div></div><h3>تعريفه — قولان</h3><div class="tbl-wrap"><table><thead><tr><th>القول</th><th>التعريف</th></tr></thead><tbody><tr><td>قول الناظم</td><td>ما انفرد به راوٍ أجمع المحدِّثون على تضعيفه — فهو مردود</td></tr><tr><td>قول ابن حجر في النخبة</td><td>ما رواه راوٍ متَّهمٌ بالكذب — فحديثه يقارب الموضوع دون الجزم بوضعه</td></tr></tbody></table></div></section>
+<section class="section" id="s84"><p class="eyebrow">القسم الثاني والثلاثون</p><h2>الحديث الموضوع</h2><p class="pageref">ص ١٢٠ – ١٢١ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">32</span><span class="bayt-text">والكذِبُ الُمخْتَلَقُ المصنُوعُ علَى النَّبيِّ فذَلِكَ الموْضوعُ</span></div></div><h3>تعريفه ومصنَّفاته وأسبابه</h3><ul class="pt-list"><li>الموضوع: الكذب المختلَق المصنوع على النبي ﷺ</li><li>من مصنَّفاته: «اللآلئ المصنوعة في الأحاديث الموضوعة» / «الفوائد المجموعة» للشوكاني / «الموضوعات» لابن الجوزي (مع تساهله فيه، حتى وصف حديثاً عند مسلم بالوضع!)؛ ولذا يُقال: «لا عبرة بوضع ابن الجوزي، ولا بتصحيح الحاكم، ولا بإجماع ابن المنذر» لتساهل الأولين، مع أن ابن المنذر كان دقيقاً فيما ينقل فيه الإجماع</li><li>من أسباب الوضع: التعصب المذهبي أو الطائفي — كأحاديث الرافضة الموضوعة في فضائل آل البيت وذمّ بني أميّة</li></ul><h3>حكمه، وتنبيه على صنيع الزمخشري</h3><ul class="pt-list"><li>التحديث بالموضوع حرامٌ إلا مع بيان وضعه، وبصيغة تمريضٍ («قيل»، «يُروى») لا بصيغة الجزم</li><li>وضع الحديث على النبي ﷺ من كبائر الذنوب</li></ul><div class="quote-block hadith"><p class="quote-text">من كذب عليَّ متعمِّداً فليتبوَّأ مقعده من النار</p><p class="quote-attrib">متفق عليه</p></div><p>تنبيه: يُلاحَظ في تفسير «الكشّاف» للزمخشري تصديرُ كل سورةٍ أو ختمُها بأحاديث ضعيفة جداً أو موضوعة في فضلها؛ وقد يسَّر الله للحافظ ابن حجر تخريج أحاديث الكشّاف وبيَّن صحيحها من ضعيفها وموضوعها.</p></section>
+<section class="section" id="s87"><p class="eyebrow">خاتمة</p><h2>خاتمة المنظومة</h2><p class="pageref">ص ١٢٢ من الأصل</p><div class="verse-group"><div class="bayt"><span class="bayt-num">33</span><span class="bayt-text">وقَدْ أتَتْ كالَجوْهَرِ المكْنُونِ سَمَّيْتُهَا: مَنْظُومَةَ البَيْقُوني</span></div><div class="bayt"><span class="bayt-num">34</span><span class="bayt-text">فَوْقَ الثَّلاثيَن بأرْبَعٍ أتَتْ أقْسامُهَا ثمَّ بخيٍر خُتِمتْ</span></div></div><h3>عدد أبيات المنظومة، ودعاء الشارح</h3><ul class="pt-list"><li>«كالجوهر المكنون»: أي المحفوظ عن الشمس والرياح والغبار، فيبقى نضراً مشرقاً دائماً — تشبيهٌ لنفاسة المنظومة</li><li>سمَّاها ناظمها: «منظومة البيقوني» نسبةً إلى ناظمها طه بن محمد الفتحي البيقوني</li><li>عدد أبياتها: أربعةٌ وثلاثون بيتاً (فوق الثلاثين بأربع)، اشتملت على اثنين وثلاثين نوعاً من أنواع علوم الحديث</li></ul><p>نسأل الله تعالى أن يتقبَّل منّا صالح الأعمال، وأن يغفر الزلل والخطأ، إنه سميعٌ مجيب</p><p>وصلى الله وسلم وبارك على نبينا وإمامنا محمد بن عبد الله وعلى آله وأصحابه وأتباعه بإحسانٍ إلى يوم الدين</p><p>ختام الشيخ ابن عثيمين رحمه الله لشرحه</p></section>
+    
+<footer class="closing">
+  <div class="cover-orn">۞</div>
+  <h2>تمّ بحمد الله</h2>
+  <p class="closing-sub">شرح المنظومة البيقونية في مصطلح الحديث</p>
+  <p class="closing-author">للشيخ محمد بن صالح العثيمين رحمه الله</p>
+</footer>
+
+  </main>
+</div>
+</body>
+</html>
