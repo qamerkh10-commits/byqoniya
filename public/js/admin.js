@@ -11,6 +11,23 @@
   const uploadSuccess = document.getElementById('uploadSuccess');
   const uploadBtn = document.getElementById('uploadBtn');
 
+  const studentsSummary = document.getElementById('studentsSummary');
+  const studentsBody = document.getElementById('studentsBody');
+  const studentsEmpty = document.getElementById('studentsEmpty');
+  const studentSearch = document.getElementById('studentSearch');
+
+  const studentModal = document.getElementById('studentModal');
+  const closeStudentModal = document.getElementById('closeStudentModal');
+  const sdAvatar = document.getElementById('sdAvatar');
+  const sdName = document.getElementById('sdName');
+  const sdEmail = document.getElementById('sdEmail');
+  const sdPercent = document.getElementById('sdPercent');
+  const sdCount = document.getElementById('sdCount');
+  const sdActive = document.getElementById('sdActive');
+  const sdJoined = document.getElementById('sdJoined');
+  const sdBar = document.getElementById('sdBar');
+  const sdVerses = document.getElementById('sdVerses');
+
   const editModal = document.getElementById('editModal');
   const editModalTitle = document.getElementById('editModalTitle');
   const editError = document.getElementById('editError');
@@ -53,6 +70,145 @@
     const ext = '.' + filename.split('.').pop().toLowerCase();
     return EDITABLE_EXT.includes(ext);
   }
+
+  function initials(name) {
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '؟';
+    return parts.length === 1 ? parts[0][0] : parts[0][0] + parts[1][0];
+  }
+
+  function timeAgo(dateStr) {
+    if (!dateStr) return 'لا يوجد';
+    const then = new Date(dateStr.replace(' ', 'T') + 'Z');
+    const diffMs = Date.now() - then.getTime();
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 2) return 'الآن';
+    if (mins < 60) return `منذ ${mins} دقيقة`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `منذ ${hrs} ساعة`;
+    const days = Math.floor(hrs / 24);
+    if (days < 30) return `منذ ${days} يوم`;
+    return then.toLocaleDateString('ar-EG');
+  }
+
+  function activityBadge(lastActive) {
+    if (!lastActive) return `<span class="badge offline">لم يبدأ بعد</span>`;
+    const then = new Date(lastActive.replace(' ', 'T') + 'Z');
+    const mins = (Date.now() - then.getTime()) / 60000;
+    if (mins < 10) return `<span class="badge online">نشط الآن</span>`;
+    if (mins < 60 * 24) return `<span class="badge idle">${timeAgo(lastActive)}</span>`;
+    return `<span class="badge offline">${timeAgo(lastActive)}</span>`;
+  }
+
+  let allStudents = [];
+
+  async function loadStudentsProgress() {
+    const res = await fetch('/api/admin/students-progress');
+    const data = await res.json();
+    allStudents = data.students || [];
+
+    const s = data.summary || {};
+    studentsSummary.innerHTML = `
+      <div class="stat-card">
+        <div class="stat-label">عدد الطلاب</div>
+        <div class="stat-value">${s.totalStudents ?? 0}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">متوسط نسبة الحفظ</div>
+        <div class="stat-value">${s.avgPercent ?? 0}٪</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">أتمّوا المنظومة</div>
+        <div class="stat-value">${s.completedCount ?? 0}</div>
+        <div class="stat-sub">من أصل ${s.totalStudents ?? 0}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">لم يبدأوا بعد</div>
+        <div class="stat-value">${s.notStartedCount ?? 0}</div>
+      </div>
+    `;
+
+    renderStudentsTable(allStudents);
+  }
+
+  function renderStudentsTable(list) {
+    studentsEmpty.style.display = list.length ? 'none' : 'block';
+    studentsBody.innerHTML = list
+      .map(
+        (st) => `
+      <tr data-id="${st.id}">
+        <td>
+          <div class="student-name-cell">
+            <span class="avatar sm">${escapeHtml(initials(st.name))}</span>
+            <div class="name-block">
+              <div class="n">${escapeHtml(st.name)}</div>
+              <div class="e">${escapeHtml(st.email)}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="progress-cell">
+            <div class="mini-bar"><span style="width:${st.percent}%"></span></div>
+            <span class="pcnt">${st.percent}٪</span>
+            ${st.percent === 100 ? '<span class="badge complete">مكتمل ✓</span>' : ''}
+          </div>
+          <div style="font-size:11px; color:var(--sub); margin-top:4px;">${st.memorized} من ${st.total} بيتًا</div>
+        </td>
+        <td style="font-size:12px; color:var(--sub);">${st.last_memorized_at ? timeAgo(st.last_memorized_at) : 'لا يوجد'}</td>
+        <td>${activityBadge(st.last_active_at)}</td>
+        <td style="font-size:12px; color:var(--sub);">${st.created_at ? st.created_at.slice(0, 10) : '—'}</td>
+        <td class="row-actions"><button data-action="view-student" data-id="${st.id}">التفاصيل</button></td>
+      </tr>`
+      )
+      .join('');
+  }
+
+  studentSearch?.addEventListener('input', () => {
+    const q = studentSearch.value.trim().toLowerCase();
+    if (!q) return renderStudentsTable(allStudents);
+    renderStudentsTable(
+      allStudents.filter(
+        (st) => st.name.toLowerCase().includes(q) || st.email.toLowerCase().includes(q)
+      )
+    );
+  });
+
+  studentsBody.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-action="view-student"]');
+    if (!btn) return;
+    await openStudentModal(btn.dataset.id);
+  });
+
+  async function openStudentModal(id) {
+    const res = await fetch(`/api/admin/students/${id}/progress`);
+    if (!res.ok) return alert('تعذّر تحميل تفاصيل الطالب');
+    const data = await res.json();
+
+    sdAvatar.textContent = initials(data.student.name);
+    sdName.textContent = data.student.name;
+    sdEmail.textContent = data.student.email;
+    sdPercent.textContent = data.stats.percent + '٪';
+    sdCount.textContent = `${data.stats.memorized} من ${data.stats.total}`;
+    sdActive.textContent = timeAgo(data.student.last_active_at);
+    sdJoined.textContent = data.student.created_at ? data.student.created_at.slice(0, 10) : '—';
+    sdBar.style.width = data.stats.percent + '%';
+
+    sdVerses.innerHTML = data.items
+      .map(
+        (it) => `
+      <div class="sv-item ${it.memorized ? 'done' : ''}">
+        <span class="sv-num">${it.id}</span>
+        <span class="sv-title">${escapeHtml(it.title)}</span>
+        ${it.memorized ? '✓' : ''}
+      </div>`
+      )
+      .join('');
+
+    studentModal.style.display = 'flex';
+  }
+
+  closeStudentModal.addEventListener('click', () => { studentModal.style.display = 'none'; });
+  studentModal.addEventListener('click', (e) => { if (e.target === studentModal) studentModal.style.display = 'none'; });
 
   async function loadPages() {
     const res = await fetch('/api/content/pages');
@@ -230,7 +386,7 @@
     }
   });
 
-  await Promise.all([loadPages(), loadUsers()]);
+  await Promise.all([loadPages(), loadUsers(), loadStudentsProgress()]);
 
   loadingScreen.style.display = 'none';
   adminRoot.style.display = 'block';

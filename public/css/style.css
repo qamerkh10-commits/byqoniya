@@ -23,10 +23,48 @@ html[data-theme="brown"]{
 
 *,*::before,*::after{ box-sizing: border-box; margin:0; padding:0; }
 
-html,body{ min-height:100%; background:var(--bg); color:var(--ink); font-family:'Tajawal',sans-serif; }
+html,body{ min-height:100%; background:var(--bg); color:var(--ink); font-family:'Tajawal',sans-serif; -webkit-font-smoothing:antialiased; }
 a{ color:inherit; text-decoration:none; }
 h1,h2,h3,.brand{ font-family:'Tajawal',sans-serif; }
 img{ max-width:100%; }
+::selection{ background: var(--accent2); color:#2b2418; }
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-thumb{ background: var(--line); border-radius:99px; }
+::-webkit-scrollbar-thumb:hover{ background: var(--accent2); }
+
+/* ============ عناصر تخصيص/لوحة معلومات مشتركة ============ */
+.avatar{
+  display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+  width:38px; height:38px; border-radius:50%; font-weight:800; font-size:14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color:#f7ecc9;
+  letter-spacing:0;
+}
+.avatar.sm{ width:28px; height:28px; font-size:11.5px; }
+.avatar.lg{ width:56px; height:56px; font-size:19px; }
+
+.badge{ display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:999px; }
+.badge.admin{ background: var(--accent2); color:#2b2418; }
+.badge.user{ background: var(--tint); color: var(--accent-dark); }
+.badge.online{ background:#e5f4ea; color:#1f7a41; }
+.badge.idle{ background:#f4f0e5; color:#8a6d2e; }
+.badge.offline{ background:#f1eee6; color:var(--sub); }
+.badge.complete{ background:#e5f4ea; color:#1f7a41; }
+
+.mini-bar{ height:7px; border-radius:999px; background:var(--tint); overflow:hidden; min-width:80px; }
+.mini-bar > span{ display:block; height:100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .35s ease; }
+
+.stat-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:22px; }
+.stat-card{
+  background: var(--surface); border:1px solid var(--line); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow); position:relative; overflow:hidden;
+}
+.stat-card::before{
+  content:''; position:absolute; inset:0 auto 0 0; width:4px;
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+}
+.stat-card .stat-label{ font-size:12px; color:var(--sub); font-weight:700; margin-bottom:8px; }
+.stat-card .stat-value{ font-size:26px; font-weight:900; color:var(--accent-dark); line-height:1; }
+.stat-card .stat-sub{ font-size:11.5px; color:var(--sub); margin-top:6px; }
 
 /* ============ مبدّل الثيم (يظهر في الشِل كله) ============ */
 .theme-sw{ display:flex; gap:8px; align-items:center; }
@@ -54,6 +92,11 @@ img{ max-width:100%; }
 .btn.google{ background:#fff; color:#3c4043; border:1px solid #dadce0; }
 .btn.google:hover{ background:#f7f8f8; }
 .btn:disabled{ opacity:.6; cursor:not-allowed; }
+.btn:focus-visible, .search-input:focus-visible, .field input:focus-visible{ outline: 2px solid var(--accent2); outline-offset: 2px; }
+
+.topbar{ box-shadow: 0 1px 0 rgba(0,0,0,.02); }
+.card{ animation: cardIn .35s ease both; }
+@keyframes cardIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
 
 .error-box{ background:#fbeaea; border:1px solid #eabdbd; color: var(--danger); padding: 10px 14px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; display:none; }
 .success-box{ background:#e9f4ec; border:1px solid #bfe0c9; color: var(--accent-dark); padding: 10px 14px; border-radius: 10px; font-size: 14px; margin-bottom: 16px; display:none; }
@@ -101,6 +144,33 @@ img{ max-width:100%; }
 .dash-header h2{ font-weight:900; font-size:clamp(1.5rem,4vw,2.1rem); color:var(--ink); }
 .dash-header .matn-strip{ margin-top:16px; }
 
+/* ============ بطاقة تقدّمي (تظهر للطالب في الرئيسية) ============ */
+.my-progress-card{
+  max-width:1180px; margin:0 auto 6px; padding: 0 6vw;
+}
+.my-progress-inner{
+  background: linear-gradient(120deg, var(--matn-bg), var(--accent-dark));
+  border-radius: 20px; padding: 24px 28px; color:#f4efe3;
+  display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;
+  box-shadow: var(--shadow);
+}
+.my-progress-info{ display:flex; align-items:center; gap:16px; }
+.my-progress-info .avatar.lg{ background: rgba(255,255,255,.14); color:#f7ecc9; }
+.my-progress-text .greet{ font-size:13px; color:#d8cdaa; font-weight:700; margin-bottom:2px; }
+.my-progress-text h3{ font-size:18px; font-weight:900; color:#faf6ea; }
+.my-progress-text .hint{ font-size:12.5px; color:#cfc4a3; margin-top:4px; }
+.my-progress-ring-wrap{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.ring{ position:relative; width:74px; height:74px; flex-shrink:0; }
+.ring svg{ width:100%; height:100%; transform:rotate(-90deg); }
+.ring circle{ fill:none; stroke-width:8; }
+.ring .track{ stroke: rgba(255,255,255,.16); }
+.ring .fill{ stroke: var(--accent2); stroke-linecap:round; transition: stroke-dashoffset .5s ease; }
+.ring .ring-label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:15px; color:#faf6ea; }
+.my-progress-stats{ font-size:12.5px; color:#d8cdaa; line-height:1.9; }
+.my-progress-stats strong{ color:#faf6ea; font-size:14px; }
+.my-progress-inner .btn{ background: var(--accent2); color:#2b2418; flex-shrink:0; }
+.my-progress-inner .btn:hover{ filter:brightness(1.06); }
+
 .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:22px; padding: 0 6vw 40px; max-width:1180px; margin:0 auto; }
 .card{ background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 26px 24px; display:flex; flex-direction:column; gap:12px; transition: transform .2s ease, box-shadow .2s ease; position:relative; overflow:hidden; }
 .card:hover{ transform: translateY(-3px); box-shadow: 0 16px 32px rgba(20,20,15,.09); }
@@ -128,7 +198,7 @@ img{ max-width:100%; }
 
 .sidebar-footer{ padding: 14px; border-top: 1px solid rgba(255,255,255,.12); }
 .user-chip{ display:flex; align-items:center; justify-content:space-between; padding: 8px 10px; border-radius:10px; background: rgba(255,255,255,.06); font-size: 12.5px; margin-bottom: 8px; gap:6px; }
-.user-chip .u-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.user-chip .u-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
 .user-chip .role-badge{ font-size: 10.5px; padding: 2px 8px; border-radius: 999px; background: var(--accent2); color:#2b2418; font-weight:700; flex-shrink:0; }
 .sidebar-footer .btn{ font-size: 12.5px; padding: 9px; }
 .google-link-btn{ font-size:12px; padding:8px; margin-bottom:8px; }
@@ -166,6 +236,36 @@ table.pages-table th{ color: var(--sub); font-size: 12px; }
 
 .upload-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 @media (max-width: 640px){ .upload-grid{ grid-template-columns: 1fr; } }
+
+/* ============ لوحة تقدّم الطلاب (للمطور) ============ */
+.panel-head-row{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+.panel-head-row h2{ margin:0; }
+.search-input{ padding:9px 14px; border-radius:10px; border:1px solid var(--line); background:var(--bg); font-family:inherit; font-size:13.5px; min-width:200px; outline:none; }
+.search-input:focus{ border-color: var(--accent2); }
+
+table.students-table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px; }
+table.students-table th, table.students-table td{ text-align:right; padding:12px 10px; border-bottom:1px solid var(--line); vertical-align:middle; }
+table.students-table th{ color:var(--sub); font-size:11.5px; font-weight:700; }
+table.students-table tr:hover td{ background: var(--tint); }
+.student-name-cell{ display:flex; align-items:center; gap:10px; }
+.student-name-cell .name-block{ min-width:0; }
+.student-name-cell .name-block .n{ font-weight:800; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px; }
+.student-name-cell .name-block .e{ font-size:11px; color:var(--sub); direction:ltr; text-align:right; unicode-bidi:plaintext; }
+.progress-cell{ display:flex; align-items:center; gap:10px; }
+.progress-cell .pcnt{ font-size:12px; font-weight:800; color:var(--accent-dark); min-width:32px; text-align:left; }
+.empty-note{ text-align:center; color:var(--sub); padding:30px 10px; font-size:13.5px; }
+
+.student-detail-head{ display:flex; align-items:center; gap:14px; margin-bottom:18px; flex-wrap:wrap; }
+.student-detail-head .name-block h3{ font-size:17px; color:var(--ink); margin-bottom:2px; }
+.student-detail-head .name-block .e{ font-size:12px; color:var(--sub); direction:ltr; text-align:right; unicode-bidi:plaintext; }
+.student-detail-meta{ display:flex; gap:16px; flex-wrap:wrap; font-size:12px; color:var(--sub); margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+.student-detail-meta strong{ color:var(--ink); }
+.student-verses-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; max-height:340px; overflow-y:auto; padding-left:4px; }
+.sv-item{ border:1px solid var(--line); border-radius:10px; padding:8px 10px; font-size:12px; display:flex; align-items:center; gap:7px; background:var(--bg); }
+.sv-item.done{ background:#e5f4ea; border-color:#bfe0c9; color:#1f7a41; }
+.sv-item .sv-num{ font-weight:900; color:var(--accent2); flex-shrink:0; }
+.sv-item.done .sv-num{ color:#1f7a41; }
+.sv-item .sv-title{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 
 textarea.code-edit{ width:100%; min-height: 320px; font-family: 'Courier New', monospace; font-size: 13px; padding: 14px; border-radius: 10px; border: 1px solid var(--line); background:var(--bg); direction: ltr; text-align: left; }
 

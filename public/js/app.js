@@ -8,6 +8,7 @@
   const adminLink = document.getElementById('adminLink');
   const googleLinkBtn = document.getElementById('googleLinkBtn');
   const logoutBtn = document.getElementById('logoutBtn');
+  const userAvatar = document.getElementById('userAvatar');
   const pageTitle = document.getElementById('pageTitle');
   const mobileTitle = document.getElementById('mobileTitle');
   const frameWrap = document.getElementById('frameWrap');
@@ -35,6 +36,10 @@
 
   usernameLabel.textContent = me.name;
   roleBadge.textContent = me.role === 'admin' ? 'مطوّر' : 'طالب';
+  if (userAvatar) {
+    const parts = String(me.name || '').trim().split(/\s+/).filter(Boolean);
+    userAvatar.textContent = parts.length ? (parts.length === 1 ? parts[0][0] : parts[0][0] + parts[1][0]) : '؟';
+  }
   if (me.role === 'admin') adminLink.style.display = 'block';
 
   logoutBtn.addEventListener('click', async () => {
@@ -126,6 +131,76 @@
     history.replaceState(null, '', `#${p.slug}`);
   }
 
+  function initials(name) {
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '؟';
+    return parts.length === 1 ? parts[0][0] : parts[0][0] + parts[1][0];
+  }
+
+  function timeGreeting() {
+    const h = new Date().getHours();
+    if (h < 5) return 'مساء الخير';
+    if (h < 12) return 'صباح الخير';
+    if (h < 17) return 'مساء الخير';
+    if (h < 20) return 'مساء الخير';
+    return 'مساء الخير';
+  }
+
+  function progressRingSvg(percent) {
+    const r = 30, c = 2 * Math.PI * r;
+    const offset = c - (Math.min(100, Math.max(0, percent)) / 100) * c;
+    return `
+      <div class="ring">
+        <svg viewBox="0 0 74 74">
+          <circle class="track" cx="37" cy="37" r="${r}"></circle>
+          <circle class="fill" cx="37" cy="37" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"></circle>
+        </svg>
+        <div class="ring-label">${percent}٪</div>
+      </div>`;
+  }
+
+  async function myProgressWidgetHtml() {
+    // بطاقة تقدّمي الشخصية — للطلاب فقط
+    if (me.role === 'admin') return '';
+    let data;
+    try {
+      const res = await fetch('/api/memorization/progress');
+      data = await res.json();
+    } catch (e) {
+      return '';
+    }
+    const { memorized, total, percent } = data.stats;
+    const remaining = total - memorized;
+    const hint =
+      memorized === 0
+        ? 'ابدأ رحلتك مع أول بيت من المنظومة اليوم'
+        : memorized === total
+        ? 'الحمد لله، أتممتَ حفظ المنظومة كاملة 🎉'
+        : `باقي لك ${remaining} بيتًا لإتمام الحفظ`;
+
+    return `
+    <div class="my-progress-card">
+      <div class="my-progress-inner">
+        <div class="my-progress-info">
+          <div class="avatar lg">${escapeHtml(initials(me.name))}</div>
+          <div class="my-progress-text">
+            <div class="greet">${timeGreeting()}</div>
+            <h3>${escapeHtml(me.name)}</h3>
+            <div class="hint">${escapeHtml(hint)}</div>
+          </div>
+        </div>
+        <div class="my-progress-ring-wrap">
+          ${progressRingSvg(percent)}
+          <div class="my-progress-stats">
+            حفظت <strong>${memorized}</strong> من <strong>${total}</strong> بيتًا<br>
+            نسبة الإنجاز: <strong>${percent}٪</strong>
+          </div>
+          <a href="/tracker.html" class="btn">متابعة الحفظ ←</a>
+        </div>
+      </div>
+    </div>`;
+  }
+
   function renderHome() {
     pageTitle.textContent = 'الرئيسية';
     mobileTitle.textContent = 'المنظومة البيقونية';
@@ -151,6 +226,7 @@
         <h2>اختر أحد الأقسام للمتابعة</h2>
         <div class="matn-strip"><p>وقَدْ أتَتْ كالَجوهَر الَمكْنُونِ … سَمَّيتُها منظُومة البَيقُونِي</p></div>
       </div>
+      <div id="myProgressSlot"></div>
       <div class="grid">
         ${cardsHtml}
         <a class="card special" href="/tracker.html">
@@ -167,6 +243,11 @@
         const p = pages.find((x) => x.slug === card.dataset.slug);
         if (p) openPage(p);
       });
+    });
+
+    myProgressWidgetHtml().then((html) => {
+      const slot = document.getElementById('myProgressSlot');
+      if (slot) slot.outerHTML = html;
     });
   }
 

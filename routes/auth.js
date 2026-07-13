@@ -59,6 +59,7 @@ router.post('/register', async (req, res) => {
 
     req.session.userId = info.lastInsertRowid;
     req.session.role = role;
+    db.prepare(`UPDATE users SET last_login_at = datetime('now'), last_active_at = datetime('now') WHERE id = ?`).run(info.lastInsertRowid);
 
     res.json(publicUser({ id: info.lastInsertRowid, email: cleanEmail, name: name.trim(), role, google_id: null }));
   } catch (err) {
@@ -87,6 +88,7 @@ router.post('/login', async (req, res) => {
 
     req.session.userId = user.id;
     req.session.role = user.role;
+    db.prepare(`UPDATE users SET last_login_at = datetime('now'), last_active_at = datetime('now') WHERE id = ?`).run(user.id);
 
     res.json(publicUser(user));
   } catch (err) {
@@ -131,6 +133,7 @@ router.post('/google', async (req, res) => {
 
     req.session.userId = user.id;
     req.session.role = user.role;
+    db.prepare(`UPDATE users SET last_login_at = datetime('now'), last_active_at = datetime('now') WHERE id = ?`).run(user.id);
 
     res.json(publicUser(user));
   } catch (err) {

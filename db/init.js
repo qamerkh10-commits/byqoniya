@@ -78,6 +78,12 @@ try {
   if (!columnExists('pages', 'description')) {
     db.exec(`ALTER TABLE pages ADD COLUMN description TEXT DEFAULT ''`);
   }
+  if (!columnExists('users', 'last_login_at')) {
+    db.exec(`ALTER TABLE users ADD COLUMN last_login_at TEXT`);
+  }
+  if (!columnExists('users', 'last_active_at')) {
+    db.exec(`ALTER TABLE users ADD COLUMN last_active_at TEXT`);
+  }
 } catch (e) {
   console.warn('تنبيه أثناء ترقية قاعدة البيانات:', e.message);
 }

@@ -170,4 +170,86 @@ router.get('/users', (req, res) => {
   res.json({ users });
 });
 
+// نظرة عامة على تقدّم كل الطلاب في الحفظ (للمطور) — ملخص لكل طالب + إحصائيات عامة
+router.get('/students-progress', (req, res) => {
+  const totalItems = db.prepare('SELECT COUNT(*) AS c FROM memorization_items').get().c || 0;
+
+  const students = db
+    .prepare(
+      `SELECT id, name, email, created_at, last_login_at, last_active_at FROM users WHERE role != 'admin' ORDER BY name ASC`
+    )
+    .all();
+
+  const memorizedCountStmt = db.prepare(
+    `SELECT COUNT(*) AS c FROM memorization_progress WHERE user_id = ? AND memorized = 1`
+  );
+  const lastMemorizedStmt = db.prepare(
+    `SELECT memorized_at FROM memorization_progress WHERE user_id = ? AND memorized = 1 ORDER BY memorized_at DESC LIMIT 1`
+  );
+
+  const rows = students.map((s) => {
+    const memorized = totalItems ? memorizedCountStmt.get(s.id).c : 0;
+    const percent = totalItems ? Math.round((memorized / totalItems) * 100) : 0;
+    const lastMemorized = totalItems ? lastMemorizedStmt.get(s.id) : null;
+    return {
+      id: s.id,
+      name: s.name,
+      email: s.email,
+      created_at: s.created_at,
+      last_login_at: s.last_login_at,
+      last_active_at: s.last_active_at,
+      memorized,
+      total: totalItems,
+      percent,
+      last_memorized_at: lastMemorized ? lastMemorized.memorized_at : null,
+    };
+  });
+
+  const summary = {
+    totalStudents: rows.length,
+    totalItems,
+    avgPercent: rows.length ? Math.round(rows.reduce((a, r) => a + r.percent, 0) / rows.length) : 0,
+    completedCount: rows.filter((r) => totalItems > 0 && r.memorized === totalItems).length,
+    notStartedCount: rows.filter((r) => r.memorized === 0).length,
+  };
+
+  res.json({ students: rows, summary });
+});
+
+// تفاصيل تقدّم طالب معيّن، بيتًا بيتًا (للمطور)
+router.get('/students/:id/progress', (req, res) => {
+  const studentId = Number(req.params.id);
+  const student = db
+    .prepare(`SELECT id, name, email, created_at, last_login_at, last_active_at FROM users WHERE id = ?`)
+    .get(studentId);
+  if (!student) return res.status(404).json({ error: 'الطالب غير موجود' });
+
+  const items = db.prepare('SELECT * FROM memorization_items ORDER BY id ASC').all();
+  const progressRows = db.prepare('SELECT * FROM memorization_progress WHERE user_id = ?').all(studentId);
+  const progressMap = new Map(progressRows.map((r) => [r.item_id, r]));
+
+  const merged = items.map((item) => {
+    const p = progressMap.get(item.id);
+    return {
+      id: item.id,
+      title: item.title,
+      scheduled_date: p ? p.scheduled_date : null,
+      memorized: p ? !!p.memorized : false,
+      memorized_at: p ? p.memorized_at : null,
+    };
+  });
+
+  const memorizedCount = merged.filter((m) => m.memorized).length;
+
+  res.json({
+    student,
+    items: merged,
+    stats: {
+      total: merged.length,
+      memorized: memorizedCount,
+      percent: merged.length ? Math.round((memorizedCount / merged.length) * 100) : 0,
+    },
+  });
+});
+
 module.exports = router;

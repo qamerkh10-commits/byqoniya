@@ -25,6 +25,32 @@
   <div class="admin-wrap">
 
     <div class="panel">
+      <div class="panel-head-row">
+        <h2>📈 تقدّم الطلاب في الحفظ</h2>
+        <input type="text" class="search-input" id="studentSearch" placeholder="ابحث بالاسم أو البريد...">
+      </div>
+
+      <div class="stat-cards" id="studentsSummary"></div>
+
+      <div class="table-scroll">
+      <table class="students-table">
+        <thead>
+          <tr>
+            <th>الطالب</th>
+            <th>نسبة الحفظ</th>
+            <th>آخر حفظ</th>
+            <th>آخر نشاط</th>
+            <th>انضم في</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="studentsBody"></tbody>
+      </table>
+      </div>
+      <div class="empty-note" id="studentsEmpty" style="display:none;">لسه مفيش طلاب مسجّلين على المنصة</div>
+    </div>
+
+    <div class="panel">
       <h2>➕ رفع ملف جديد وإضافته للقائمة الجانبية</h2>
       <div class="error-box" id="uploadError"></div>
       <div class="success-box" id="uploadSuccess"></div>
@@ -82,6 +108,30 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- مودال تفاصيل تقدّم طالب -->
+<div class="modal-backdrop" id="studentModal" style="display:none;">
+  <div class="modal">
+    <div class="student-detail-head">
+      <div class="avatar lg" id="sdAvatar">؟</div>
+      <div class="name-block">
+        <h3 id="sdName">—</h3>
+        <div class="e" id="sdEmail">—</div>
+      </div>
+    </div>
+    <div class="student-detail-meta">
+      <div>نسبة الإنجاز: <strong id="sdPercent">٠٪</strong></div>
+      <div>محفوظ: <strong id="sdCount">٠ من ٣٤</strong></div>
+      <div>آخر نشاط: <strong id="sdActive">—</strong></div>
+      <div>انضم في: <strong id="sdJoined">—</strong></div>
+    </div>
+    <div class="mini-bar" style="height:8px; margin-bottom:18px;"><span id="sdBar" style="width:0%"></span></div>
+    <div class="student-verses-grid" id="sdVerses"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="closeStudentModal" style="width:auto;">إغلاق</button>
+    </div>
   </div>
 </div>
 
