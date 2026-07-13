@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="green">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,14 +16,18 @@
 
       <form id="regForm">
         <div class="field">
-          <label>اسم المستخدم</label>
-          <input type="text" id="username" autocomplete="username" required minlength="3" maxlength="30">
+          <label>الاسم</label>
+          <input type="text" id="name" autocomplete="name" required minlength="2" maxlength="60">
+        </div>
+        <div class="field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="email" autocomplete="username" required>
         </div>
         <div class="field">
           <label>كلمة المرور</label>
           <input type="password" id="password" autocomplete="new-password" required minlength="6">
         </div>
-        <button class="btn" type="submit" id="submitBtn">إنشاء الحساب</button>
+        <button class="btn block" type="submit" id="submitBtn">إنشاء الحساب</button>
       </form>
 
       <div class="switch-link">
@@ -33,6 +37,8 @@
   </div>
 
 <script>
+document.documentElement.setAttribute('data-theme', localStorage.getItem('baiq-theme') || 'green');
+
 const form = document.getElementById('regForm');
 const errorBox = document.getElementById('errorBox');
 const submitBtn = document.getElementById('submitBtn');
@@ -48,7 +54,8 @@ form.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        username: document.getElementById('username').value,
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
         password: document.getElementById('password').value,
       }),
     });

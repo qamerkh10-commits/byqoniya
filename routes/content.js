@@ -11,7 +11,7 @@ const CONTENT_DIR = path.join(__dirname, '..', 'content');
 // قائمة الصفحات (محتاج تسجيل دخول)
 router.get('/pages', requireAuth, (req, res) => {
   const pages = db
-    .prepare('SELECT id, slug, title, icon, sort_order, updated_at FROM pages ORDER BY sort_order ASC, id ASC')
+    .prepare('SELECT id, slug, title, description, icon, sort_order, updated_at FROM pages ORDER BY sort_order ASC, id ASC')
     .all();
   res.json({ pages });
 });

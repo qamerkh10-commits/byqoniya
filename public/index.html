@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="green">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,14 +22,26 @@
     </div>
 
     <ul class="nav-list" id="navList">
+      <li>
+        <button class="nav-item" id="homeNavBtn">
+          <span class="icon">🏠</span><span>الرئيسية</span>
+        </button>
+      </li>
+      <li>
+        <a class="nav-item" href="/tracker.html">
+          <span class="icon">📅</span><span>جدول محفوظاتي</span>
+        </a>
+      </li>
+      <li class="nav-section-label">الأقسام</li>
       <!-- تُملأ ديناميكيًا -->
     </ul>
 
     <div class="sidebar-footer">
       <div class="user-chip">
-        <span id="usernameLabel">—</span>
+        <span class="u-name" id="usernameLabel">—</span>
         <span class="role-badge" id="roleBadge">مستخدم</span>
       </div>
+      <button class="btn secondary google-link-btn" id="googleLinkBtn" style="display:none;">🔗 ربط حساب Google</button>
       <a href="/admin.html" class="btn secondary" id="adminLink" style="display:none; margin-bottom:8px;">لوحة تحكم المطور</a>
       <button class="btn danger" id="logoutBtn">تسجيل الخروج</button>
     </div>
@@ -38,20 +50,23 @@
   <div class="main-area">
     <div class="mobile-topbar">
       <button id="menuToggle">☰</button>
-      <strong id="mobileTitle">المنظومة البيقونية</strong>
+      <strong class="brand" id="mobileTitle">المنظومة البيقونية</strong>
       <span></span>
     </div>
 
     <div class="topbar">
-      <div class="page-title" id="pageTitle">اختر صفحة من القائمة</div>
-      <div class="actions"></div>
+      <div class="page-title" id="pageTitle">الرئيسية</div>
+      <div class="actions">
+        <div class="theme-sw" id="theme-sw">
+          <div class="tsw green" data-theme="green" title="أخضر"></div>
+          <div class="tsw navy" data-theme="navy" title="كحلي"></div>
+          <div class="tsw brown" data-theme="brown" title="بني"></div>
+        </div>
+      </div>
     </div>
 
     <div class="content-frame-wrap" id="frameWrap">
-      <div class="empty-state">
-        <div class="big">📚</div>
-        <div>اختر أحد الأقسام من القائمة الجانبية للبدء</div>
-      </div>
+      <!-- يُملأ ديناميكيًا: إما لوحة الكروت، أو إطار صفحة محتوى -->
     </div>
   </div>
 

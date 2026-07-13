@@ -8,12 +8,13 @@
     "seed": "node db/seed.js"
   },
   "dependencies": {
-    "better-sqlite3": "^11.3.0",
     "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.3.0",
+    "better-sqlite3-session-store": "^0.1.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
-    "better-sqlite3-session-store": "^0.1.0",
-    "multer": "^2.2.0",
-    "dotenv": "^16.4.5"
+    "google-auth-library": "^10.9.0",
+    "multer": "^2.2.0"
   }
 }

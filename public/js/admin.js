@@ -16,6 +16,7 @@
   const editError = document.getElementById('editError');
   const editTitle = document.getElementById('editTitle');
   const editIcon = document.getElementById('editIcon');
+  const editDescription = document.getElementById('editDescription');
   const editContentField = document.getElementById('editContentField');
   const editContent = document.getElementById('editContent');
   const replaceFileField = document.getElementById('replaceFileField');
@@ -84,9 +85,10 @@
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${u.id}</td>
-        <td>${escapeHtml(u.username)}</td>
-        <td>${u.role === 'admin' ? '🛠️ مطوّر' : 'مستخدم'}</td>
-        <td style="font-size:12px; color:#7a6f5c;">${escapeHtml(u.created_at)}</td>
+        <td>${escapeHtml(u.name)}</td>
+        <td style="direction:ltr; text-align:left;">${escapeHtml(u.email)}</td>
+        <td>${u.role === 'admin' ? '🛠️ مطوّر' : 'طالب'}</td>
+        <td style="font-size:12px; color:var(--sub);">${escapeHtml(u.created_at)}</td>
       `;
       usersBody.appendChild(tr);
     });
@@ -104,6 +106,7 @@
       const fd = new FormData();
       fd.append('title', document.getElementById('uTitle').value);
       fd.append('icon', document.getElementById('uIcon').value || '📄');
+      fd.append('description', document.getElementById('uDescription').value || '');
       fd.append('file', document.getElementById('uFile').files[0]);
 
       const res = await fetch('/api/admin/pages', { method: 'POST', body: fd });
@@ -162,12 +165,14 @@
       editModalTitle.textContent = 'تعديل: ' + (page ? page.title : '');
       editTitle.value = page ? page.title : '';
       editIcon.value = page ? page.icon : '';
+      editDescription.value = page ? (page.description || '') : '';
       editContentField.style.display = 'none';
       replaceFileField.style.display = 'block';
     } else {
       editModalTitle.textContent = 'تعديل: ' + data.page.title;
       editTitle.value = data.page.title;
       editIcon.value = data.page.icon;
+      editDescription.value = data.page.description || '';
       editContent.value = data.content;
       editContentField.style.display = 'block';
       replaceFileField.style.display = 'block';
@@ -199,6 +204,7 @@
       const body = {
         title: editTitle.value,
         icon: editIcon.value,
+        description: editDescription.value,
       };
       if (editContentField.style.display !== 'none') {
         body.content = editContent.value;

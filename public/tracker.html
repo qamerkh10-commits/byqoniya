@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="green">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>جدول محفوظاتي — المنظومة البيقونية</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="loading-screen" id="loadingScreen">
+  <div class="spinner"></div>
+  <div>جاري التحميل...</div>
+</div>
+
+<div id="root" style="display:none;">
+  <div class="topbar">
+    <div class="page-title">📅 جدول محفوظاتي</div>
+    <div class="actions">
+      <a href="/index.html" class="btn secondary" style="width:auto; padding:8px 14px;">↩ الرئيسية</a>
+    </div>
+  </div>
+
+  <div class="tracker-wrap">
+    <div class="tracker-head">
+      <h1>جدول حفظ منظومة البيقونية</h1>
+      <p>حدّد لنفسك تاريخًا مستهدفًا لكل بيت (اختياري)، وأشّر عليه لما تحفظه. الجدول ده خاص بيك وحدك.</p>
+    </div>
+
+    <div class="progress-panel">
+      <div class="pct" id="pct">٠٪</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="count" id="countLabel">٠ من ٣٤ بيتًا</div>
+    </div>
+
+    <div class="verse-list" id="verseList"></div>
+  </div>
+</div>
+
+<script>
+(async function () {
+  const loadingScreen = document.getElementById('loadingScreen');
+  const root = document.getElementById('root');
+  const verseList = document.getElementById('verseList');
+  const pctEl = document.getElementById('pct');
+  const fillEl = document.getElementById('progressFill');
+  const countEl = document.getElementById('countLabel');
+
+  document.documentElement.setAttribute('data-theme', localStorage.getItem('baiq-theme') || 'green');
+
+  let me;
+  try {
+    const meRes = await fetch('/api/auth/me');
+    me = (await meRes.json()).user;
+  } catch (e) { me = null; }
+  if (!me) { window.location.href = '/login.html'; return; }
+
+  function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str ?? '';
+    return d.innerHTML;
+  }
+
+  const arabicIndex = (n) => n.toString().split('').map((d) => '٠١٢٣٤٥٦٧٨٩'[+d] ?? d).join('');
+
+  async function load() {
+    const res = await fetch('/api/memorization/progress');
+    const data = await res.json();
+    render(data);
+  }
+
+  function render(data) {
+    pctEl.textContent = arabicIndex(data.stats.percent) + '٪';
+    fillEl.style.width = data.stats.percent + '%';
+    countEl.textContent = `${arabicIndex(data.stats.memorized)} من ${arabicIndex(data.stats.total)} بيتًا`;
+
+    verseList.innerHTML = data.items
+      .map(
+        (item) => `
+      <div class="verse-row ${item.memorized ? 'done' : ''}" data-id="${item.id}">
+        <div class="vnum">${arabicIndex(item.id)}</div>
+        <input type="checkbox" class="chk" ${item.memorized ? 'checked' : ''}>
+        <div class="vbody">
+          <div class="vtitle">${escapeHtml(item.title)}</div>
+          <div class="vtext">${escapeHtml(item.text)}</div>
+          <div class="vmeta">
+            <label style="font-size:12px; color:var(--sub);">تاريخ مستهدف/إنجاز:</label>
+            <input type="date" class="sdate" value="${item.scheduled_date || ''}">
+            ${item.memorized ? `<span class="memorized-tag">✅ حُفظ${item.memorized_at ? ' في ' + item.memorized_at : ''}</span>` : ''}
+          </div>
+        </div>
+      </div>`
+      )
+      .join('');
+
+    verseList.querySelectorAll('.verse-row').forEach((row) => {
+      const id = row.dataset.id;
+      const chk = row.querySelector('.chk');
+      const dateInput = row.querySelector('.sdate');
+
+      chk.addEventListener('change', () => save(id, dateInput.value, chk.checked));
+      dateInput.addEventListener('change', () => save(id, dateInput.value, chk.checked));
+    });
+  }
+
+  async function save(id, scheduled_date, memorized) {
+    await fetch(`/api/memorization/progress/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scheduled_date: scheduled_date || null, memorized }),
+    });
+    await load();
+  }
+
+  await load();
+  loadingScreen.style.display = 'none';
+  root.style.display = 'block';
+})();
+</script>
+</body>
+</html>

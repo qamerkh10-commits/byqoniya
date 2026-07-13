@@ -60,6 +60,7 @@ router.post('/pages', upload.single('file'), (req, res) => {
     }
     const title = (req.body.title || req.file.originalname).trim();
     const icon = (req.body.icon || '📄').trim();
+    const description = (req.body.description || '').trim();
     let slug = slugify(req.body.slug || title);
 
     const exists = db.prepare('SELECT id FROM pages WHERE slug = ?').get(slug);
@@ -69,12 +70,12 @@ router.post('/pages', upload.single('file'), (req, res) => {
 
     const info = db
       .prepare(
-        `INSERT INTO pages (slug, title, icon, filename, sort_order, created_by)
-         VALUES (?, ?, ?, ?, ?, ?)`
+        `INSERT INTO pages (slug, title, icon, description, filename, sort_order, created_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
       )
-      .run(slug, title, icon, req.file.filename, maxOrder + 1, req.session.userId);
+      .run(slug, title, icon, description, req.file.filename, maxOrder + 1, req.session.userId);
 
-    res.json({ id: info.lastInsertRowid, slug, title, icon, filename: req.file.filename });
+    res.json({ id: info.lastInsertRowid, slug, title, icon, description, filename: req.file.filename });
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: err.message || 'حدث خطأ أثناء رفع الملف' });
@@ -105,7 +106,7 @@ router.put('/pages/:id', (req, res) => {
   const page = db.prepare('SELECT * FROM pages WHERE id = ?').get(req.params.id);
   if (!page) return res.status(404).json({ error: 'الصفحة غير موجودة' });
 
-  const { title, icon, sort_order, content } = req.body || {};
+  const { title, icon, sort_order, content, description } = req.body || {};
 
   if (typeof content === 'string') {
     const ext = path.extname(page.filename).toLowerCase();
@@ -121,10 +122,11 @@ router.put('/pages/:id', (req, res) => {
     `UPDATE pages SET
        title = COALESCE(?, title),
        icon = COALESCE(?, icon),
+       description = COALESCE(?, description),
        sort_order = COALESCE(?, sort_order),
        updated_at = datetime('now')
      WHERE id = ?`
-  ).run(title ?? null, icon ?? null, sort_order ?? null, page.id);
+  ).run(title ?? null, icon ?? null, description ?? null, sort_order ?? null, page.id);
 
   res.json({ ok: true });
 });
@@ -164,7 +166,7 @@ router.delete('/pages/:id', (req, res) => {
 
 // قائمة المستخدمين (للمطور)
 router.get('/users', (req, res) => {
-  const users = db.prepare('SELECT id, username, role, created_at FROM users ORDER BY id ASC').all();
+  const users = db.prepare('SELECT id, email, name, role, created_at FROM users ORDER BY id ASC').all();
   res.json({ users });
 });
 

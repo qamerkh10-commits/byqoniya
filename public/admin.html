@@ -40,6 +40,10 @@
           </div>
         </div>
         <div class="field">
+          <label>وصف قصير (يظهر تحت العنوان في الصفحة الرئيسية)</label>
+          <input type="text" id="uDescription" maxlength="200">
+        </div>
+        <div class="field">
           <label>الملف (html, htm, txt, pdf, png, jpg, svg)</label>
           <input type="file" id="uFile" required accept=".html,.htm,.txt,.pdf,.png,.jpg,.jpeg,.svg">
         </div>
@@ -49,6 +53,7 @@
 
     <div class="panel">
       <h2>📑 الصفحات الحالية</h2>
+      <div class="table-scroll">
       <table class="pages-table">
         <thead>
           <tr>
@@ -62,16 +67,19 @@
         </thead>
         <tbody id="pagesBody"></tbody>
       </table>
+      </div>
     </div>
 
     <div class="panel">
       <h2>👥 المستخدمون</h2>
+      <div class="table-scroll">
       <table class="pages-table">
         <thead>
-          <tr><th>#</th><th>اسم المستخدم</th><th>الصلاحية</th><th>تاريخ التسجيل</th></tr>
+          <tr><th>#</th><th>الاسم</th><th>البريد الإلكتروني</th><th>الصلاحية</th><th>تاريخ التسجيل</th></tr>
         </thead>
         <tbody id="usersBody"></tbody>
       </table>
+      </div>
     </div>
 
   </div>
@@ -92,6 +100,11 @@
         <label>الأيقونة</label>
         <input type="text" id="editIcon">
       </div>
+    </div>
+
+    <div class="field">
+      <label>وصف قصير</label>
+      <input type="text" id="editDescription" maxlength="200">
     </div>
 
     <div id="editContentField" class="field" style="display:none;">

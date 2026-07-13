@@ -10,6 +10,7 @@ const db = require('./db/init');
 const authRoutes = require('./routes/auth');
 const contentRoutes = require('./routes/content');
 const adminRoutes = require('./routes/admin');
+const memorizationRoutes = require('./routes/memorization');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,19 +36,19 @@ app.use(
   })
 );
 
-// الملفات الثابتة العامة (صفحات الواجهة، تسجيل الدخول، CSS, JS) - غير محمية
+// الصفحة العامة (قبل تسجيل الدخول) هي المدخل الرئيسي للموقع
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'landing.html'));
+});
+
+// الملفات الثابتة العامة (الواجهة، تسجيل الدخول، CSS, JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // مسارات الـ API
 app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/admin', adminRoutes);
-
-// أي مسار غير معروف داخل الواجهة يرجع للصفحة الرئيسية (SPA بسيطة)
-app.get('*', (req, res, next) => {
-  if (req.path.startsWith('/api/')) return next();
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+app.use('/api/memorization', memorizationRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err);
