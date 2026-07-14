@@ -143,6 +143,23 @@ img{ max-width:100%; }
 .dash-header .eyebrow{ font-size:.85rem; color:var(--accent); letter-spacing:.14em; font-weight:800; margin-bottom:10px; }
 .dash-header h2{ font-weight:900; font-size:clamp(1.5rem,4vw,2.1rem); color:var(--ink); }
 .dash-header .matn-strip{ margin-top:16px; }
+.dash-header.library-header{ text-align:right; padding: 26px 6vw 6px; }
+.dash-header.library-header h2{ font-size:clamp(1.15rem,2.6vw,1.5rem); }
+
+/* ============ لوحة قيادة المطوّر (الرئيسية) — هوية مختلفة تمامًا عن واجهة الطالب ============ */
+.cockpit{ margin: 22px 6vw 6px; max-width:1180px; margin-inline:auto; background: linear-gradient(135deg, var(--accent-dark), #1c2b22 70%); border-radius:20px; padding:26px 30px; color:#eef0e6; box-shadow: var(--shadow); position:relative; overflow:hidden; }
+.cockpit::before{ content:''; position:absolute; inset:0; background-image: linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 34px 100%; opacity:.5; pointer-events:none; }
+.cockpit-top{ display:flex; align-items:flex-end; justify-content:space-between; gap:18px; flex-wrap:wrap; position:relative; }
+.cockpit-eyebrow{ font-size:11.5px; letter-spacing:.16em; font-weight:800; color: var(--accent2); margin-bottom:8px; }
+.cockpit-intro h2{ font-size: clamp(1.3rem,2.8vw,1.7rem); font-weight:900; color:#fbf7ea; margin-bottom:6px; }
+.cockpit-intro p{ font-size:13px; color:#c9d3c4; max-width:480px; line-height:1.8; }
+.cockpit-cta{ width:auto; padding:11px 20px; background: var(--accent2); color:#2b2418; flex-shrink:0; }
+.cockpit-cta:hover{ filter:brightness(1.05); }
+.cockpit-stats{ display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-top:22px; position:relative; }
+.cockpit-stat{ background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:14px 16px; }
+.cockpit-stat .cs-label{ font-size:11px; color:#b9c4b3; font-weight:700; margin-bottom:6px; }
+.cockpit-stat .cs-value{ font-size:22px; font-weight:900; color:#fbf7ea; font-variant-numeric: tabular-nums; }
+@media (max-width:720px){ .cockpit{ margin: 16px 5vw 6px; padding:20px; } }
 
 /* ============ بطاقة تقدّمي (تظهر للطالب في الرئيسية) ============ */
 .my-progress-card{
@@ -181,6 +198,13 @@ img{ max-width:100%; }
 .card .cta:hover{ opacity:.88; }
 .card.special{ border-color: var(--accent2); background: linear-gradient(160deg, var(--tint), var(--surface)); }
 
+/* بطاقة "مجموعة" (كتب/تلخيصات) — تبان كرُزمة مكدّسة عشان تتفرّق بصريًا عن الصفحة المفردة */
+.card.group-card{ background: linear-gradient(150deg, var(--surface) 55%, var(--tint)); border-color: var(--accent2); box-shadow: 5px 5px 0 -1px var(--bg), 5px 5px 0 0 var(--line), 10px 10px 0 -1px var(--bg), 10px 10px 0 0 var(--line); }
+.card.group-card:hover{ transform: translateY(-3px); }
+.card.group-card .num{ font-size:1.7rem; }
+.card.group-card p.desc{ -webkit-line-clamp:2; display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden; }
+.group-count-chip{ position:absolute; top:16px; left:16px; background: var(--accent2); color:#2b2418; font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:999px; }
+
 /* ============ الهيكل الرئيسي بعد الدخول (Hub) ============ */
 .app-shell{ display:flex; height:100vh; overflow:hidden; }
 .sidebar{ width: 280px; flex-shrink:0; background: linear-gradient(180deg, var(--accent-dark), var(--accent)); color:#f3ead2; display:flex; flex-direction:column; box-shadow: 4px 0 20px rgba(0,0,0,.12); z-index: 5; }
@@ -196,6 +220,18 @@ img{ max-width:100%; }
 .nav-item .icon{ font-size: 16px; }
 .nav-section-label{ font-size:11px; color:#c9d9cf; padding:10px 14px 4px; letter-spacing:.08em; }
 
+/* ============ مجموعة قابلة للطي في القائمة الجانبية (كتب/تلخيصات) ============ */
+.nav-group-header{ position:relative; }
+.nav-group-header .nav-group-count{ font-size:10px; background: rgba(255,255,255,.14); padding:1px 7px; border-radius:999px; margin-inline-start:auto; }
+.nav-group-header.active .nav-group-count{ background: rgba(43,36,24,.18); }
+.nav-group-header .nav-group-chev{ font-size:13px; transition: transform .2s; flex-shrink:0; transform: rotate(180deg); }
+.nav-group.open .nav-group-header .nav-group-chev{ transform: rotate(90deg); }
+.nav-sub-list{ list-style:none; max-height:0; overflow:hidden; transition: max-height .25s ease; padding-inline-start:14px; border-inline-start:2px solid rgba(255,255,255,.12); margin-inline-start:22px; }
+.nav-group.open .nav-sub-list{ max-height:400px; }
+.nav-sub-item{ display:block; width:100%; text-align:right; background:transparent; border:none; color:#d9cfae; font-family:inherit; font-size:12.5px; padding:8px 10px; border-radius:8px; cursor:pointer; margin-top:2px; transition: background .15s; }
+.nav-sub-item:hover{ background: rgba(255,255,255,.08); }
+.nav-sub-item.active{ background: rgba(255,255,255,.14); color:#f7ecc9; font-weight:700; }
+
 .sidebar-footer{ padding: 14px; border-top: 1px solid rgba(255,255,255,.12); }
 .user-chip{ display:flex; align-items:center; justify-content:space-between; padding: 8px 10px; border-radius:10px; background: rgba(255,255,255,.06); font-size: 12.5px; margin-bottom: 8px; gap:6px; }
 .user-chip .u-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; }
@@ -209,8 +245,24 @@ img{ max-width:100%; }
 .topbar .actions{ display:flex; gap:8px; align-items:center; }
 .topbar .btn{ width:auto; padding: 8px 14px; font-size: 13px; }
 
-.content-frame-wrap{ flex:1; position:relative; background:#fff; overflow-y:auto; }
-.content-frame-wrap iframe{ width:100%; height:100%; border:none; display:block; }
+.content-frame-wrap{ flex:1; position:relative; background:#fff; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; }
+.content-frame-wrap > iframe{ flex:1; width:100%; border:none; display:block; }
+
+/* ============ تبويبات المجموعة (كتب/تلخيصات) — شكل "رفّ الكتب" ============ */
+.tab-shelf{ flex:0 0 auto; background: linear-gradient(180deg, var(--surface), var(--tint)); border-bottom:1px solid var(--line); padding: 14px 6vw 0; }
+.tab-shelf-label{ display:flex; align-items:center; gap:8px; font-size:12px; font-weight:800; color:var(--sub); margin-bottom:10px; }
+.tab-shelf-tabs{ display:flex; gap:6px; overflow-x:auto; padding-bottom:0; }
+.shelf-tab{
+  flex-shrink:0; display:flex; align-items:center; gap:8px; padding:12px 20px; border:1px solid var(--line); border-bottom:none;
+  border-radius:12px 12px 0 0; background: var(--bg); color:var(--sub); font-family:inherit; font-weight:700; font-size:13.5px;
+  cursor:pointer; transition: background .15s, color .15s; position:relative; top:1px;
+}
+.shelf-tab .icon{ font-size:15px; }
+.shelf-tab:hover{ background: var(--tint); color:var(--ink); }
+.shelf-tab.active{ background:#fff; color:var(--accent-dark); border-color:var(--line); box-shadow: 0 -2px 0 var(--accent2) inset; }
+.tab-shelf-frame{ flex:1; min-height:0; background:#fff; }
+.tab-shelf-frame iframe{ width:100%; height:100%; border:none; display:block; }
+@media (max-width:720px){ .tab-shelf{ padding: 12px 5vw 0; } .shelf-tab{ padding:10px 14px; font-size:12.5px; } }
 
 .loading-screen{ position:fixed; inset:0; background: var(--bg); display:flex; align-items:center; justify-content:center; z-index: 50; flex-direction:column; gap:14px; color: var(--accent-dark); font-weight:700; }
 .spinner{ width:34px; height:34px; border-radius:50%; border: 4px solid var(--tint); border-top-color: var(--accent2); animation: spin 0.9s linear infinite; }

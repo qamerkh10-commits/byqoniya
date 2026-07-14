@@ -84,6 +84,15 @@ try {
   if (!columnExists('users', 'last_active_at')) {
     db.exec(`ALTER TABLE users ADD COLUMN last_active_at TEXT`);
   }
+  if (!columnExists('pages', 'group_key')) {
+    db.exec(`ALTER TABLE pages ADD COLUMN group_key TEXT`);
+  }
+  if (!columnExists('pages', 'group_title')) {
+    db.exec(`ALTER TABLE pages ADD COLUMN group_title TEXT`);
+  }
+  if (!columnExists('pages', 'group_icon')) {
+    db.exec(`ALTER TABLE pages ADD COLUMN group_icon TEXT`);
+  }
 } catch (e) {
   console.warn('تنبيه أثناء ترقية قاعدة البيانات:', e.message);
 }

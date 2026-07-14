@@ -7,38 +7,47 @@ const pages = [
   {
     slug: 'slides', title: 'العرض التفاعلي (بوربوينت)', icon: '🖥️', filename: 'slides.html', sort_order: 1,
     description: 'شرح المنظومة كاملةً بأبياتها الأربعة والثلاثين، شريحةً شريحة، بترتيب كلام الشيخ رحمه الله حرفيًا.',
+    group_key: null, group_title: null, group_icon: null,
   },
   {
-    slug: 'interactive-book', title: 'الكتاب التفاعلي - شرح ابن عثيمين', icon: '📖', filename: 'interactive-book.html', sort_order: 2,
+    slug: 'interactive-book', title: 'شرح ابن عثيمين', icon: '📖', filename: 'interactive-book.html', sort_order: 2,
     description: 'تصفّح كامل الكتاب (المتن والشرح) في نسق تفاعلي مع بطاقات مراجعة ومراجع لكل مسألة.',
+    group_key: 'books', group_title: 'الكتب', group_icon: '📚',
   },
   {
     slug: 'summaries', title: 'التلخيصات القمرية', icon: '🌙', filename: 'summaries.html', sort_order: 3,
     description: 'تلخيص مركّز لكل أقسام المنظومة، مناسب للمراجعة السريعة قبل الاختبار.',
+    group_key: 'summaries', group_title: 'التلخيصات', group_icon: '🗂️',
   },
   {
     slug: 'mindmap', title: 'الخريطة الذهنية', icon: '🧠', filename: 'mindmap.html', sort_order: 4,
     description: 'خريطة ذهنية تربط بين أقسام الحديث الاثنين والثلاثين وعلاقتها ببعض بصريًا.',
+    group_key: null, group_title: null, group_icon: null,
   },
   {
     slug: 'memorization', title: 'اختبار الحفظ', icon: '📝', filename: 'memorization.html', sort_order: 5,
     description: 'اتكلم من حفظك وقارن كلامك بالمتن الأصلي كلمة بكلمة، بيتًا بيتًا أو القصيدة كاملة.',
+    group_key: null, group_title: null, group_icon: null,
   },
   {
     slug: 'quiz', title: 'اختبارات الشرح', icon: '✅', filename: 'quiz.html', sort_order: 6,
     description: 'اختبار يغطي فهمك لشرح المنظومة بأسئلة متنوعة وتصحيح فوري.',
+    group_key: null, group_title: null, group_icon: null,
   },
 ];
 
 const insertPage = db.prepare(`
-  INSERT INTO pages (slug, title, icon, filename, sort_order, description)
-  VALUES (@slug, @title, @icon, @filename, @sort_order, @description)
+  INSERT INTO pages (slug, title, icon, filename, sort_order, description, group_key, group_title, group_icon)
+  VALUES (@slug, @title, @icon, @filename, @sort_order, @description, @group_key, @group_title, @group_icon)
   ON CONFLICT(slug) DO UPDATE SET
     title = excluded.title,
     icon = excluded.icon,
     filename = excluded.filename,
     sort_order = excluded.sort_order,
     description = CASE WHEN pages.description = '' OR pages.description IS NULL THEN excluded.description ELSE pages.description END,
+    group_key = CASE WHEN pages.group_key IS NULL THEN excluded.group_key ELSE pages.group_key END,
+    group_title = CASE WHEN pages.group_title IS NULL THEN excluded.group_title ELSE pages.group_title END,
+    group_icon = CASE WHEN pages.group_icon IS NULL THEN excluded.group_icon ELSE pages.group_icon END,
     updated_at = datetime('now')
 `);
 

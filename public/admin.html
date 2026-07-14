@@ -69,6 +69,22 @@
           <label>وصف قصير (يظهر تحت العنوان في الصفحة الرئيسية)</label>
           <input type="text" id="uDescription" maxlength="200">
         </div>
+        <div class="upload-grid">
+          <div class="field">
+            <label>المجموعة (اختياري — يظهر معها كتب/تلخيصات أخرى في تبويبات)</label>
+            <select id="uGroup">
+              <option value="">بدون مجموعة (عنصر مستقل في القائمة)</option>
+              <option value="__new__">➕ مجموعة جديدة...</option>
+            </select>
+          </div>
+          <div class="field" id="uNewGroupField" style="display:none;">
+            <label>اسم المجموعة الجديدة وأيقونتها</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="uNewGroupIcon" placeholder="📚" maxlength="4" style="max-width:70px; text-align:center;">
+              <input type="text" id="uNewGroupTitle" placeholder="مثال: الكتب">
+            </div>
+          </div>
+        </div>
         <div class="field">
           <label>الملف (html, htm, txt, pdf, png, jpg, svg)</label>
           <input type="file" id="uFile" required accept=".html,.htm,.txt,.pdf,.png,.jpg,.jpeg,.svg">
@@ -86,6 +102,7 @@
             <th>الترتيب</th>
             <th>الأيقونة</th>
             <th>العنوان</th>
+            <th>المجموعة</th>
             <th>الملف</th>
             <th>آخر تعديل</th>
             <th>إجراءات</th>
@@ -155,6 +172,23 @@
     <div class="field">
       <label>وصف قصير</label>
       <input type="text" id="editDescription" maxlength="200">
+    </div>
+
+    <div class="upload-grid">
+      <div class="field">
+        <label>المجموعة (اختياري)</label>
+        <select id="editGroup">
+          <option value="">بدون مجموعة (عنصر مستقل في القائمة)</option>
+          <option value="__new__">➕ مجموعة جديدة...</option>
+        </select>
+      </div>
+      <div class="field" id="editNewGroupField" style="display:none;">
+        <label>اسم المجموعة الجديدة وأيقونتها</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" id="editNewGroupIcon" placeholder="📚" maxlength="4" style="max-width:70px; text-align:center;">
+          <input type="text" id="editNewGroupTitle" placeholder="مثال: الكتب">
+        </div>
+      </div>
     </div>
 
     <div id="editContentField" class="field" style="display:none;">

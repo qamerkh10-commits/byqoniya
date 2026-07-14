@@ -10,6 +10,10 @@
   const uploadError = document.getElementById('uploadError');
   const uploadSuccess = document.getElementById('uploadSuccess');
   const uploadBtn = document.getElementById('uploadBtn');
+  const uGroup = document.getElementById('uGroup');
+  const uNewGroupField = document.getElementById('uNewGroupField');
+  const uNewGroupIcon = document.getElementById('uNewGroupIcon');
+  const uNewGroupTitle = document.getElementById('uNewGroupTitle');
 
   const studentsSummary = document.getElementById('studentsSummary');
   const studentsBody = document.getElementById('studentsBody');
@@ -34,6 +38,10 @@
   const editTitle = document.getElementById('editTitle');
   const editIcon = document.getElementById('editIcon');
   const editDescription = document.getElementById('editDescription');
+  const editGroup = document.getElementById('editGroup');
+  const editNewGroupField = document.getElementById('editNewGroupField');
+  const editNewGroupIcon = document.getElementById('editNewGroupIcon');
+  const editNewGroupTitle = document.getElementById('editNewGroupTitle');
   const editContentField = document.getElementById('editContentField');
   const editContent = document.getElementById('editContent');
   const replaceFileField = document.getElementById('replaceFileField');
@@ -63,6 +71,52 @@
     const d = document.createElement('div');
     d.textContent = str ?? '';
     return d.innerHTML;
+  }
+
+  function slugify(text) {
+    return (
+      String(text)
+        .trim()
+        .toLowerCase()
+        .replace(/[\s_]+/g, '-')
+        .replace(/[^a-z0-9\u0621-\u064A\u0660-\u0669-]/g, '')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '') || 'group-' + Date.now()
+    );
+  }
+
+  let allGroups = [];
+
+  async function loadGroups() {
+    const res = await fetch('/api/admin/groups');
+    const data = await res.json();
+    allGroups = data.groups || [];
+    [uGroup, editGroup].forEach((sel) => populateGroupSelect(sel));
+  }
+
+  function populateGroupSelect(sel, selectedKey) {
+    const prev = selectedKey !== undefined ? selectedKey : sel.value;
+    sel.innerHTML = `<option value="">بدون مجموعة (عنصر مستقل في القائمة)</option>` +
+      allGroups.map((g) => `<option value="${escapeHtml(g.group_key)}">${escapeHtml(g.group_icon || '📚')} ${escapeHtml(g.group_title)} (${g.pages_count})</option>`).join('') +
+      `<option value="__new__">➕ مجموعة جديدة...</option>`;
+    if (prev && [...sel.options].some((o) => o.value === prev)) sel.value = prev;
+  }
+
+  uGroup.addEventListener('change', () => {
+    uNewGroupField.style.display = uGroup.value === '__new__' ? 'block' : 'none';
+  });
+  editGroup.addEventListener('change', () => {
+    editNewGroupField.style.display = editGroup.value === '__new__' ? 'block' : 'none';
+  });
+
+  function resolveGroupFields(selectEl, newTitleEl, newIconEl) {
+    if (selectEl.value === '') return { group_key: '', group_title: '', group_icon: '' };
+    if (selectEl.value === '__new__') {
+      const title = newTitleEl.value.trim();
+      if (!title) throw new Error('من فضلك اكتب اسم المجموعة الجديدة');
+      return { group_key: slugify(title), group_title: title, group_icon: newIconEl.value.trim() || '📚' };
+    }
+    return { group_key: selectEl.value, group_title: '', group_icon: '' };
   }
 
   const EDITABLE_EXT = ['.html', '.htm', '.txt'];
@@ -221,6 +275,7 @@
         <td>${p.sort_order}</td>
         <td>${escapeHtml(p.icon)}</td>
         <td>${escapeHtml(p.title)}</td>
+        <td>${p.group_key ? `<span class="badge user">${escapeHtml(p.group_icon || '📚')} ${escapeHtml(p.group_title || p.group_key)}</span>` : '<span style="color:var(--sub); font-size:12px;">—</span>'}</td>
         <td style="direction:ltr; text-align:left; color:#7a6f5c; font-size:12px;">${escapeHtml(p.slug)}</td>
         <td style="font-size:12px; color:#7a6f5c;">${escapeHtml(p.updated_at)}</td>
         <td class="row-actions">
@@ -259,10 +314,14 @@
     uploadBtn.textContent = 'جاري الرفع...';
 
     try {
+      const groupFields = resolveGroupFields(uGroup, uNewGroupTitle, uNewGroupIcon);
       const fd = new FormData();
       fd.append('title', document.getElementById('uTitle').value);
       fd.append('icon', document.getElementById('uIcon').value || '📄');
       fd.append('description', document.getElementById('uDescription').value || '');
+      fd.append('group_key', groupFields.group_key);
+      fd.append('group_title', groupFields.group_title);
+      fd.append('group_icon', groupFields.group_icon);
       fd.append('file', document.getElementById('uFile').files[0]);
 
       const res = await fetch('/api/admin/pages', { method: 'POST', body: fd });
@@ -272,7 +331,8 @@
       uploadSuccess.textContent = 'تم رفع الصفحة بنجاح ✅';
       uploadSuccess.style.display = 'block';
       uploadForm.reset();
-      await loadPages();
+      uNewGroupField.style.display = 'none';
+      await Promise.all([loadPages(), loadGroups()]);
     } catch (err) {
       uploadError.textContent = err.message;
       uploadError.style.display = 'block';
@@ -322,6 +382,8 @@
       editTitle.value = page ? page.title : '';
       editIcon.value = page ? page.icon : '';
       editDescription.value = page ? (page.description || '') : '';
+      populateGroupSelect(editGroup, page ? page.group_key || '' : '');
+      editNewGroupField.style.display = 'none';
       editContentField.style.display = 'none';
       replaceFileField.style.display = 'block';
     } else {
@@ -329,6 +391,8 @@
       editTitle.value = data.page.title;
       editIcon.value = data.page.icon;
       editDescription.value = data.page.description || '';
+      populateGroupSelect(editGroup, data.page.group_key || '');
+      editNewGroupField.style.display = 'none';
       editContent.value = data.content;
       editContentField.style.display = 'block';
       replaceFileField.style.display = 'block';
@@ -357,10 +421,14 @@
         if (!r.ok) throw new Error(d.error || 'فشل استبدال الملف');
       }
 
+      const groupFields = resolveGroupFields(editGroup, editNewGroupTitle, editNewGroupIcon);
       const body = {
         title: editTitle.value,
         icon: editIcon.value,
         description: editDescription.value,
+        group_key: groupFields.group_key,
+        group_title: groupFields.group_title,
+        group_icon: groupFields.group_icon,
       };
       if (editContentField.style.display !== 'none') {
         body.content = editContent.value;
@@ -376,7 +444,7 @@
 
       editModal.style.display = 'none';
       replaceFile.value = '';
-      await loadPages();
+      await Promise.all([loadPages(), loadGroups()]);
     } catch (err) {
       editError.textContent = err.message;
       editError.style.display = 'block';
@@ -386,7 +454,7 @@
     }
   });
 
-  await Promise.all([loadPages(), loadUsers(), loadStudentsProgress()]);
+  await Promise.all([loadPages(), loadUsers(), loadStudentsProgress(), loadGroups()]);
 
   loadingScreen.style.display = 'none';
   adminRoot.style.display = 'block';

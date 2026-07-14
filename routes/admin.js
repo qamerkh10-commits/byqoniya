@@ -49,6 +49,17 @@ const upload = multer({
   limits: { fileSize: 15 * 1024 * 1024 }, // 15MB
 });
 
+// قائمة المجموعات الحالية (الكتب، التلخيصات، ...) عشان تظهر في قائمة اختيار المجموعة بالأدمن
+router.get('/groups', requireAdmin, (req, res) => {
+  const groups = db
+    .prepare(
+      `SELECT group_key, group_title, group_icon, COUNT(*) AS pages_count
+       FROM pages WHERE group_key IS NOT NULL GROUP BY group_key ORDER BY group_title ASC`
+    )
+    .all();
+  res.json({ groups });
+});
+
 // كل مسارات الأدمن محمية
 router.use(requireAdmin);
 
@@ -68,14 +79,31 @@ router.post('/pages', upload.single('file'), (req, res) => {
 
     const maxOrder = db.prepare('SELECT MAX(sort_order) AS m FROM pages').get().m || 0;
 
+    let groupKey = (req.body.group_key || '').trim() || null;
+    let groupTitle = (req.body.group_title || '').trim() || null;
+    let groupIcon = (req.body.group_icon || '').trim() || null;
+    if (groupKey) {
+      // لو المجموعة دي موجودة بالفعل، خُد عنوانها وأيقونتها الرسمية بدل ما تتكرر بقيم مختلفة لكل صفحة
+      const existingGroup = db
+        .prepare('SELECT group_title, group_icon FROM pages WHERE group_key = ? AND group_title IS NOT NULL LIMIT 1')
+        .get(groupKey);
+      if (existingGroup) {
+        groupTitle = existingGroup.group_title;
+        groupIcon = existingGroup.group_icon;
+      } else {
+        groupTitle = groupTitle || groupKey;
+        groupIcon = groupIcon || '📚';
+      }
+    }
+
     const info = db
       .prepare(
-        `INSERT INTO pages (slug, title, icon, description, filename, sort_order, created_by)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`
+        `INSERT INTO pages (slug, title, icon, description, filename, sort_order, created_by, group_key, group_title, group_icon)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
-      .run(slug, title, icon, description, req.file.filename, maxOrder + 1, req.session.userId);
+      .run(slug, title, icon, description, req.file.filename, maxOrder + 1, req.session.userId, groupKey, groupTitle, groupIcon);
 
-    res.json({ id: info.lastInsertRowid, slug, title, icon, description, filename: req.file.filename });
+    res.json({ id: info.lastInsertRowid, slug, title, icon, description, filename: req.file.filename, group_key: groupKey, group_title: groupTitle, group_icon: groupIcon });
   } catch (err) {
     console.error(err);
     res.status(400).json({ error: err.message || 'حدث خطأ أثناء رفع الملف' });
@@ -118,15 +146,49 @@ router.put('/pages/:id', (req, res) => {
     fs.writeFileSync(filePath, content, 'utf8');
   }
 
+  let groupKey = req.body.group_key;
+  let groupTitle = req.body.group_title;
+  let groupIcon = req.body.group_icon;
+  if (groupKey !== undefined) {
+    groupKey = String(groupKey).trim() || null;
+    if (groupKey) {
+      const existingGroup = db
+        .prepare('SELECT group_title, group_icon FROM pages WHERE group_key = ? AND id != ? AND group_title IS NOT NULL LIMIT 1')
+        .get(groupKey, page.id);
+      if (existingGroup) {
+        groupTitle = existingGroup.group_title;
+        groupIcon = existingGroup.group_icon;
+      } else {
+        groupTitle = (groupTitle && String(groupTitle).trim()) || groupKey;
+        groupIcon = (groupIcon && String(groupIcon).trim()) || '📚';
+      }
+    } else {
+      groupTitle = null;
+      groupIcon = null;
+    }
+  }
+
   db.prepare(
     `UPDATE pages SET
        title = COALESCE(?, title),
        icon = COALESCE(?, icon),
        description = COALESCE(?, description),
        sort_order = COALESCE(?, sort_order),
+       group_key = CASE WHEN ? THEN ? ELSE group_key END,
+       group_title = CASE WHEN ? THEN ? ELSE group_title END,
+       group_icon = CASE WHEN ? THEN ? ELSE group_icon END,
        updated_at = datetime('now')
      WHERE id = ?`
-  ).run(title ?? null, icon ?? null, description ?? null, sort_order ?? null, page.id);
+  ).run(
+    title ?? null,
+    icon ?? null,
+    description ?? null,
+    sort_order ?? null,
+    groupKey !== undefined ? 1 : 0, groupKey ?? null,
+    groupKey !== undefined ? 1 : 0, groupTitle ?? null,
+    groupKey !== undefined ? 1 : 0, groupIcon ?? null,
+    page.id
+  );
 
   res.json({ ok: true });
 });
